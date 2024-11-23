@@ -2,105 +2,43 @@ package com.industrial.pasantias.Model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-@Entity
-public class Empresa {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long idEmpresa;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "EMPRESA")
+public class Empresa {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_EMPRESA")
+    private int idEmpresa;
+
+    @Column(name = "NOMBRE", nullable = false, length = 200)
     private String nombre;
+
+    @Column(name = "ESTADO", nullable = false, length = 1)
     private String estado;
+
+    @Column(name = "ID_RUBRO", nullable = false)
+    private int idRubro;
+
+    @Column(name = "UBICACION", nullable = true, length = 250)
     private String ubicacion;
+
+    @Column(name = "TELEFONO", nullable = true, length = 20)
     private String telefono;
+
+    @Column(name = "SITIO_WEB", nullable = true, length = 100)
     private String sitioWeb;
 
-    @Column(name = "FECHA_CREA", updatable = false)
+    @Column(name = "FECHA_CREA")
     private LocalDateTime fechaCrea;
 
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
-
-    @ManyToOne
-    @JoinColumn(name = "ID_RUBRO", referencedColumnName = "ID_RUBRO")
-    private Rubro rubro; // Suponiendo que tienes otra tabla para ID_RUBRO
-
-    public Long getIdEmpresa() {
-        return idEmpresa;
-    }
-
-    public void setIdEmpresa(Long idEmpresa) {
-        this.idEmpresa = idEmpresa;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getSitioWeb() {
-        return sitioWeb;
-    }
-
-    public void setSitioWeb(String sitioWeb) {
-        this.sitioWeb = sitioWeb;
-    }
-
-    public LocalDateTime getFechaCrea() {
-        return fechaCrea;
-    }
-
-    public void setFechaCrea(LocalDateTime fechaCrea) {
-        this.fechaCrea = fechaCrea;
-    }
-
-    public LocalDateTime getFechaMod() {
-        return fechaMod;
-    }
-
-    public void setFechaMod(LocalDateTime fechaMod) {
-        this.fechaMod = fechaMod;
-    }
-
-    public Rubro getRubro() {
-        return rubro;
-    }
-
-    public void setRubro(Rubro rubro) {
-        this.rubro = rubro;
-    }
-    
 }
