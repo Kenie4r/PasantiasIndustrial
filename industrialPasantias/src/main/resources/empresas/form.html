@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulario Empresa</title>
+</head>
+<body>
+    <h1 th:text="${#fields.hasErrors() ? 'Editar Empresa' : 'Nueva Empresa'}"></h1>
+    <form th:action="@{/empresas}" th:object="${empresa}" method="post">
+        <input type="hidden" th:field="*{idEmpresa}"/>
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}" required/>
+        </div>
+        <div>
+            <label for="estado">Estado:</label>
+            <input type="text" id="estado" th:field="*{estado}" required/>
+        </div>
+        <div>
+            <label for="ubicacion">Ubicación:</label>
+            <input type="text" id="ubicacion" th:field="*{ubicacion}"/>
+        </div>
+        <div>
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" th:field="*{telefono}"/>
+        </div>
+        <div>
+            <label for="sitioWeb">Sitio Web:</label>
+            <input type="url" id="sitioWeb" th:field="*{sitioWeb}"/>
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>
