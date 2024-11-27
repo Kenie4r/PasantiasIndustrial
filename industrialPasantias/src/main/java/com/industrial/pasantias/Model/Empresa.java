@@ -41,4 +41,14 @@ public class Empresa {
 
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
+    @PrePersist
+    protected void onCreate() {
+        this.fechaCrea = LocalDateTime.now();
+        this.fechaMod = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.fechaMod = LocalDateTime.now();
+    }
 }
