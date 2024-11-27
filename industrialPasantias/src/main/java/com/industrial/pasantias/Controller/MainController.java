@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(method = RequestMethod.GET, path = {"/", "", "/inicio"})
+
 public class MainController {
 
-
+    @RequestMapping(method = RequestMethod.GET, path = {"/", "", "/inicio", "/index"})
     public String  obtenerPaginaPrincipal(){
-        return "index"; 
+        return "index.html"; 
     }
 }
