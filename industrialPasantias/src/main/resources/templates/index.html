@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = 'Inicio')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+           <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"/>
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div th:replace="fragments/footer :: footer"/>
+            <!-- End of Footer -->
+
+        </div>
+    </div>
+
+    <div th:replace="fragments/userModal :: userModal">
+
+    </div>
+
+    <div th:replace="fragments/jsComponents :: jsScripts">
+
+    </div>
+</body>
+</html>
