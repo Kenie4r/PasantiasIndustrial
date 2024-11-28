@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-IndustrialPasantiasApplication<industrialPasantias>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.industrial.pasantias.IndustrialPasantiasApplication",
+            "projectName": "industrialPasantias",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
