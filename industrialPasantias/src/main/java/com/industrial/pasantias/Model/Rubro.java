@@ -1,5 +1,6 @@
 package com.industrial.pasantias.Model;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
@@ -18,7 +19,7 @@ public class Rubro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_RUBRO")
-    private Long idRubro;
+    private Integer idRubro;
 
     @Column(name = "DESCRIPCION", nullable = false)
     private String descripcion;

@@ -16,4 +16,16 @@ public class RubroService {
     public List<Rubro> obtenerTodos() {
         return rubroRepository.findAll();
     }
+
+    public Rubro obtenerPorId(Integer id) {
+        return rubroRepository.findById(id).orElse(null);
+    }
+
+    public Rubro guardar(Rubro rubro) {
+        return rubroRepository.save(rubro);
+    }
+
+    public void eliminar(Integer id) {
+        rubroRepository.deleteById(id);
+    }
 }
