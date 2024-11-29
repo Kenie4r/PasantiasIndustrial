@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Inicio')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carreras</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <div id="content">
+                <div class="container-fluid">
+                    <h1 class="mb-4"
+                        th:text="${#strings.isEmpty(carrera.idCarrera) ? 'Crear Carrera' : 'Editar Carrera'}"></h1>
+                    <form
+                        th:action="@{${carrera.idCarrera == null} ? '/carreras' : '/carreras/editar/' + ${carrera.idCarrera}}"
+                        th:object="${carrera}" method="post">
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripcion</label>
+                            <input type="text" id="descripcion" name="descripcion" class="form-control"
+                                th:field="*{descripcion}" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="/carreras" class="btn btn-secondary">Cancelar</a>
+                    </form>
+
+                </div>
+            </div>
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>
