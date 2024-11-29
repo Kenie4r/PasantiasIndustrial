@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Inicio')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubros de empresa</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <div id="content">
+                <div class="container-fluid">
+                    <h1 class="mb-4"
+                        th:text="${#strings.isEmpty(rubro.idRubro) ? 'Crear rubro de empresa' : 'Editar rubro de usuario'}"></h1>
+                    <form
+                        th:action="@{${#strings.isEmpty(rubro.idRubro)} ? '/rubros' : '/rubros/editar/' + ${rubro.idRubro}}"
+                        th:object="${rubro}" method="post">
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <input type="text" id="descripcion" name="descripcion" class="form-control" th:field="*{descripcion}"
+                                required>
+                        </div>
+
+                        <div th:if="${error}">
+                            <p style="color: red;">${error}</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="/rubros" class="btn btn-secondary">Cancelar</a>
+                    </form>
+
+                </div>
+            </div>
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>
