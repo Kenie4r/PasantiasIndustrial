@@ -5,13 +5,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.industrial.pasantias.Model.Materia;
-import com.industrial.pasantias.Servicio.CarreraService; // Servicio para listar carreras
+//import com.industrial.pasantias.Servicio.CarreraService; // Servicio para listar carreras
 import com.industrial.pasantias.Servicio.MateriaService;
 
 @Controller
 @RequestMapping("/materias")
 public class MateriaController {
-
+/*
     private final MateriaService materiaService;
     private final CarreraService carreraService; // Servicio para gestionar carreras
 
@@ -65,5 +65,5 @@ public class MateriaController {
     public String eliminarMateria(@PathVariable Integer id) {
         materiaService.eliminarMateria(id); // Llamar al servicio para eliminar
         return "redirect:/materias"; // Redirigir al listado
-    }
+    }*/
 }
