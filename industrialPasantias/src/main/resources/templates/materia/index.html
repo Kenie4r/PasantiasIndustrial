@@ -37,7 +37,8 @@
                             <tbody>
                                 <tr th:each="materia : ${materia}">
                                     <td th:text="${materia.nombre}"></td>
-                                    <td th:text="${materia.idCarrera}"></td>
+                                   <!--- <td th:text="${materia.idCarrera}"></td>--->
+                                   <td th:text="Medicina"></td>
                                     <td th:text="${materia.estado == 'A' ? 'Activo' : 'Inactivo'}"></td>
                                     <td th:text="${materia.horas}"></td>
                                     <td>
