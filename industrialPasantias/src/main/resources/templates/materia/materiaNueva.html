@@ -19,32 +19,37 @@
             <div id="content">
                 <div class="container-fluid">
                     <!-- Título dinámico basado en el contexto -->
-                    <h1 class="mb-4"
-                        th:text="${materia.idMateria == null ? 'Crear Materia' : 'Editar Materia'}"></h1>
+                    <h1 class="mb-4" th:text="${materia.idMateria == 0 ? 'Crear Materia' : 'Editar Materia'}"></h1>
 
                     <!-- Formulario para crear/editar materia -->
-                    <form th:action="@{${materia.idMateria == 0 ? '/materias/guardar' : '/materias/editar/' + materia.idMateria}}" 
-                    th:object="${materia}" method="post">
-              
+                    <form
+                        th:action="@{${materia.idMateria == 0 ? '/materias/guardar' : '/materias/editar/' + materia.idMateria}}"
+                        th:object="${materia}" method="post">
+
                         <!-- Campo Nombre -->
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" id="nombre" name="nombre" class="form-control" 
-                                   th:field="*{nombre}" required>
+                            <input type="text" id="nombre" name="nombre" class="form-control" th:field="*{nombre}"
+                                required>
                         </div>
 
                         <!-- Campo Carrera -->
                         <div class="mb-3">
-                            <label for="carrera" class="form-label">Carrera</label>
-                            <input type="number" id="carrera" name="carrera" class="form-control" 
-                                   th:field="*{idCarrera}" required>
+                            <label for="Carrera" class="form-label">Carrera</label>
+                            <select id="Carrera" name="idCarrera" class="form-control" th:field="*{idCarrera}" required>
+                                <option value="2" disabled selected>Seleccionar...</option>
+                                <option value="2" th:selected="${materia.idCarrera == 2}">Ingeniería</option>
+                                <option value="2" th:selected="${materia.idCarrera == 2}">Ciencias</option>
+                                <option value="2" th:selected="${materia.idCarrera == 2}">Artes</option>
+                                <option value="2" th:selected="${materia.idCarrera == 2}">Medicina</option>
+                            </select>
                         </div>
+                    
 
                         <!-- Campo Estado -->
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado</label>
-                            <select id="estado" name="estado" class="form-control" 
-                                    th:field="*{estado}" required>
+                            <select id="estado" name="estado" class="form-control" th:field="*{estado}" required>
                                 <option value="" disabled selected>Seleccionar...</option>
                                 <option value="A" th:selected="${materia.estado == 'A'}">Activo</option>
                                 <option value="I" th:selected="${materia.estado == 'I'}">Inactivo</option>
@@ -54,8 +59,8 @@
                         <!-- Campo Horas -->
                         <div class="mb-3">
                             <label for="horas" class="form-label">Horas</label>
-                            <input type="number" id="horas" name="horas" class="form-control" 
-                                   th:field="*{horas}" required>
+                            <input type="number" id="horas" name="horas" class="form-control" th:field="*{horas}"
+                                required>
                         </div>
 
                         <!-- Botones -->

@@ -1,69 +1,61 @@
 package com.industrial.pasantias.Controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.industrial.pasantias.Model.Empresa;
 import com.industrial.pasantias.Model.Materia;
-import com.industrial.pasantias.Servicio.CarreraService; // Servicio para listar carreras
+import com.industrial.pasantias.Servicio.EmpresaService;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import com.industrial.pasantias.Servicio.MateriaService;
 
 @Controller
 @RequestMapping("/materias")
 public class MateriaController {
-
-    private final MateriaService materiaService;
-    private final CarreraService carreraService; // Servicio para gestionar carreras
-
-    // Constructor para inyectar dependencias
-    public MateriaController(MateriaService materiaService, CarreraService carreraService) {
-        this.materiaService = materiaService;
-        this.carreraService = carreraService;
+    private final MateriaService materia;
+    public MateriaController(MateriaService materia){
+        this.materia=materia;
     }
-
-    // Listar materias
     @GetMapping
     public String listarMaterias(Model model) {
-        model.addAttribute("materias", materiaService.listar()); // Lista de materias
-        return "materia/index"; // Vista del listado
+        model.addAttribute("materia", materia.listar());
+        return "materia/index"; // Vista HTML llamada "empresas.html"
     }
-
-    // Mostrar formulario para crear nueva materia
     @GetMapping("/nueva")
-    public String nuevaMateriaForm(Model model) {
-        model.addAttribute("materia", new Materia()); // Objeto vacío para creación
-        model.addAttribute("carreras", carreraService.listarTodas()); // Lista de carreras
-        return "materia/materiaForm"; // Vista del formulario
+    public String nuevaEmpresaForm(Model model) {
+        model.addAttribute("materia", new Materia());
+        return "materia/materiaNueva";
     }
-
-    // Guardar materia (creación)
     @PostMapping("/guardar")
-    public String guardarMateria(@ModelAttribute("materia") Materia materia) {
-        materiaService.crear(materia); // Guardar nueva materia
-        return "redirect:/materias"; // Redirigir al listado
-    }
-
-    // Mostrar formulario para editar materia
-    @GetMapping("/editar/{id}")
-    public String editarMateriaForm(@PathVariable("id") Integer id, Model model) {
-        Materia materia = materiaService.obtenerPorId(id); // Obtener materia por ID
-        model.addAttribute("materia", materia); // Cargar materia existente
-        model.addAttribute("carreras", carreraService.listarTodas()); // Lista de carreras
-        return "materia/materiaForm"; // Reutilizar la misma vista del formulario
-    }
-
-    // Guardar cambios en la materia (edición)
-    @PostMapping("/editar/{id}")
-    public String editarMateria(@PathVariable("id") Integer id, @ModelAttribute Materia materia) {
-        materia.setIdMateria(id); // Asegurar que el ID esté presente
-        materiaService.actualizarMateria(materia); // Actualizar materia existente
-        return "redirect:/materias"; // Redirigir al listado
-    }
-
-    // Eliminar materia
-    @GetMapping("/eliminar/{id}")
-    public String eliminarMateria(@PathVariable Integer id) {
-        materiaService.eliminarMateria(id); // Llamar al servicio para eliminar
-        return "redirect:/materias"; // Redirigir al listado
-    }
+    public String guardarEmpresa(@ModelAttribute("materia") Materia empresa) {
+      
+       materia.crear(empresa);  // Guardar o actualizar
+       return "redirect:/materias";  // Redirigir al listado
+   }
+   @GetMapping("/editar/{id}")
+   public String EditarEmpresaForm(Model model) {
+       model.addAttribute("materia", new Materia());
+       return "materia/materiaNueva";
+   }
+   @PostMapping("/editar")
+   public String editarEmpresa(Materia empresa) {
+       materia.actualizarEmpresa(empresa);
+       return "redirect:/materias"; // Redirige de nuevo a la lista
+   }
+   
+  // Eliminar un usuario
+  @GetMapping("/eliminar/{id}")
+  public String eliminarMateria(@PathVariable Integer id) {
+      materia.eliminarMateria(id);  // Call to the service to delete the materia
+      return "redirect:/materias";  // Redirect to the list of materias
+  }
 }
