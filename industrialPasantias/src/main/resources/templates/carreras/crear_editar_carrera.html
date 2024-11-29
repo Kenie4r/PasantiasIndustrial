@@ -21,6 +21,12 @@
                         th:object="${carrera}" method="post">
 
                         <div class="mb-3">
+                            <label for="codCarrera" class="form-label">Código carrera</label>
+                            <input type="text" id="codCarrera" name="codCarrera" class="form-control"
+                                th:field="*{codCarrera}" required>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripcion</label>
                             <input type="text" id="descripcion" name="descripcion" class="form-control"
                                 th:field="*{descripcion}" required>

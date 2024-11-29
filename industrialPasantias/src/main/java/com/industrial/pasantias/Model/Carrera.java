@@ -42,11 +42,15 @@ public class Carrera {
     @Column(name = "USU_MOD")
     private String usuMod;
 
+    @Column(name = "COD_CARRERA")
+    private Integer codCarrera;
+
     // Constructor con parámetros
-    public Carrera(String descripcion, String estado, LocalDateTime fechaCre, String usuCrea) {
+    public Carrera(String descripcion, String estado, LocalDateTime fechaCre, String usuCrea, Integer codCarrera) {
         this.descripcion = descripcion;
         this.estado = estado;
         this.fechaCre = fechaCre;
         this.usuCrea = usuCrea;
+        this.codCarrera = codCarrera;
     }
 }

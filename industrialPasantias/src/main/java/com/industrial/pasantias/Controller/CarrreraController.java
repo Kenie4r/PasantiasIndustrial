@@ -82,6 +82,7 @@ public class CarrreraController {
             carreraExistente.setDescripcion(carrera.getDescripcion());
             carreraExistente.setFechaMod(carrera.getFechaMod());
             carreraExistente.setUsuMod(carrera.getUsuMod());
+            carreraExistente.setCodCarrera(carrera.getCodCarrera());
 
             carreraService.guardar(carreraExistente);
             redirectAttributes.addFlashAttribute("mensaje", "La carrera se actualizó correctamente.");
