@@ -36,7 +36,7 @@ public class CarrreraController {
         return "carreras/crear_editar_carrera";
     }
 
-    // Guardar carrera (Crear o Editar)
+    // Guardar carrera 
     @PostMapping("/carreras")
     public String guardarCarrera(@ModelAttribute Carrera carrera, RedirectAttributes redirectAttributes) {
         try {
@@ -120,6 +120,7 @@ public class CarrreraController {
                 } else {
                     carrera.setEstado("A");
                 }
+                carrera.setFechaMod(LocalDateTime.now());
                 carreraService.guardar(carrera);
             }
             redirectAttributes.addFlashAttribute("mensaje", "La estado de la carrera se actualizó correctamente.");

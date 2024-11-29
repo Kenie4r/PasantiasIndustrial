@@ -39,7 +39,7 @@ public class UsuarioController {
         return "usuarios/crear_editar_usuario";
     }
 
-    // Guardar usuario (Crear o Editar)
+    // Guardar usuario
     @PostMapping("/usuarios")
     public String guardarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
         try {
@@ -133,6 +133,7 @@ public class UsuarioController {
                 } else {
                     usuario.setEstado("A");
                 }
+                usuario.setFechaMod(LocalDateTime.now());
                 usuarioService.guardar(usuario);
             }
             redirectAttributes.addFlashAttribute("mensaje", "El usuario se actualizó correctamente.");
