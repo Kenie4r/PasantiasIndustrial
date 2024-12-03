@@ -18,8 +18,17 @@ public class Pasantia {
     @Column(name = "ID_PASANTIA")
     private Integer idPasantia;
 
-    @Column(name = "COD_PASANTE", nullable = false)
-    private String codPasante;
+    @Column(name = "ID_CARRERA", nullable = false)
+    private Integer idCarrera;
+
+    @Column(name = "CORRELATIVO", nullable = false)
+    private Integer correlativo;
+
+    @Column(name = "ANIO_ESTUDIANTE", nullable = false)
+    private String anioEstudiante;
+
+    @Column(name = "CARNET", nullable = false)
+    private String carnet;
 
     @Column(name = "ID_PROGRAMA", nullable = false)
     private Integer idPrograma;
