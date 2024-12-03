@@ -52,17 +52,12 @@
 
                         <div class="mb-3">
                             <label for="idRol" class="form-label">Rol</label>
-                            <select id="idRol" name="idRol" class="form-control" required>
-                                <!--
-                                th:field="*{rol.idRol}"
-                                <option value="" disabled th:if="${usuario.rol == null}" selected>Seleccione un rol
+                            <select id="idRol" name="idRol" class="form-control" th:field="*{idRol}" required>
+                                <option value="" disabled selected>Seleccione un rol</option>
+                                <option th:each="rol : ${roles}" th:value="${rol.ID_ROL}" th:text="${rol.DESCRIPCION}">
                                 </option>
-                                <option th:each="rol : ${roles}" th:value="${rol.idRol}" th:text="${rol.nombre}"
-                                    th:selected="${usuario.rol?.idRol == rol.idRol}">
-                                </option>
-                                -->
-                                <option value="1">Administrador</option>
                             </select>
+
                         </div>
 
                         <button type="submit" class="btn btn-success">Guardar</button>

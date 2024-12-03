@@ -48,7 +48,7 @@
                                     <td th:text="${usuario.username}"></td>
                                     <td th:text="${usuario.correo}"></td>
                                     <td th:text="${usuario.estado == 'A' ? 'Activo' : 'Inactivo'}"></td>
-                                    <td th:text="${usuario.idRol}"></td>
+                                    <td th:text="${usuario.idRol.DESCRIPCION}"></td>
                                     <td>
                                         <form th:action="@{/usuarios/cambiarEstado/{id}(id=${usuario.idUsuario})}"
                                             method="post" style="display: inline;">

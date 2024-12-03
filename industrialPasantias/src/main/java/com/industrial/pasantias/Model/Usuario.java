@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "USUARIO")
 public class Usuario {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_USUARIO")
@@ -33,8 +33,9 @@ public class Usuario {
     @Column(name = "CORREO", nullable = false)
     private String correo;
 
-    @Column(name = "ID_ROL", nullable = false)
-    private Long idRol;
+    @ManyToOne
+    @JoinColumn(name = "ID_ROL", referencedColumnName = "ID_ROL", nullable = false)
+    private RolEntity idRol;
 
     @Column(name = "ESTADO", nullable = false)
     private String estado;
@@ -46,7 +47,8 @@ public class Usuario {
     private LocalDateTime fechaMod;
 
     // Constructor con parámetros
-    public Usuario(String nombres, String apellidos, String username, String password, String correo, Long idRol, String estado, LocalDateTime fechaCrea) {
+    public Usuario(String nombres, String apellidos, String username, String password, String correo, RolEntity idRol,
+            String estado, LocalDateTime fechaCrea) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.username = username;

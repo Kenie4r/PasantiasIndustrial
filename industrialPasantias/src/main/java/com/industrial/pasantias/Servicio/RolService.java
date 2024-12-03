@@ -117,4 +117,8 @@ public class RolService {
         }
 
     }
+
+    public List<RolEntity> obtenerRolesActivos() {
+        return repository.encontrarRolesActivos("A"); 
+    }
 }

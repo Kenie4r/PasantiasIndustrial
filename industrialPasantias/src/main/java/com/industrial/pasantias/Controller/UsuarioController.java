@@ -10,7 +10,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.industrial.pasantias.Model.RolEntity;
 import com.industrial.pasantias.Model.Usuario;
+import com.industrial.pasantias.Servicio.RolService;
 import com.industrial.pasantias.Servicio.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +23,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private RolService rolService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -35,6 +41,8 @@ public class UsuarioController {
     // Mostrar formulario para crear un nuevo usuario
     @GetMapping("/usuarios/nuevo")
     public String mostrarFormularioNuevoUsuario(Model model) {
+        List<RolEntity> rolesActivos = rolService.obtenerRolesActivos();
+        model.addAttribute("roles", rolesActivos);
         model.addAttribute("usuario", new Usuario());
         return "usuarios/crear_editar_usuario";
     }
@@ -67,10 +75,12 @@ public class UsuarioController {
     @GetMapping("/usuarios/editar/{id}")
     public String mostrarFormularioModificarUsuario(@PathVariable Integer id, Model model) {
         Usuario usuario = usuarioService.obtenerPorId(id);
-        System.out.println("USUARIO: " + usuario);
         if (usuario == null) {
             return "redirect:/usuarios";
         }
+
+        List<RolEntity> rolesActivos = rolService.obtenerRolesActivos();
+        model.addAttribute("roles", rolesActivos);
         model.addAttribute("usuario", usuario);
         return "usuarios/crear_editar_usuario";
     }
