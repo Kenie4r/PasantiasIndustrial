@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Programas')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programas</title>
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">Programas</h1>
+                    <a th:href="@{/empresaPrograma/nuevo}" class="btn btn-primary mb-3">Nuevo Programa</a>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Responsable</th>
+                                    <th>Área</th>
+                                    <th>Estado</th>
+                                    <th>Empresa</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="programa : ${programas}">
+                                    <td th:text="${programa.nombrePrograma}"></td>
+                                    <td th:text="${programa.nombreResponsable}"></td>
+                                    <td th:text="${programa.areaRealizacion}"></td>
+                                    <td th:text="${programa.estado == 'A' ? 'Activo' : 'Inactivo'}"></td>
+                                    <td th:text="${programa.empresa.nombre}"></td>
+                                    <td>
+                                        <!-- Cambiar Estado -->
+                                        <form th:action="@{/empresaPrograma/cambiarEstado/{id}(id=${programa.idPrograma})}"
+                                            method="post" style="display: inline;">
+                                            <button type="submit"
+                                                style="background: none; border: none; padding: 0; cursor: pointer;">
+                                                <i th:classappend="${programa.estado == 'A' ? 'fas fa-lock-open' : 'fas fa-lock'}"
+                                                    style="color: #085691;"></i>
+                                            </button>
+                                        </form>
+
+                                        <!-- Editar -->
+                                        <a th:href="@{/empresaPrograma/editar/{id}(id=${programa.idPrograma})}">
+                                            <i class="fas fa-edit" style="color: #085691;"></i>
+                                        </a>
+
+                                        <!-- Eliminar -->
+                                        <a th:href="@{/empresaPrograma/eliminar/{id}(id=${programa.idPrograma})}"
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este programa?');">
+                                            <i class="fas fa-trash-alt" style="color: #085691;"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div th:replace="fragments/footer :: footer"></div>
+            <!-- End of Footer -->
+        </div>
+    </div>
+
+    <div th:replace="fragments/userModal :: userModal"></div>
+
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- Core plugin JavaScript -->
+    <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+    <!-- Custom scripts for all pages -->
+    <script th:src="@{/js/sb-admin-2.min.js}"></script>
+
+    <!-- Page level plugins -->
+    <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+    <!-- Page level custom scripts -->
+    <script th:src="@{/js/demo/datatables-demo.js}"></script>
+</body>
+
+</html>

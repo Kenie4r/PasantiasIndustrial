@@ -74,6 +74,9 @@
                                             th:attr="data-id=${empresa.idEmpresa}, data-nombre=${empresa.nombre}">
                                             Eliminar
                                         </button>
+                                        <a class="btn btn-success btn-sm" th:href="@{/empresaPrograma/{id}(id=${empresa.idEmpresa})}">
+                                           Programas
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>

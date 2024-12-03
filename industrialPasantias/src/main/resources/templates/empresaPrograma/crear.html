@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Programa')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Barra de navegación -->
+        <div th:replace="fragments/navbar :: navbar"></div>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Barra superior -->
+            <div th:replace="fragments/topbar :: topbar"></div>
+
+            <div id="content">
+                <div class="container-fluid">
+                    <!-- Título dinámico basado en el contexto -->
+                    <h1 class="mb-4" th:text="${programa.idPrograma == 0 ? 'Crear Programa' : 'Editar Programa'}"></h1>
+
+                    <!-- Formulario para crear/editar programa -->
+                    <form th:action="@{${programa.idPrograma == 0 ? '/empresaPrograma/guardar' : '/empresaPrograma/editar/' + programa.idPrograma}}"
+                        th:object="${programa}" method="post">
+
+                        <!-- Campo Nombre -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" id="nombre" name="nombrePrograma" class="form-control"
+                                th:field="*{nombrePrograma}" required>
+                        </div>
+
+                        <!-- Campo Empresa -->
+                        <div class="mb-3">
+                            <label for="empresa" class="form-label">Empresa</label>
+                            <select id="empresa" name="idEmpresa" class="form-control" th:field="*{empresa.idEmpresa}"
+                                required>
+                                <option value="1" disabled selected>Seleccionar...</option>
+                                <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}"
+                                    th:text="${empresa.nombre}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Campo Estado -->
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select id="estado" name="estado" class="form-control" th:field="*{estado}" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                <option value="A" th:selected="${programa.estado == 'A'}">Activo</option>
+                                <option value="I" th:selected="${programa.estado == 'I'}">Inactivo</option>
+                            </select>
+                        </div>
+
+                        <!-- Campo Nombre Responsable -->
+                        <div class="mb-3">
+                            <label for="nombreResponsable" class="form-label">Nombre Responsable</label>
+                            <input type="text" id="nombreResponsable" name="nombreResponsable" class="form-control"
+                                th:field="*{nombreResponsable}" required>
+                        </div>
+
+                        <!-- Campo Área Realización -->
+                        <div class="mb-3">
+                            <label for="areaRealizacion" class="form-label">Área de Realización</label>
+                            <input type="text" id="areaRealizacion" name="areaRealizacion" class="form-control"
+                                th:field="*{areaRealizacion}" required>
+                        </div>
+
+                        <!-- Campo Otros Detalles -->
+                        <div class="mb-3">
+                            <label for="otrosDetalles" class="form-label">Otros Detalles</label>
+                            <input type="text" id="otrosDetalles" name="otrosDetalles" class="form-control"
+                                th:field="*{otrosDetalles}" required>
+                        </div>
+
+                        <!-- Campo Observaciones -->
+                        <div class="mb-3">
+                            <label for="observaciones" class="form-label">Observaciones</label>
+                            <input type="text" id="observaciones" name="observaciones" class="form-control"
+                                th:field="*{observaciones}">
+                        </div>
+
+                        <!-- Botones -->
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="/empresaPrograma" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Pie de página -->
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+
+    <!-- Modales y scripts -->
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>
