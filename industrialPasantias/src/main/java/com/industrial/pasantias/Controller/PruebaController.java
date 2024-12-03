@@ -6,15 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.industrial.pasantias.Model.RolEntity;
 import com.industrial.pasantias.Servicio.RolService;
-import com.industrial.pasantias.dto.RolDto;
-import com.industrial.pasantias.dto.RolDtoMod;
+
 
 @RestController
 @RequestMapping("/prueba")
@@ -35,6 +32,7 @@ public class PruebaController {
     @Autowired
     private RolService service;
 
+    /** 
     @PostMapping("/crear")
     public RolEntity crearRol(@RequestBody RolDto body){
 
@@ -48,7 +46,11 @@ public class PruebaController {
         return null;
     }
 
-    @PostMapping("/modificar")
+    */
+
+    /*
+     * 
+     *  @PostMapping("/modificar")
     public RolEntity modificarRol(@RequestBody RolDtoMod body){
 
         Optional<RolEntity> rol = service.modificarRol(body);
@@ -60,6 +62,8 @@ public class PruebaController {
 
         return null;
     }
+   
+     */
    
     @DeleteMapping("/eliminar/{id}")
     public RolEntity eliminarRol(@PathVariable int id){

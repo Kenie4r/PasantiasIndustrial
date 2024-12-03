@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Roles')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Barra de navegación -->
+        <div th:replace="fragments/navbar :: navbar"></div>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Barra superior -->
+            <div th:replace="fragments/topbar :: topbar"></div>
+
+            <div id="content">
+                <div class="container-fluid">
+                    <!-- Título dinámico basado en el contexto -->
+                    <h1 class="mb-4" th:text="${rol.ID_ROL == null ? 'Crear Rol' : 'Editar Rol'}"></h1>
+
+                    <!-- Formulario para crear/editar rol -->
+                    <form
+                        th:action="@{${rol.ID_ROL == null ? '/roles/crear' : '/roles/editar/' + rol.ID_ROL}}"
+                        th:object="${rol}" method="post">
+
+                        <!-- Campo DESCRIPCION -->
+                        <div class="mb-3">
+                            <label for="DESCRIPCION" class="form-label">Descripcion</label>
+                            <input type="text" id="DESCRIPCION" name="DESCRIPCION" class="form-control" th:field="*{DESCRIPCION}"
+                                required>
+                        </div>
+
+
+                        <!-- Campo Estado -->
+                        <div class="mb-3">
+                            <label for="ESTADO" class="form-label">Estado</label>
+                            <select id="ESTADO" name="ESTADO" class="form-control" th:field="*{ESTADO}" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                <option value="A" th:selected="${rol.ESTADO == 'A'}">Activo</option>
+                                <option value="I" th:selected="${rol.ESTADO == 'I'}">Inactivo</option>
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="/roles/obtenerTodos" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Pie de página -->
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+
+    <!-- Modales y scripts -->
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>
