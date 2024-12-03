@@ -36,7 +36,7 @@ public class Pasantia {
     @Column(name = "FECHA_INICIO", nullable = false)
     private LocalDateTime fechaInicio;
 
-    @Column(name = "FECHA_FIN", nullable = false)
+    @Column(name = "FECHA_FIN")
     private LocalDateTime fechaFin;
 
     @Column(name = "ESTADO", nullable = false)
