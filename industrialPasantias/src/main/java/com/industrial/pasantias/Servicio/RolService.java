@@ -1,10 +1,13 @@
 package com.industrial.pasantias.Servicio;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.industrial.pasantias.Model.RolEntity;
 import com.industrial.pasantias.Repository.RolRepository;
@@ -37,6 +40,23 @@ public class RolService {
 
     }
 
+    public Optional<List<RolEntity>> obtenerTodos(){
+
+        try {
+
+            List<RolEntity> roles = repository.findAll();
+
+            if(roles == null || roles.isEmpty()){
+                return Optional.empty();
+            }
+
+            return Optional.of(roles);
+
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<RolEntity> obtenerDataModificar(int id) {
 
         try {
@@ -55,14 +75,16 @@ public class RolService {
 
     }
 
-    public Optional<RolEntity> modificarRol(RolDtoMod dto) {
+    public Optional<RolEntity> modificarRol(RolEntity dto) {
 
         RolEntity entity = new RolEntity();
 
-        entity.setID_ROL(dto.getId());
-        entity.setDESCRIPCION(dto.getDescripcion());
-        entity.setESTADO(dto.getEstado());
+        entity.setID_ROL(dto.getID_ROL());
+        entity.setDESCRIPCION(dto.getDESCRIPCION());
+        entity.setESTADO(dto.getESTADO());
         entity.setFECHA_MOD(new Date(System.currentTimeMillis()));
+        entity.setFECHA_CREA(dto.getFECHA_CREA());
+
 
         try {
 
@@ -76,12 +98,12 @@ public class RolService {
 
     }
 
-    public Optional<RolEntity> crearRol(RolDto dto) {
+    public Optional<RolEntity> crearRol(@ModelAttribute RolEntity dto) {
 
         RolEntity entity = new RolEntity();
 
-        entity.setDESCRIPCION(dto.getDescripcion());
-        entity.setESTADO(dto.getEstado());
+        entity.setDESCRIPCION(dto.getDESCRIPCION());
+        entity.setESTADO(dto.getESTADO());
         entity.setFECHA_CREA(new Date(System.currentTimeMillis()));
 
         try {

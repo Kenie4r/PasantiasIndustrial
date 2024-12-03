@@ -2,6 +2,9 @@ package com.industrial.pasantias.Model;
 
 import java.sql.Date;
 
+import org.springframework.boot.context.properties.bind.Name;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +21,7 @@ public class RolEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ID_ROL;
+    private Integer ID_ROL;
 
     private String DESCRIPCION;
 
