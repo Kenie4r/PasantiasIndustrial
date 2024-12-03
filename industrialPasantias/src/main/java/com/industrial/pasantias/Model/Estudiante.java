@@ -15,10 +15,7 @@ import lombok.NoArgsConstructor;
 public class Estudiante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CODIGO_PASANTE")
-    private String codigoPasante;
-    
-    @Column(name = "CARNET", nullable = false)
+    @Column(name = "CARNET")
     private String carnet;
 
     @Column(name = "NOMBRES", nullable = false)
