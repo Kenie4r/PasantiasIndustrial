@@ -33,7 +33,7 @@
 
                         <div class="mb-3">
                             <label for="idCarrera" class="form-label">Carrera *</label>
-                            <select id="idCarrera" name="idCarrera" class="form-control" th:field="*{idCarrera}" required>
+                            <select id="idCarrera" name="idCarrera" class="form-control" th:field="*{carrera.idCarrera}" required>
                                 <option value="0">Seleccionar carrera...</option>
                                 <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
                                 </option>
@@ -49,7 +49,7 @@
 
                         <div class="mb-3">
                             <label for="idPrograma" class="form-label">Programa de empresa *</label>
-                            <select id="idPrograma" name="idPrograma" class="form-control" th:field="*{idPrograma}" required>
+                            <select id="idPrograma" name="idPrograma" class="form-control" th:field="*{programa.idPrograma}" required>
                                 <option value="0">Seleccionar un programa...</option>
                                 <option th:each="programa : ${programas}" th:value="${programa.value}" th:text="${programa.text}">
                                 </option>
