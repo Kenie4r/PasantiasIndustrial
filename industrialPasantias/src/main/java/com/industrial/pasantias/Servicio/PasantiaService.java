@@ -16,4 +16,8 @@ public class PasantiaService {
     public List<Pasantia> obtenerTodos() {
         return pasantiaRepository.findAll();
     }
+
+    public Pasantia guardar(Pasantia pasantia) {
+        return pasantiaRepository.save(pasantia);
+    }
 }
