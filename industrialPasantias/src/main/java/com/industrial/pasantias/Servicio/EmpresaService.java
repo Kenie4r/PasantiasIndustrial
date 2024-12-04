@@ -26,7 +26,7 @@ public class EmpresaService {
             // Actualizar los campos de la empresa
             actual.setNombre(empresa.getNombre());
             actual.setEstado(empresa.getEstado());
-            actual.setIdRubro(empresa.getIdRubro());
+            actual.setRubro(empresa.getRubro());;
             actual.setUbicacion(empresa.getUbicacion());
             actual.setTelefono(empresa.getTelefono());
             actual.setSitioWeb(empresa.getSitioWeb());

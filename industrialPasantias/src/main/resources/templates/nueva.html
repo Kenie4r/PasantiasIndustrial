@@ -21,8 +21,10 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="idRubro" class="form-label">Rubro</label>
-                <input type="number" id="idRubro" name="idRubro" class="form-control" th:field="*{idRubro}" placeholder="ID del rubro" required>
+                <label for="rubro" class="form-label">Rubro</label>
+                <select id="rubro" name="rubro" class="form-select" th:field="*{rubro}" required>
+                    <option th:each="rubro : ${rubro}" th:value="${rubro.idRubro}" th:text="${rubro.descripcion}"></option>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="ubicacion" class="form-label">Ubicación</label>

@@ -47,7 +47,7 @@
                                     <td th:text="${empresa.idEmpresa}"></td>
                                     <td th:text="${empresa.nombre}"></td>
                                     <td th:text="${empresa.estado}"></td>
-                                    <td th:text="${empresa.idRubro}"></td>
+                                    <td th:text="${empresa.rubro.descripcion}"></td>
                                     <td th:text="${empresa.ubicacion}"></td>
                                     <td th:text="${empresa.telefono}"></td>
                                     <td>
@@ -61,7 +61,7 @@
                                             th:attr="data-id=${empresa.idEmpresa}, 
                                                     data-nombre=${empresa.nombre}, 
                                                     data-estado=${empresa.estado}, 
-                                                    data-idrubro=${empresa.idRubro}, 
+                                                    data-idrubro=${empresa.rubro.idRubro}, 
                                                     data-ubicacion=${empresa.ubicacion}, 
                                                     data-telefono=${empresa.telefono}, 
                                                     data-sitioweb=${empresa.sitioWeb}">

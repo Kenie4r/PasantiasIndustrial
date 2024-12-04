@@ -24,9 +24,9 @@ public class Empresa {
     @Column(name = "ESTADO", nullable = false, length = 1)
     private String estado;
 
-    @Column(name = "ID_RUBRO", nullable = false)
-    private int idRubro;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_RUBRO", nullable = false)
+    private Rubro rubro;
     @Column(name = "UBICACION", nullable = true, length = 250)
     private String ubicacion;
 

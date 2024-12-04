@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.industrial.pasantias.Model.Empresa;
 import com.industrial.pasantias.Servicio.EmpresaService;
+import com.industrial.pasantias.Servicio.RubroService;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +22,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/empresas")
 public class EmpresaController {
     private final EmpresaService empresaService;
-
-    public EmpresaController(EmpresaService empresaService) {
+    private final RubroService rubroService;
+    public EmpresaController(EmpresaService empresaService,RubroService rubroService) {
         this.empresaService = empresaService;
+        this.rubroService=rubroService;
     }
 
     @GetMapping
@@ -33,6 +36,7 @@ public class EmpresaController {
     @GetMapping("/nueva")
     public String nuevaEmpresaForm(Model model) {
         model.addAttribute("empresa", new Empresa());
+        model.addAttribute("rubro", rubroService.obtenerTodos());
         return "nueva";
     }
     @PostMapping("/guardar")
