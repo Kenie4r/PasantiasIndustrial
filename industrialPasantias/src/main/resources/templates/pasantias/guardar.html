@@ -48,8 +48,8 @@
                         <div class="mb-3">
                             <label for="idPrograma" class="form-label">Programa de empresa *</label>
                             <select id="idPrograma" name="idPrograma" class="form-control" th:field="*{idPrograma}" required>
-                                <option value="0">Seleccionar...</option>
-                                <option th:each="programa : ${programas}" th:value="${programa.idPrograma}" th:text="${programa.nombrePrograma}">
+                                <option value="0">Seleccionar un programa...</option>
+                                <option th:each="programa : ${programas}" th:value="${programa.value}" th:text="${programa.text}">
                                 </option>
                             </select>
                         </div>
@@ -60,12 +60,17 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="fechaFin" class="form-label">Fecha fin *</label>
+                            <label for="fechaFin" class="form-label">Fecha fin</label>
                             <input type="date" id="fechaFin" name="fechaFin" th:field="*{fechaFin}" class="form-control">
                         </div>
 
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado de la pasantía *</label>
+                            <select id="estado" name="estado" class="form-control" th:field="*{estado}" required>
+                                <option value="0">Seleccionar un estado...</option>
+                                <option th:each="est : ${estados}" th:value="${est.value}" th:text="${est.text}">
+                                </option>
+                            </select>
                         </div>
 
                         <button type="submit" class="btn btn-success">Guardar</button>
