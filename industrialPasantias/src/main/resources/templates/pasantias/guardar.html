@@ -22,16 +22,18 @@
                     <form th:action="${'/pasantias'}" th:object="${pasantia}" method="post">
                         <div class="mb-3">
                             <label class="form-label">Prática profesional N°</label>
-                            <div class="row">
-                                <input type="text" id="num-carrera" name="num-carrera" class="form-control col-3" readonly>
-                                <input type="text" id="correlativo" name="correlativo" th:field="*{correlativo}" class="form-control col-3" readonly>
-                                <input type="text" id="anioEstudiante" name="anioEstudiante" th:field="*{anioEstudiante}" class="form-control col-3" readonly>
+                            <div class="container">
+                                <div class="row">
+                                    <input type="text" id="num-carrera" name="num-carrera" class="form-control col" readonly>
+                                    <input type="text" id="correlativo" name="correlativo" th:field="*{correlativo}" class="form-control col" readonly>
+                                    <input type="text" id="anioEstudiante" name="anioEstudiante" th:field="*{anioEstudiante}" class="form-control col" readonly>
+                                </div>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="idCarrera" class="form-label">Carrera *</label>
-                            <select id="idCarrera" name="idCarrera" class="form-control" th:field="*{idCarrera}" required>
+                            <select id="idCarrera" name="idCarrera" class="form-control" th:field="*{carrera.idCarrera}" required>
                                 <option value="0">Seleccionar carrera...</option>
                                 <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
                                 </option>
@@ -47,7 +49,7 @@
 
                         <div class="mb-3">
                             <label for="idPrograma" class="form-label">Programa de empresa *</label>
-                            <select id="idPrograma" name="idPrograma" class="form-control" th:field="*{idPrograma}" required>
+                            <select id="idPrograma" name="idPrograma" class="form-control" th:field="*{programa.idPrograma}" required>
                                 <option value="0">Seleccionar un programa...</option>
                                 <option th:each="programa : ${programas}" th:value="${programa.value}" th:text="${programa.text}">
                                 </option>
@@ -56,12 +58,12 @@
 
                         <div class="mb-3">
                             <label for="fechaInicio" class="form-label">Fecha inicio *</label>
-                            <input type="date" id="fechaInicio" name="fechaInicio" th:field="*{fechaInicio}" class="form-control" required>
+                            <input type="datetime-local" id="fechaInicio" name="fechaInicio" th:field="*{fechaInicio}" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="fechaFin" class="form-label">Fecha fin</label>
-                            <input type="date" id="fechaFin" name="fechaFin" th:field="*{fechaFin}" class="form-control">
+                            <input type="datetime-local" id="fechaFin" name="fechaFin" th:field="*{fechaFin}" class="form-control">
                         </div>
 
                         <div class="mb-3">
@@ -104,6 +106,47 @@
 
     <!-- Page level custom scripts -->
     <script th:src="@{/js/demo/datatables-demo.js}"></script>
+
+    <!-- Custom Javascript -->
+     <script>
+        $(document).ready(() => {
+            document.querySelector("#idCarrera").addEventListener("change", function(){
+                $.ajax({
+                    url: "/pasantias/obtenerCarrera/" + this.value,
+                    type: "GET",
+                    success: function(data){
+                        document.querySelector("#num-carrera").value = data.codCarrera;
+                    }
+                });
+
+                $.ajax({
+                    url: "/pasantias/obtenerEstudiantesPorCarrera/" + this.value,
+                    type: "GET",
+                    success: function(data){
+                        // LImpiar opciones
+                        document.querySelector("#carnet").innerHTML = '';
+
+                        // Agregar opcion default
+                        let option = new Option('Seleccionar un estudiante...', '0');
+                        document.querySelector("#carnet").add(option);
+
+                        // Agregar opciones
+                        data.forEach((element, index) => {
+                            let valueOption = '['+ element.carnet +'] ' + element.nombres + ' ' + element.apellidos;
+                            let option = new Option(valueOption, element.carnet);
+                            document.querySelector("#carnet").add(option);
+                        });
+                    }
+                });
+            });
+
+            document.querySelector('#carnet').addEventListener('change', function(){
+                let anioEstudiante = '0' + this.value.slice(2,4);
+                document.querySelector('#anioEstudiante').value = anioEstudiante;
+                console.log(anioEstudiante);
+            });
+        });
+     </script>
 </body>
 
 </html>

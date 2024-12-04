@@ -19,6 +19,39 @@
                 <div class="container-fluid">
                     <h1 class="h3 mb-4 text-gray-800">Pasantias</h1>
                     <a href="/pasantias/nuevo" class="btn btn-primary mb-3">Crear Pasantia</a>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Código de la carrera</th>
+                                    <th>Correlativo</th>
+                                    <th>Año del estudiante</th>
+                                    <th>Carnet del estudiante</th>
+                                    <th>Empresa</th>
+                                    <th>Programa</th>
+                                    <th>Estado</th>
+                                    <th>Operaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p : ${pasantias}">
+                                    <td th:text="${p.idPasantia}"></td>
+                                    <td th:text="${p.carrera.codCarrera}"></td>
+                                    <td th:text="${p.correlativo}"></td>
+                                    <td th:text="${p.anioEstudiante}"></td>
+                                    <td th:text="${p.carnet}"></td>
+                                    <td th:text="${p.programa.empresa.nombre}"></td>
+                                    <td th:text="${p.programa.nombrePrograma}"></td>
+                                    <td th:text="${p.estado == 'E' ? 'En Proceso' : 'Finalizado'}"></td>
+                                    <td>
+                                        <!---->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
