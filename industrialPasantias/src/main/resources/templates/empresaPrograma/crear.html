@@ -35,8 +35,10 @@
                         <!-- Campo Tipo Programa -->
                         <div class="mb-3">
                             <label for="tipo" class="form-label">Tipo de Programa</label>
-                            <input type="text" id="tipo" name="tipoPrograma" class="form-control"
-                                th:field="*{tipoPrograma}" required>
+                                <select id="tipo" name="tipoPrograma" class="form-control" th:field="*{tipoPrograma}" required>
+                                    <option value="Empresa" th:selected="${programa.tipoPrograma == 'Empresa'}">Empresa</option>
+                                    <option value="Materia" th:selected="${programa.tipoPrograma == 'Materia'}">Materia</option>
+                                </select>
                         </div>
                         <!-- Campo Fechas -->
                         <div class="mb-3 d-flex align-items-center">

@@ -31,6 +31,7 @@
                                     <th>Responsable</th>
                                     <th>Área</th>
                                     <th>Estado</th>
+                                    <th>Tipo de Programa</th>
                                     <th>Empresa</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -41,6 +42,7 @@
                                     <td th:text="${programa.nombreResponsable}"></td>
                                     <td th:text="${programa.areaRealizacion}"></td>
                                     <td th:text="${programa.estado == 'A' ? 'Activo' : 'Inactivo'}"></td>
+                                    <td th:text="${programa.tipoPrograma}"></td>
                                     <td th:text="${programa.empresa.nombre}"></td>
                                     <td>
                                         <!-- Cambiar Estado -->
