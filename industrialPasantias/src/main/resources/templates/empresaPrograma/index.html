@@ -44,7 +44,8 @@
                                     <td th:text="${programa.empresa.nombre}"></td>
                                     <td>
                                         <!-- Cambiar Estado -->
-                                        <form th:action="@{/empresaPrograma/cambiarEstado/{id}(id=${programa.idPrograma})}"
+                                        <form
+                                            th:action="@{/empresaPrograma/cambiarEstado/{id}(id=${programa.idPrograma})}"
                                             method="post" style="display: inline;">
                                             <button type="submit"
                                                 style="background: none; border: none; padding: 0; cursor: pointer;">
@@ -63,6 +64,7 @@
                                             onclick="return confirm('¿Estás seguro de que deseas eliminar este programa?');">
                                             <i class="fas fa-trash-alt" style="color: #085691;"></i>
                                         </a>
+
                                     </td>
                                 </tr>
                             </tbody>

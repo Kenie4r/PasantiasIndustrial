@@ -22,7 +22,8 @@
                     <h1 class="mb-4" th:text="${programa.idPrograma == 0 ? 'Crear Programa' : 'Editar Programa'}"></h1>
 
                     <!-- Formulario para crear/editar programa -->
-                    <form th:action="@{${programa.idPrograma == 0 ? '/empresaPrograma/guardar' : '/empresaPrograma/editar/' + programa.idPrograma}}"
+                    <form
+                        th:action="@{${programa.idPrograma == 0 ? '/empresaPrograma/guardar' : '/empresaPrograma/editar/' + programa.idPrograma}}"
                         th:object="${programa}" method="post">
 
                         <!-- Campo Nombre -->
@@ -31,7 +32,28 @@
                             <input type="text" id="nombre" name="nombrePrograma" class="form-control"
                                 th:field="*{nombrePrograma}" required>
                         </div>
+                        <!-- Campo Tipo Programa -->
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo de Programa</label>
+                            <input type="text" id="tipo" name="tipoPrograma" class="form-control"
+                                th:field="*{tipoPrograma}" required>
+                        </div>
+                        <!-- Campo Fechas -->
+                        <div class="mb-3 d-flex align-items-center">
+                            <!-- Fecha de Inicio -->
+                            <div class="me-3">
+                                <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+                                <input type="date" id="fechaInicio" name="fechaInicio" class="form-control"
+                                    th:field="*{fechaIni}" required>
+                            </div>
 
+                            <!-- Fecha Final -->
+                            <div>
+                                <label for="fechaFinal" class="form-label">Fecha Final</label>
+                                <input type="date" id="fechaFinal" name="fechaFinal" class="form-control"
+                                    th:field="*{fechaFi}" required>
+                            </div>
+                        </div>
                         <!-- Campo Empresa -->
                         <div class="mb-3">
                             <label for="empresa" class="form-label">Empresa</label>
@@ -40,6 +62,16 @@
                                 <option value="1" disabled selected>Seleccionar...</option>
                                 <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}"
                                     th:text="${empresa.nombre}">
+                                </option>
+                            </select>
+                        </div>
+                        <!-- Campo Empresa -->
+                        <div class="mb-3">
+                            <label for="Materias" class="form-label">Materia</label>
+                            <select id="empresa" name="idMateria" class="form-control" th:field="*{materia.idMateria}"
+                                required>
+                                <option th:each="materia : ${materia}" th:value="${materia.idMateria}"
+                                    th:text="${materia.nombre}">
                                 </option>
                             </select>
                         </div>
@@ -78,8 +110,13 @@
                         <!-- Campo Observaciones -->
                         <div class="mb-3">
                             <label for="observaciones" class="form-label">Observaciones</label>
-                            <input type="text" id="observaciones" name="observaciones" class="form-control"
-                                th:field="*{observaciones}">
+                            <textarea id="observaciones" name="observaciones" class="form-control" rows="3"
+                                th:field="*{observaciones}"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="otrosDetalles" class="form-label">Otros Detalles</label>
+                            <input type="text" id="otrosDetalles" name="otrosDetalles" class="form-control"
+                                th:field="*{otrosDetalles}" required>
                         </div>
 
                         <!-- Botones -->

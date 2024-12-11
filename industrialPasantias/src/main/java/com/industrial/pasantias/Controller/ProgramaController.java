@@ -24,10 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProgramaController {
     private final ProgramaService progama;
     private final EmpresaService empresaService;
-
-    public ProgramaController(ProgramaService progama, EmpresaService empresaService) {
+    private final MateriaService materiaService;
+    public ProgramaController(ProgramaService progama, EmpresaService empresaService,MateriaService materiaService) {
         this.progama = progama;
         this.empresaService = empresaService;
+        this.materiaService=materiaService;
     }
 
     @GetMapping(path ={"", "/"})
@@ -48,7 +49,11 @@ public class ProgramaController {
     @GetMapping("/nuevo")
     public String FormGuardar(Model model) {
         List<Empresa> empresas = empresaService.listarEmpresas();
+        List<Materia> materias = materiaService.listar();
+
         model.addAttribute("empresas", empresas);
+        model.addAttribute("materia", materias);
+        
         model.addAttribute("programa", new EmpresaPrograma());
         return "empresaPrograma/crear";
     }
@@ -59,6 +64,12 @@ public class ProgramaController {
         // Guarda el nuevo programa en la base de datos
         progama.guardar(programa);
         // Redirige al listado de programas
-        return "/empresaPrograma/";
+        return "redirect:/empresaPrograma";
     }
+    @GetMapping("/eliminar/{id}")
+    public String eliminarPrograma(@PathVariable Integer id) {  // Use lowercase 'id'
+        progama.eliminar(id);
+        return "redirect:/empresaPrograma";
+    }
+    
 }

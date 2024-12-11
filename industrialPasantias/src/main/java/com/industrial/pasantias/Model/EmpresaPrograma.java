@@ -1,5 +1,6 @@
 package com.industrial.pasantias.Model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "EMPRESA_PROGRAMA")
+@Table(name = "PROGRAMA")
 public class EmpresaPrograma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +37,19 @@ public class EmpresaPrograma {
     @ManyToOne
     @JoinColumn(name = "ID_EMPRESA", nullable = false)
     private Empresa empresa;
-
+    
+    @ManyToOne
+    @JoinColumn(name = "ID_MATERIA", nullable = false)
+    private Materia materia;
+    @Column(name = "TIPO_PROGRAMA", nullable = false, length = 200)
+    private String tipoPrograma;
     @Column(name = "ESTADO", nullable = false, length = 200)
     private String estado;
+    @Column(name = "FECHA_INI")
+    private LocalDate fechaIni;
+
+    @Column(name = "FECHA_FIN")
+    private LocalDate fechaFi;
     @Column(name = "FECHA_CREA")
     private LocalDateTime fechaCrea;
 
