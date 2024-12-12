@@ -48,25 +48,6 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="idPrograma" class="form-label">Programa de empresa *</label>
-                            <select id="idPrograma" name="idPrograma" class="form-control" th:field="*{programa.idPrograma}" required>
-                                <option value="0">Seleccionar un programa...</option>
-                                <option th:each="programa : ${programas}" th:value="${programa.value}" th:text="${programa.text}">
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="fechaInicio" class="form-label">Fecha inicio *</label>
-                            <input type="datetime-local" id="fechaInicio" name="fechaInicio" th:field="*{fechaInicio}" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="fechaFin" class="form-label">Fecha fin</label>
-                            <input type="datetime-local" id="fechaFin" name="fechaFin" th:field="*{fechaFin}" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
                             <label for="estado" class="form-label">Estado de la pasantía *</label>
                             <select id="estado" name="estado" class="form-control" th:field="*{estado}" required>
                                 <option value="0">Seleccionar un estado...</option>

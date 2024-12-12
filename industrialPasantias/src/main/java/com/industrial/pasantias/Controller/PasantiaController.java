@@ -73,7 +73,6 @@ public class PasantiaController {
         List<Pasantia> pasantias = pasantiaService.obtenerTodos();
         int totalPasantias = pasantias.size();
         pasantia.setCorrelativo(totalPasantias + 1);
-        pasantia.setFechaInicio(LocalDateTime.now());
 
         model.addAttribute("carreras", carreras);
         model.addAttribute("programas", programas);

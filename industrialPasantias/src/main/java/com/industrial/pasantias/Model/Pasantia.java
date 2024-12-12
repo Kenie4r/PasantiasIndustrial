@@ -30,15 +30,6 @@ public class Pasantia {
     @Column(name = "CARNET", nullable = false)
     private String carnet;
 
-    //@Column(name = "ID_PROGRAMA", nullable = false)
-    //private Integer idPrograma;
-
-    @Column(name = "FECHA_INICIO", nullable = false)
-    private LocalDateTime fechaInicio;
-
-    @Column(name = "FECHA_FIN")
-    private LocalDateTime fechaFin;
-
     @Column(name = "ESTADO", nullable = false)
     private String estado;
 
@@ -57,8 +48,4 @@ public class Pasantia {
     @ManyToOne
     @JoinColumn(name = "ID_CARRERA", nullable = false)
     private Carrera carrera;
-
-    @ManyToOne
-    @JoinColumn(name = "ID_PROGRAMA", nullable = false)
-    private EmpresaPrograma programa;
 }
