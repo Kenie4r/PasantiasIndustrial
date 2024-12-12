@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Formulario de Empresa</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet" />
+
+<head th:replace="fragments/header :: header(title = 'Inicio')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empresas</title>
 </head>
 
 <body>
@@ -15,20 +16,23 @@
                 <div class="container-fluid">
                     <h2 th:text="${#strings.isEmpty(empresa.idEmpresa) ? 'Crear Nueva Empresa' : 'Editar Empresa'}">
                     </h2>
+
                     <form th:action="@{/empresas/guardar}" th:object="${empresa}" method="post">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" id="nombre" name="nombre" class="form-control" th:field="*{nombre}"
                                 placeholder="Nombre de la empresa" required>
                         </div>
+
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado</label>
-                            <select id="estado" name="estado" class="form-control" th:field="*{estado}" required>
+                            <select id="estado" name="estado" class="form-select" th:field="*{estado}" required>
                                 <option value="">Seleccione un estado</option>
                                 <option value="A" th:selected="*{estado == 'A'}">Activo</option>
                                 <option value="I" th:selected="*{estado == 'I'}">Inactivo</option>
                             </select>
                         </div>
+
                         <div class="mb-3">
                             <label for="rubro" class="form-label">Rubro</label>
                             <select id="rubro" name="rubro" class="form-control" th:field="*{rubro}" required>
@@ -36,16 +40,19 @@
                                     th:text="${rubro.descripcion}"></option>
                             </select>
                         </div>
+
                         <div class="mb-3">
                             <label for="ubicacion" class="form-label">Ubicación</label>
                             <input type="text" id="ubicacion" name="ubicacion" class="form-control"
                                 th:field="*{ubicacion}" placeholder="Ubicación de la empresa">
                         </div>
+
                         <div class="mb-3">
                             <label for="telefono" class="form-label">Teléfono</label>
                             <input type="text" id="telefono" name="telefono" class="form-control" th:field="*{telefono}"
                                 placeholder="Teléfono de la empresa">
                         </div>
+
                         <div class="mb-3">
                             <label for="sitioWeb" class="form-label">Sitio Web</label>
                             <input type="text" id="sitioWeb" name="sitioWeb" class="form-control" th:field="*{sitioWeb}"
@@ -60,49 +67,18 @@
 
                 </div>
             </div>
-            <div class="mb-3">
-                <label for="estado" class="form-label">Estado</label>
-                <select id="estado" name="estado" class="form-select" th:field="*{estado}" required>
-                    <option value="">Seleccione un estado</option>
-                    <option value="A" th:selected="*{estado == 'A'}">Activo</option>
-                    <option value="I" th:selected="*{estado == 'I'}">Inactivo</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="rubro" class="form-label">Rubro</label>
-                <select id="rubro" name="rubro" class="form-select select2" th:field="*{rubro}" required>
-                    <option th:each="rubro : ${rubro}" th:value="${rubro.idRubro}" th:text="${rubro.descripcion}"></option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="ubicacion" class="form-label">Ubicación</label>
-                <input type="text" id="ubicacion" name="ubicacion" class="form-control" th:field="*{ubicacion}" placeholder="Ubicación de la empresa">
-            </div>
-            <div class="mb-3">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input type="text" id="telefono" name="telefono" class="form-control" th:field="*{telefono}" placeholder="Teléfono de la empresa">
-            </div>
-            <div class="mb-3">
-                <label for="sitioWeb" class="form-label">Sitio Web</label>
-                <input type="text" id="sitioWeb" name="sitioWeb" class="form-control" th:field="*{sitioWeb}" placeholder="Sitio web de la empresa">
-            </div>
-            
-            <div class="mt-3">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <a href="/empresas" class="btn btn-secondary">Cancelar</a>
-            </div>
-        </form>
-    </div>
+        </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.select2').select2({
-                placeholder: "Seleccione una opción",
-                allowClear: true
+        <div th:replace="fragments/userModal :: userModal"></div>
+        <div th:replace="fragments/jsComponents :: jsScripts"></div>
+        <script>
+            $(document).ready(function () {
+                $('.select2').select2({
+                    placeholder: "Seleccione una opción",
+                    allowClear: true
+                });
             });
-        });
-    </script>
+        </script>
 </body>
+
 </html>

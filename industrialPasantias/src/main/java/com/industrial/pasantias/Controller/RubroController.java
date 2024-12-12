@@ -1,6 +1,5 @@
 package com.industrial.pasantias.Controller;
 
-import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/rubros")
@@ -41,10 +40,17 @@ public class RubroController {
     }
 
     @PostMapping
-    public String guardarRubro(@ModelAttribute Rubro rubro) {
-        rubro.setEstado("A");
-        rubro.setFechaCrea(LocalDateTime.now());
-        rubroService.guardar(rubro);
+    public String guardarRubro(@ModelAttribute Rubro rubro, RedirectAttributes redirectAttributes) {
+        try {
+            rubro.setEstado("A");
+            rubro.setFechaCrea(LocalDateTime.now());
+            rubroService.guardar(rubro);
+            redirectAttributes.addFlashAttribute("mensaje", "El rubro de empresa se guardó correctamente.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el rubro de empresa.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+        }
         return "redirect:/rubros";
     }
 
@@ -53,7 +59,7 @@ public class RubroController {
     public String editarRubro(@PathVariable Integer id, Model model) {
         Rubro rubro = rubroService.obtenerPorId(id);
 
-        if(rubro == null) {
+        if (rubro == null) {
             return "redirect:/rubros";
         }
 
@@ -62,45 +68,55 @@ public class RubroController {
     }
 
     @PostMapping("/editar/{id}")
-    public String actualizarRubro(@PathVariable Integer id, @ModelAttribute Rubro rubro) {
+    public String actualizarRubro(@PathVariable Integer id, @ModelAttribute Rubro rubro,
+            RedirectAttributes redirectAttributes) {
         Rubro rubroExiste = rubroService.obtenerPorId(id);
 
-        if(rubroExiste == null) {
+        if (rubroExiste == null) {
             return "redirect:/rubros";
         }
-
-        rubroExiste.setDescripcion(rubro.getDescripcion());
-        rubroExiste.setFechaMod(LocalDateTime.now());
-        rubroService.guardar(rubroExiste);
+        try {
+            rubroExiste.setDescripcion(rubro.getDescripcion());
+            rubroExiste.setFechaMod(LocalDateTime.now());
+            rubroService.guardar(rubroExiste);
+            redirectAttributes.addFlashAttribute("mensaje", "El rubro de empresa se editó correctamente.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al editar el rubro de empresa.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+        }
 
         return "redirect:/rubros";
     }
 
     // Eliminar rubro -----------------------------------------------------
     @GetMapping("/eliminar/{id}")
-    public String eliminarRubro(@PathVariable Integer id) {
+    public String eliminarRubro(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         Rubro rubro = rubroService.obtenerPorId(id);
 
-        if(rubro != null) {
+        if (rubro != null) {
             rubroService.eliminar(id);
         }
-
+        redirectAttributes.addFlashAttribute("mensaje", "El estado del rubro de empresa se eliminó correctamente.");
+        redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         return "redirect:/rubros";
     }
 
     // Cambiar estado del rubro -------------------------------------------
     @GetMapping("/cambiarEstado/{id}")
-    public String cambiarEstado(@PathVariable Integer id) {
+    public String cambiarEstado(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         Rubro rubro = rubroService.obtenerPorId(id);
 
-        if(rubro != null) {
-            if(rubro.getEstado().equals("A")) {
+        if (rubro != null) {
+            if (rubro.getEstado().equals("A")) {
                 rubro.setEstado("I");
             } else {
                 rubro.setEstado("A");
             }
 
             rubroService.guardar(rubro);
+            redirectAttributes.addFlashAttribute("mensaje", "El estado del rubro de empresa se actualizó correctamente.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         }
 
         return "redirect:/rubros";

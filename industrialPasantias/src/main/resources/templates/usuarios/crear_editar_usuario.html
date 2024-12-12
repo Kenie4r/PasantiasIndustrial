@@ -52,11 +52,11 @@
 
                         <div class="mb-3">
                             <label for="idRol" class="form-label">Rol</label>
-                            <select id="idRol" name="idRol" class="form-control" th:field="*{idRol}" required>
+                            <select id="idRol" name="idRol" class="form-control select-2" th:field="*{idRol}" required>
                                 <option value="" disabled selected>Seleccione un rol</option>
                                 <option th:each="rol : ${roles}" th:value="${rol.ID_ROL}" th:text="${rol.DESCRIPCION}">
                                 </option>
-                            </select>
+                            </select>                           
 
                         </div>
 

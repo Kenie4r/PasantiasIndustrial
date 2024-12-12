@@ -123,7 +123,7 @@ public class CarrreraController {
                 carrera.setFechaMod(LocalDateTime.now());
                 carreraService.guardar(carrera);
             }
-            redirectAttributes.addFlashAttribute("mensaje", "La estado de la carrera se actualizó correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje", "El estado de la carrera se actualizó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al actualizar el estado de la carrera.");

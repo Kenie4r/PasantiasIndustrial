@@ -1,6 +1,5 @@
 package com.industrial.pasantias.Controller;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.industrial.pasantias.Model.Parametro;
 import com.industrial.pasantias.Model.RolEntity;
 import com.industrial.pasantias.Servicio.RolService;
 
@@ -77,17 +75,19 @@ public class RolController {
                 rolExistente.setDESCRIPCION(rol.getDESCRIPCION());
                 rolExistente.setESTADO(rol.getESTADO());
 
+                redirectAttributes.addFlashAttribute("mensaje", "El rol se editó correctamente.");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "success");
                 service.modificarRol(rolExistente);
                 return "redirect:/roles/obtenerTodos";
             }
-            redirectAttributes.addFlashAttribute("mensaje", "El rol se edito correctamente.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el rol.");
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al editar el rol.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
         return "redirect:/roles/obtenerTodos";
     }
+
     @GetMapping("/editar/{id}")
     public String editarRolForm(@PathVariable int id, Model model) {
         try {
