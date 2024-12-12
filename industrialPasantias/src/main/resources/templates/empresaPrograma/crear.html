@@ -81,7 +81,7 @@
                         <!-- Campo Estado -->
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado</label>
-                            <select id="estado" name="estado" class="form-control" th:field="*{estado}" required>
+                            <select id="estado" name="estado" class="form-control select-2" th:field="*{estado}" required>
                                 <option value="" disabled selected>Seleccionar...</option>
                                 <option value="A" th:selected="${programa.estado == 'A'}">Activo</option>
                                 <option value="I" th:selected="${programa.estado == 'I'}">Inactivo</option>
