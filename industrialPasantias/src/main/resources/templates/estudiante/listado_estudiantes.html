@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Listado Estudiantes')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>estudiantes</title>
+</head>
+
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">Estudiantes</h1>
+                    <a th:href="@{/estudiantes/nuevo}" class="btn btn-primary mb-3">Crear Estudiantes</a>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Carnet</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Telefono</th>
+                                    <th>Correo</th>
+                                    <th>Hoja de Vida</th>
+                                    <th>Foto URL</th>
+                                    <th>Fecha Crea</th>
+                                    <th>Fecha Mod</th>
+                                    <th>Operaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="estudiantes : ${estudiantes}">
+                                    <td th:text="${estudiantes.carnet}"></td>
+                                
+                                    <td th:text="${estudiantes.NOMBRES}"></td>
+                                    <td th:text="${estudiantes.APELLIDOS}"></td>
+                                    <td th:text="${estudiantes.TELEFONO}"></td>
+
+                                    <td th:text="${estudiantes.CORREO}"></td>
+                                    <td th:text="${estudiantes.HOJA_DE_VIDA}"></td>
+                                    <td th:text="${estudiantes.FOTO_URL}"></td>
+
+                                    <td th:text="${estudiantes.FECHA_CREA}"></td>
+                                    <td th:text="${estudiantes.FECHA_MOD}"></td>
+
+                                    <td>
+                                        <a th:href="@{/estudiantes/editar/{carnet}(carnet=${estudiantes.carnet})}">
+                                            <i class="fas fa-edit" style="color: #085691;"></i></a>
+
+                                        <a th:href="@{/estudiantes/eliminar/{carnet}(carnet=${estudiantes.carnet})}"
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este estudiante?');">
+                                            <i class="fas fa-trash-alt" style="color: #085691;"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div th:replace="fragments/footer :: footer"></div>
+            <!-- End of Footer -->
+        </div>
+    </div>
+
+    <script th:src="@{/js/alertFade.js}"></script>
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>
