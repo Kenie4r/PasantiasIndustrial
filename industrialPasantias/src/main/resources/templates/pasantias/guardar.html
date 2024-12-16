@@ -17,7 +17,7 @@
             <div th:replace="fragments/topbar :: topbar"></div>
             <div id="content">
                 <div class="container-fluid">
-                    <h1 class="mb-4">Nueva Pasantia</h1>
+                    <h1 class="mb-4">Nueva Practica</h1>
 
                     <form th:action="${'/pasantias'}" th:object="${pasantia}" method="post">
                         <div class="mb-3">
@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="estado" class="form-label">Estado de la pasantía *</label>
+                            <label for="estado" class="form-label">Estado de la Práctica *</label>
                             <select id="estado" name="estado" class="form-control" th:field="*{estado}" required>
                                 <option value="0">Seleccionar un estado...</option>
                                 <option th:each="est : ${estados}" th:value="${est.value}" th:text="${est.text}">
