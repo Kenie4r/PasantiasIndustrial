@@ -82,6 +82,10 @@ public class EstudianteService {
         entity.setTELEFONO(dto.getTELEFONO());
         entity.setTELEFONO2(dto.getTELEFONO2());
         entity.setHOJA_DE_VIDA(dto.getHOJA_DE_VIDA());
+        entity.setFOTO_URL(dto.getFOTO_URL());
+        entity.setNOMBRES(dto.getNOMBRES());
+        entity.setID_CARRERA(dto.getID_CARRERA());
+
 
         entity.setFECHA_MOD(new Date(System.currentTimeMillis()));
         entity.setFECHA_CREA(dto.getFECHA_CREA());

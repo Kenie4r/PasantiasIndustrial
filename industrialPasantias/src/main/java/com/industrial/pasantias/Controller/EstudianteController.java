@@ -142,51 +142,11 @@ public class EstudianteController {
                 EstudianteEntity estudianteExistente = optional.orElse(new EstudianteEntity());
 
         
-                DateTimeFormatter format = DateTimeFormatter.ofPattern("MMddyyyyHHmmss");
-
-                String contentTypeCV = hojaDeVida.getContentType();
-                String contentTypeFU = fotoUrl.getContentType();
-                String nameFileCV = "";
-                String nameFileFU = "";
     
                
                 estudianteExistente.setHOJA_DE_VIDA(estudianteExistente.getHOJA_DE_VIDA());
                 estudianteExistente.setFOTO_URL(estudianteExistente.getFOTO_URL());
-                
-                if(contentTypeCV != null && contentTypeFU != null){
-                    String[] contentTypeCVS = contentTypeCV.split("/") ;
-                    String[] contentTypeFUS = contentTypeFU.split("/");
-                    nameFileCV = String.format("%s_CV.%s",format.format(LocalDateTime.now()), contentTypeCVS[1]);
-    
-                    nameFileFU = String.format("%s_FU.%s",format.format(LocalDateTime.now()), contentTypeFUS[1]);
-                }
-    
-                //String nameFileCV = hojaDeVida.getOriginalFilename(); 
-    
-                if (nameFileCV != null && !nameFileCV.isEmpty()) {
-                    String destinyRouteCV = String.format("%s%s%s%s%s",
-                            environment.getProperty("route.destiny.files", String.class),
-                            File.separator,
-                            "CV",
-                            File.separator,
-                            nameFileCV);
-    
-                    hojaDeVida.transferTo(new File(destinyRouteCV));
-    
-                    estudianteExistente.setHOJA_DE_VIDA(destinyRouteCV);
-                }
-    
-                if (nameFileFU != null && !nameFileFU.isEmpty()) {
-                    String destinyRouteFU = String.format("%s%s%s%s%s",
-                            environment.getProperty("route.destiny.files", String.class),
-                            File.separator,
-                            "fotos",
-                            File.separator,
-                            nameFileFU);
-    
-                    fotoUrl.transferTo(new File(destinyRouteFU));
-                    estudianteExistente.setFOTO_URL(destinyRouteFU);
-                }
+            
 
                 System.out.println(estudianteExistente.getFOTO_URL());
                 estudianteExistente.setCarnet(estudiante.getCarnet());
