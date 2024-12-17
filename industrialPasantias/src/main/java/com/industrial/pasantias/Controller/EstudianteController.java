@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ public class EstudianteController {
     private Environment environment;
 
     private static Logger logger = LoggerFactory.getLogger(EstudianteController.class);
+
     @GetMapping("/obtenerTodos")
     public String listarTodos(Model model) {
 
@@ -68,6 +70,42 @@ public class EstudianteController {
             @RequestParam("FotoUrl") MultipartFile fotoUrl, RedirectAttributes redirectAttributes) {
         try {
 
+            HashMap<String, String> rutas = rutasDeDestino(fotoUrl, hojaDeVida);
+
+            estudiante.setFOTO_URL("");
+            estudiante.setHOJA_DE_VIDA("");
+
+            if (rutas.containsKey("rutaFoto")) {
+                estudiante.setFOTO_URL(rutas.get("rutaFoto"));
+            }
+
+            if (rutas.containsKey("rutaCV")) {
+                estudiante.setHOJA_DE_VIDA(rutas.get("rutaCV"));
+            }
+
+            estudiante.setID_CARRERA(1);
+            estudiante.setFECHA_CREA(new Date(System.currentTimeMillis()));
+
+            Optional<EstudianteEntity> response = service.crearEstudiante(estudiante);
+
+            if (!response.isPresent()) {
+                logger.info("No se pudo guardar el estudiante.");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+
+        }
+        return "redirect:/estudiantes/obtenerTodos";
+    }
+
+    public HashMap<String, String> rutasDeDestino(MultipartFile fotoUrl, MultipartFile hojaDeVida) {
+
+        HashMap<String, String> rutas = new HashMap<>();
+
+        try {
+
             DateTimeFormatter format = DateTimeFormatter.ofPattern("MMddyyyyHHmmss");
 
             String contentTypeCV = hojaDeVida.getContentType();
@@ -75,56 +113,58 @@ public class EstudianteController {
             String nameFileCV = "";
             String nameFileFU = "";
 
-            if(contentTypeCV != null && contentTypeFU != null){
-                String[] contentTypeCVS = contentTypeCV.split("/") ;
-                String[] contentTypeFUS = contentTypeFU.split("/");
-                nameFileCV = String.format("%s_CV.%s",format.format(LocalDateTime.now()), contentTypeCVS[1]);
+            System.out.println(contentTypeCV);
+            System.out.println(contentTypeFU);
 
-                nameFileFU = String.format("%s_FU.%s",format.format(LocalDateTime.now()), contentTypeFUS[1]);
+            if (contentTypeCV != null) {
+                String[] contentTypeCVS = contentTypeCV.split("/");
+
+                boolean noFile = (contentTypeCV.equals("application/octet-stream") ? false : true);
+
+                if (noFile) {
+                    nameFileCV = String.format("%s_CV.%s", format.format(LocalDateTime.now()), contentTypeCVS[1]);
+
+                    String destinyRouteCV = String.format("%s%s%s%s%s",
+                            environment.getProperty("route.destiny.files", String.class),
+                            File.separator,
+                            "CV",
+                            File.separator,
+                            nameFileCV);
+
+                    hojaDeVida.transferTo(new File(destinyRouteCV));
+                    rutas.put("rutaCV", destinyRouteCV);
+                }
             }
 
-            //String nameFileCV = hojaDeVida.getOriginalFilename(); 
+            if (contentTypeFU != null) {
 
-            if (nameFileCV != null && !nameFileCV.isEmpty()) {
-                String destinyRouteCV = String.format("%s%s%s%s%s",
-                        environment.getProperty("route.destiny.files", String.class),
-                        File.separator,
-                        "CV",
-                        File.separator,
-                        nameFileCV);
+                boolean noFile = (contentTypeFU.equals("application/octet-stream") ? false : true);
 
-                hojaDeVida.transferTo(new File(destinyRouteCV));
+                if (noFile) {
+                    String[] contentTypeFUS = contentTypeFU.split("/");
 
-                estudiante.setHOJA_DE_VIDA(destinyRouteCV);
+                    nameFileFU = String.format("%s_FU.%s", format.format(LocalDateTime.now()), contentTypeFUS[1]);
+
+                    String destinyRouteFU = String.format("%s%s%s%s%s",
+                            environment.getProperty("route.destiny.files", String.class),
+                            File.separator,
+                            "fotos",
+                            File.separator,
+                            nameFileFU);
+
+                    fotoUrl.transferTo(new File(destinyRouteFU));
+                    rutas.put("rutaFoto", destinyRouteFU);
+                }
+
             }
 
-            if (nameFileFU != null && !nameFileFU.isEmpty()) {
-                String destinyRouteFU = String.format("%s%s%s%s%s",
-                        environment.getProperty("route.destiny.files", String.class),
-                        File.separator,
-                        "fotos",
-                        File.separator,
-                        nameFileFU);
-
-                fotoUrl.transferTo(new File(destinyRouteFU));
-                estudiante.setFOTO_URL(destinyRouteFU);
-            }
-
-            estudiante.setID_CARRERA(1);
-            estudiante.setFECHA_CREA(new Date(System.currentTimeMillis()));
-
-            Optional<EstudianteEntity> response  = service.crearEstudiante(estudiante);
-
-            if(!response.isPresent()){
-                logger.info("No se pudo guardar el estudiante.");
-            }
+            return rutas;
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }finally{
-            
+            logger.error("Error al obtener las rutas de los archivos: {}", e.getMessage());
+            return rutas;
         }
-        return "redirect:/estudiantes/obtenerTodos";
+
     }
 
     @PostMapping("/editar/{carnet}")
@@ -137,21 +177,24 @@ public class EstudianteController {
 
             if (optional.isPresent()) {
 
-                System.out.print("Modificando...");
-            
                 EstudianteEntity estudianteExistente = optional.orElse(new EstudianteEntity());
 
-        
-    
-               
                 estudianteExistente.setHOJA_DE_VIDA(estudianteExistente.getHOJA_DE_VIDA());
                 estudianteExistente.setFOTO_URL(estudianteExistente.getFOTO_URL());
-            
 
-                System.out.println(estudianteExistente.getFOTO_URL());
+                HashMap<String, String> rutas = rutasDeDestino(fotoUrl, hojaDeVida);
+
+                if (rutas.containsKey("rutaFoto")) {
+                    estudianteExistente.setFOTO_URL(rutas.get("rutaFoto"));
+                }
+
+                if (rutas.containsKey("rutaCV")) {
+                    estudianteExistente.setHOJA_DE_VIDA(rutas.get("rutaCV"));
+                }
+
                 estudianteExistente.setCarnet(estudiante.getCarnet());
                 estudianteExistente.setID_CARRERA(1);
-    
+
                 estudianteExistente.setFECHA_CREA(estudianteExistente.getFECHA_CREA());
                 estudianteExistente.setCORREO(estudiante.getCORREO());
                 estudianteExistente.setAPELLIDOS(estudiante.getAPELLIDOS());
