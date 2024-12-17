@@ -1,10 +1,12 @@
 package com.industrial.pasantias.Controller;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,17 +129,69 @@ public class EstudianteController {
 
     @PostMapping("/editar/{carnet}")
     public String editarEstudiante(@PathVariable String carnet, RedirectAttributes redirectAttributes,
-            @ModelAttribute EstudianteEntity estudiante) {
+            @ModelAttribute EstudianteEntity estudiante, @RequestParam("HojaDeVida") MultipartFile hojaDeVida,
+            @RequestParam("FotoUrl") MultipartFile fotoUrl) {
         try {
 
             Optional<EstudianteEntity> optional = service.obtenerDataModificar(carnet);
 
             if (optional.isPresent()) {
 
+                System.out.print("Modificando...");
+            
                 EstudianteEntity estudianteExistente = optional.orElse(new EstudianteEntity());
 
-                estudianteExistente.setID_CARRERA(1);
+        
+                DateTimeFormatter format = DateTimeFormatter.ofPattern("MMddyyyyHHmmss");
 
+                String contentTypeCV = hojaDeVida.getContentType();
+                String contentTypeFU = fotoUrl.getContentType();
+                String nameFileCV = "";
+                String nameFileFU = "";
+    
+               
+                estudianteExistente.setHOJA_DE_VIDA(estudianteExistente.getHOJA_DE_VIDA());
+                estudianteExistente.setFOTO_URL(estudianteExistente.getFOTO_URL());
+                
+                if(contentTypeCV != null && contentTypeFU != null){
+                    String[] contentTypeCVS = contentTypeCV.split("/") ;
+                    String[] contentTypeFUS = contentTypeFU.split("/");
+                    nameFileCV = String.format("%s_CV.%s",format.format(LocalDateTime.now()), contentTypeCVS[1]);
+    
+                    nameFileFU = String.format("%s_FU.%s",format.format(LocalDateTime.now()), contentTypeFUS[1]);
+                }
+    
+                //String nameFileCV = hojaDeVida.getOriginalFilename(); 
+    
+                if (nameFileCV != null && !nameFileCV.isEmpty()) {
+                    String destinyRouteCV = String.format("%s%s%s%s%s",
+                            environment.getProperty("route.destiny.files", String.class),
+                            File.separator,
+                            "CV",
+                            File.separator,
+                            nameFileCV);
+    
+                    hojaDeVida.transferTo(new File(destinyRouteCV));
+    
+                    estudianteExistente.setHOJA_DE_VIDA(destinyRouteCV);
+                }
+    
+                if (nameFileFU != null && !nameFileFU.isEmpty()) {
+                    String destinyRouteFU = String.format("%s%s%s%s%s",
+                            environment.getProperty("route.destiny.files", String.class),
+                            File.separator,
+                            "fotos",
+                            File.separator,
+                            nameFileFU);
+    
+                    fotoUrl.transferTo(new File(destinyRouteFU));
+                    estudianteExistente.setFOTO_URL(destinyRouteFU);
+                }
+
+                System.out.println(estudianteExistente.getFOTO_URL());
+                estudianteExistente.setCarnet(estudiante.getCarnet());
+                estudianteExistente.setID_CARRERA(1);
+    
                 estudianteExistente.setFECHA_CREA(estudianteExistente.getFECHA_CREA());
                 estudianteExistente.setCORREO(estudiante.getCORREO());
                 estudianteExistente.setAPELLIDOS(estudiante.getAPELLIDOS());
@@ -145,13 +199,11 @@ public class EstudianteController {
                 estudianteExistente.setNOMBRES(estudiante.getNOMBRES());
                 estudianteExistente.setTELEFONO(estudiante.getTELEFONO());
                 estudianteExistente.setTELEFONO2(estudiante.getTELEFONO2());
-                estudianteExistente.setHOJA_DE_VIDA(estudiante.getHOJA_DE_VIDA());
-                estudianteExistente.setFOTO_URL(estudiante.getFOTO_URL());
 
-                service.modificarEstudiante(estudiante);
+                service.modificarEstudiante(estudianteExistente);
                 return "redirect:/estudiantes/obtenerTodos";
             }
-            redirectAttributes.addFlashAttribute("mensaje", "El rol se edito correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje", "El estudiante se edito correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el rol.");
