@@ -43,7 +43,7 @@ public class EmpresaController {
      public String guardarEmpresa(@ModelAttribute("empresa") Empresa empresa) {
        
         empresaService.crearEmpresa(empresa);  // Guardar o actualizar
-        return "redirect:/empresas/empresas";  // Redirigir al listado
+        return "redirect:/empresas";  // Redirigir al listado
     }
     @PostMapping("/editar")
     public String editarEmpresa(Empresa empresa) {
