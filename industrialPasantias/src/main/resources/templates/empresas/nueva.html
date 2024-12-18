@@ -35,7 +35,7 @@
 
                         <div class="mb-3">
                             <label for="rubro" class="form-label">Rubro</label>
-                            <select id="rubro" name="rubro" class="form-control" th:field="*{rubro}" required>
+                            <select id="rubro" name="rubro" class="form-control select-2" th:field="*{rubro}" required>
                                 <option th:each="rubro : ${rubro}" th:value="${rubro.idRubro}"
                                     th:text="${rubro.descripcion}"></option>
                             </select>
@@ -69,16 +69,8 @@
             </div>
         </div>
 
-        <div th:replace="fragments/userModal :: userModal"></div>
-        <div th:replace="fragments/jsComponents :: jsScripts"></div>
-        <script>
-            $(document).ready(function () {
-                $('.select2').select2({
-                    placeholder: "Seleccione una opción",
-                    allowClear: true
-                });
-            });
-        </script>
+        <div th:replace="/fragments/userModal :: userModal"></div>
+        <div th:replace="/fragments/jsComponents :: jsScripts"></div>
 </body>
 
 </html>

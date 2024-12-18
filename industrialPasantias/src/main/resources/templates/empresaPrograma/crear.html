@@ -56,12 +56,10 @@
                                     th:field="*{fechaFi}" required>
                             </div>
                         </div>
-                        <!-- Campo Empresa -->
                         <div class="mb-3">
                             <label for="empresa" class="form-label">Empresa</label>
-                            <select id="empresa" name="idEmpresa" class="form-control" th:field="*{empresa.idEmpresa}"
+                            <select id="empresa" name="idEmpresa" class="form-control select-2" th:field="*{empresa.idEmpresa}"
                                 required>
-                                <option value="1" disabled selected>Seleccionar...</option>
                                 <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}"
                                     th:text="${empresa.nombre}">
                                 </option>
@@ -129,13 +127,14 @@
             </div>
 
             <!-- Pie de página -->
-            <div th:replace="fragments/footer :: footer"></div>
+            <div th:replace="~{fragments/footer :: footer}"></div>
         </div>
     </div>
 
     <!-- Modales y scripts -->
-    <div th:replace="fragments/userModal :: userModal"></div>
-    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+    <div th:replace="~{fragments/userModal :: userModal}"></div>
+    <div th:replace="~{fragments/jsComponents :: jsScripts}"></div>
+
 </body>
 
 </html>

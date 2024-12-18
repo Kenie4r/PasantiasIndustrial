@@ -31,7 +31,7 @@ public class EmpresaController {
     @GetMapping
     public String listarEmpresas(Model model) {
         model.addAttribute("empresas", empresaService.listarEmpresas());
-        return "empresas/empresa"; // Vista HTML llamada "empresas.html"
+        return "empresas/empresas"; // Vista HTML llamada "empresas.html"
     }
     @GetMapping("/nueva")
     public String nuevaEmpresaForm(Model model) {
@@ -43,17 +43,17 @@ public class EmpresaController {
      public String guardarEmpresa(@ModelAttribute("empresa") Empresa empresa) {
        
         empresaService.crearEmpresa(empresa);  // Guardar o actualizar
-        return "redirect:/empresas/empresa";  // Redirigir al listado
+        return "redirect:/empresas/empresas";  // Redirigir al listado
     }
     @PostMapping("/editar")
     public String editarEmpresa(Empresa empresa) {
         empresaService.actualizarEmpresa(empresa);
-        return "redirect:/empresas/empresa"; // Redirige de nuevo a la lista
+        return "redirect:/empresas/empresas"; // Redirige de nuevo a la lista
     }
     @PostMapping("/eliminar")
     public String eliminar(@RequestParam("idEmpresa") int idEmpresa) {
         empresaService.eliminarEmpresa(idEmpresa);
-        return "redirect:/empresas/empresa"; // Redirige al listado de empresas
+        return "redirect:/empresas/empresas"; // Redirige al listado de empresas
     }
     
 }
