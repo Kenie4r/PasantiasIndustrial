@@ -68,8 +68,7 @@
                         <!-- Campo Empresa -->
                         <div class="mb-3">
                             <label for="Materias" class="form-label">Materia</label>
-                            <select id="empresa" name="idMateria" class="form-control select-2" th:field="*{materia.idMateria}"
-                                required>
+                            <select id="materia" name="idMateria" class="form-control select-2" th:field="*{materia.idMateria}" required>
                                 <option th:each="materia : ${materia}" th:value="${materia.idMateria}"
                                     th:text="${materia.nombre}">
                                 </option>
