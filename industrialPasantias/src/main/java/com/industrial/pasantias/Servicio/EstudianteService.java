@@ -55,17 +55,12 @@ public class EstudianteService {
     }
 
     public Optional<EstudianteEntity> obtenerDataModificar(String carnet) {
-
         try {
-
             Optional<EstudianteEntity> entidad = repository.findByCarnet(carnet);
-
             if (entidad.isPresent()) {
                 return Optional.of(entidad.get());
             }
-
             return Optional.empty();
-
         } catch (Exception e) {
             return Optional.empty();
         }

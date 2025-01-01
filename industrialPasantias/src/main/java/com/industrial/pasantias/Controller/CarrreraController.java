@@ -43,10 +43,10 @@ public class CarrreraController {
             if (carrera.getIdCarrera() == null) {
                 carrera.setFechaCre(LocalDateTime.now());
                 carrera.setEstado("A");
-                carrera.setUsuCrea("USUARIO");
+                carrera.setUsuCrea("USUARIO"); //PENDIENTE
             } else {
                 carrera.setFechaMod(LocalDateTime.now());
-                carrera.setUsuMod("USUARIO");
+                carrera.setUsuMod("USUARIO"); //PENDIENTE
             }
             carreraService.guardar(carrera);
             redirectAttributes.addFlashAttribute("mensaje", "La carrera se guardó correctamente.");
@@ -81,7 +81,7 @@ public class CarrreraController {
 
             carreraExistente.setDescripcion(carrera.getDescripcion());
             carreraExistente.setFechaMod(carrera.getFechaMod());
-            carreraExistente.setUsuMod(carrera.getUsuMod());
+            carreraExistente.setUsuMod(carrera.getUsuMod()); //PENDIENTE
             carreraExistente.setCodCarrera(carrera.getCodCarrera());
 
             carreraService.guardar(carreraExistente);

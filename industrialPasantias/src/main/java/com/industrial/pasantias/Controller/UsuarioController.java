@@ -34,7 +34,7 @@ public class UsuarioController {
     @GetMapping("/usuarios")
     public String listarUsuarios(Model model) {
         List<Usuario> usuarios = usuarioService.obtenerTodos();
-        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("usuarios", usuarios);        
         return "usuarios/listado_usuarios";
     }
 
@@ -58,7 +58,6 @@ public class UsuarioController {
                 usuario.setFechaCrea(LocalDateTime.now());
                 usuario.setEstado("A");
             } else {
-
                 usuario.setFechaMod(LocalDateTime.now());
             }
             usuarioService.guardar(usuario);

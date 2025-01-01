@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "CARRERA")
+@Table(name = "CARRERA", schema = "dbo")
 public class Carrera {
 
     @Id

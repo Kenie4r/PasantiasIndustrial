@@ -21,6 +21,15 @@
                     <h1 class="h3 mb-4 text-gray-800">Estudiantes</h1>
                     <a th:href="@{/estudiantes/nuevo}" class="btn btn-primary mb-3">Crear Estudiantes</a>
 
+                    <div th:if="${mensaje}"
+                        th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"
+                        role="alert">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
                             <thead>
@@ -40,7 +49,7 @@
                             <tbody>
                                 <tr th:each="estudiantes : ${estudiantes}">
                                     <td th:text="${estudiantes.carnet}"></td>
-                                
+
                                     <td th:text="${estudiantes.NOMBRES}"></td>
                                     <td th:text="${estudiantes.APELLIDOS}"></td>
                                     <td th:text="${estudiantes.TELEFONO}"></td>

@@ -1,7 +1,6 @@
 package com.industrial.pasantias.Servicio;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.industrial.pasantias.Model.RolEntity;
 import com.industrial.pasantias.Repository.RolRepository;
-import com.industrial.pasantias.dto.RolDto;
-import com.industrial.pasantias.dto.RolDtoMod;
 
 @Service
 public class RolService {
@@ -40,13 +37,13 @@ public class RolService {
 
     }
 
-    public Optional<List<RolEntity>> obtenerTodos(){
+    public Optional<List<RolEntity>> obtenerTodos() {
 
         try {
 
             List<RolEntity> roles = repository.findAll();
 
-            if(roles == null || roles.isEmpty()){
+            if (roles == null || roles.isEmpty()) {
                 return Optional.empty();
             }
 
@@ -85,7 +82,6 @@ public class RolService {
         entity.setFECHA_MOD(new Date(System.currentTimeMillis()));
         entity.setFECHA_CREA(dto.getFECHA_CREA());
 
-
         try {
 
             repository.save(entity);
@@ -119,6 +115,6 @@ public class RolService {
     }
 
     public List<RolEntity> obtenerRolesActivos() {
-        return repository.encontrarRolesActivos("A"); 
+        return repository.encontrarRolesActivos("A");
     }
 }

@@ -11,10 +11,12 @@ import com.industrial.pasantias.Model.EmpresaPrograma;
 
 @Repository()
 public interface ProgramaRepository extends JpaRepository<EmpresaPrograma, Integer> {
-   /* @Query("SELECT ep FROM EmpresaPrograma ep WHERE ep.idEmpresa =0")
-    List<EmpresaPrograma> findProgramasByIdEmpresa(@Param("idEmpresa") Integer idEmpresa);*/
+    /*
+     * @Query("SELECT ep FROM EmpresaPrograma ep WHERE ep.idEmpresa =0")
+     * List<EmpresaPrograma> findProgramasByIdEmpresa(@Param("idEmpresa") Integer
+     * idEmpresa);
+     */
     @Query(value = "SELECT * FROM PROGRAMA WHERE ID_EMPRESA = :idEmpresa", nativeQuery = true)
-List<EmpresaPrograma> findProgramasByIdEmpresa(@Param("idEmpresa") Integer idEmpresa);
-
+    List<EmpresaPrograma> findProgramasByIdEmpresa(@Param("idEmpresa") Integer idEmpresa);
 
 }

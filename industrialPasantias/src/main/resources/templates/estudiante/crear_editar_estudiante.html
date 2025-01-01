@@ -9,67 +9,69 @@
 
 <body>
     <div id="wrapper">
-        <!-- Barra de navegación -->
         <div th:replace="fragments/navbar :: navbar"></div>
-
         <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Barra superior -->
             <div th:replace="fragments/topbar :: topbar"></div>
-
             <div id="content">
                 <div class="container-fluid">
-                    <!-- Título dinámico basado en el contexto -->
-                    <h1 class="mb-4" th:text="${estudiante.carnet == null ? 'Crear estudiante' : 'Editar estudiante'}"></h1>
+                    <h1 class="mb-4" th:text="${estudiante.carnet == null ? 'Crear estudiante' : 'Editar estudiante'}">
+                    </h1>
 
-                    <!-- Formulario para crear/editar estudiante -->
                     <form
-                        th:action="@{${estudiante.carnet == null ? '/estudiantes/crear' : '/estudiantes/editar/' + estudiante.carnet}}"
-                        th:object="${estudiante}" method="post"
-                        enctype="multipart/form-data">
+                        th:action="@{${estudiante.carnet == null} ? '/estudiantes/crear' : '/estudiantes/editar/' + estudiante.carnet}"
+                        th:object="${estudiante}" method="post" enctype="multipart/form-data">
 
                         <div class="mb-3">
                             <label for="carnet" class="form-label">Carnet</label>
-                            <input type="text" id="carnet" name="carnet" class="form-control" th:field="*{carnet}" required>
+                            <input type="text" id="carnet" name="carnet" class="form-control" th:field="*{carnet}"
+                                required>
                         </div>
 
                         <div class="mb-3">
                             <label for="NOMBRES" class="form-label">Nombres</label>
-                            <input type="text" id="NOMBRES" name="NOMBRES" class="form-control" th:field="*{NOMBRES}" required>
+                            <input type="text" id="NOMBRES" name="NOMBRES" class="form-control" th:field="*{NOMBRES}"
+                                required>
                         </div>
-                    
+
                         <!-- Campo para APELLIDOS -->
                         <div class="mb-3">
                             <label for="APELLIDOS" class="form-label">Apellidos</label>
-                            <input type="text" id="APELLIDOS" name="APELLIDOS" class="form-control" th:field="*{APELLIDOS}" required>
+                            <input type="text" id="APELLIDOS" name="APELLIDOS" class="form-control"
+                                th:field="*{APELLIDOS}" required>
                         </div>
-                    
+
                         <!-- Campo para TELEFONO -->
                         <div class="mb-3">
                             <label for="TELEFONO" class="form-label">Teléfono</label>
-                            <input type="tel" id="TELEFONO" name="TELEFONO" class="form-control" th:field="*{TELEFONO}" required>
+                            <input type="tel" id="TELEFONO" name="TELEFONO" class="form-control" th:field="*{TELEFONO}"
+                                required>
                         </div>
-                    
+
                         <!-- Campo para TELEFONO2 -->
                         <div class="mb-3">
                             <label for="TELEFONO2" class="form-label">Teléfono Alternativo</label>
-                            <input type="tel" id="TELEFONO2" name="TELEFONO2" class="form-control" th:field="*{TELEFONO2}">
+                            <input type="tel" id="TELEFONO2" name="TELEFONO2" class="form-control"
+                                th:field="*{TELEFONO2}">
                         </div>
-                    
+
                         <!-- Campo para CORREO -->
                         <div class="mb-3">
                             <label for="CORREO" class="form-label">Correo Electrónico</label>
-                            <input type="email" id="CORREO" name="CORREO" class="form-control" th:field="*{CORREO}" required>
+                            <input type="email" id="CORREO" name="CORREO" class="form-control" th:field="*{CORREO}"
+                                required>
                         </div>
-                    
+
 
                         <div class="mb-3">
                             <label for="HojaDeVida">Hoja de Vida</label>
-                            <input type="file" id="HojaDeVida" name="HojaDeVida" class="form-control" accept=".pdf,.doc,.docx">
+                            <input type="file" id="HojaDeVida" name="HojaDeVida" class="form-control"
+                                accept=".pdf,.doc,.docx" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="FotoUrl">Foto Url</label>
-                            <input type="file" id="FotoUrl" name="FotoUrl" class="form-control" accept="image/*" >
+                            <input type="file" id="FotoUrl" name="FotoUrl" class="form-control" accept="image/*"
+                                required>
                         </div>
 
                         <button type="submit" class="btn btn-success">Guardar</button>

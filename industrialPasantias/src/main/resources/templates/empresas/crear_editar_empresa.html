@@ -17,7 +17,9 @@
                     <h2 th:text="${#strings.isEmpty(empresa.idEmpresa) ? 'Crear Nueva Empresa' : 'Editar Empresa'}">
                     </h2>
 
-                    <form th:action="@{/empresas/guardar}" th:object="${empresa}" method="post">
+                    <form
+                        th:action="@{${empresa.idEmpresa == null} ? '/empresas/guardar' : '/empresas/editar/' + ${empresa.idEmpresa}}"
+                        th:object="${empresa}" method="post">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" id="nombre" name="nombre" class="form-control" th:field="*{nombre}"

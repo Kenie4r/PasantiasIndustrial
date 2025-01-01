@@ -20,11 +20,15 @@ public class CarreraService {
         return carreraRepository.findById(id).orElse(null);
     }
 
-    public Carrera guardar(Carrera usuario) {
-        return carreraRepository.save(usuario);
+    public Carrera guardar(Carrera carrera) {
+        return carreraRepository.save(carrera);
     }
 
     public void eliminar(Integer id) {
         carreraRepository.deleteById(id);
+    }
+
+     public List<Carrera> obtenerCarrerasActivas() {
+        return carreraRepository.encontrarCarrerasActivas("A"); 
     }
 }

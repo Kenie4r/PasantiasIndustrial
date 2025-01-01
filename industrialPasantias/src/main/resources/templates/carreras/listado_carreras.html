@@ -31,18 +31,18 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Descripción</th>
-                                    <th>Estado</th>
                                     <th>Código carrera</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>                                    
                                     <th>Operaciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="carrera, iter  : ${carreras}">
                                     <td th:text="${iter.index + 1}"></td>
-                                    <td th:text="${carrera.descripcion}"></td>
-                                    <td th:text="${carrera.estado == 'A' ? 'Activo' : 'Inactivo'}"></td>
                                     <td th:text="${carrera.codCarrera}"></td>
+                                    <td th:text="${carrera.descripcion}"></td>
+                                    <td th:text="${carrera.estado == 'A' ? 'Activo' : 'Inactivo'}"></td>                                    
 
                                     <td>
                                         <form th:action="@{/carreras/cambiarEstado/{id}(id=${carrera.idCarrera})}"

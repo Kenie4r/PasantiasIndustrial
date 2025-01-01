@@ -9,21 +9,15 @@
 
 <body>
     <div id="wrapper">
-        <!-- Barra de navegación -->
         <div th:replace="fragments/navbar :: navbar"></div>
-
         <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Barra superior -->
             <div th:replace="fragments/topbar :: topbar"></div>
-
             <div id="content">
                 <div class="container-fluid">
-                    <!-- Título dinámico basado en el contexto -->
-                    <h1 class="mb-4" th:text="${materia.idMateria == 0 ? 'Crear Materia' : 'Editar Materia'}"></h1>
+                    <h1 class="mb-4" th:text="${materia.idMateria == null ? 'Crear Materia' : 'Editar Materia'}"></h1>
 
-                    <!-- Formulario para crear/editar materia -->
                     <form
-                        th:action="@{${materia.idMateria == 0 ? '/materias/guardar' : '/materias/editar/' + materia.idMateria}}"
+                        th:action="@{${materia.idMateria == null ? '/materias/guardar' : '/materias/editar/' + materia.idMateria}}"
                         th:object="${materia}" method="post">
 
                         <!-- Campo Nombre -->
@@ -35,14 +29,14 @@
 
                         <!-- Campo Carrera -->
                         <div class="mb-3">
-                            <label for="Carrera" class="form-label">Carrera</label>
-                            <select id="Carrera" name="idCarrera" class="form-control select-2" th:field="*{idCarrera}" required>
-
-                                <option value="1" th:selected="${materia.idCarrera == 1}">Ingeniería</option>
-
+                            <label for="carrera" class="form-label">Carrera</label>
+                            <select id="carrera" name="carrera" class="form-control select-2" th:field="*{carrera}" required>
+                                <option value="" disabled selected>Seleccione una carrera</option>
+                                <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${carrera.descripcion}">
+                                </option>
+                                
                             </select>
-                        </div>
-                    
+                        </div>                    
 
                         <!-- Campo Estado -->
                         <div class="mb-3">

@@ -1,8 +1,6 @@
 package com.industrial.pasantias.Model;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "RUBRO_EMPRESA")
 public class Rubro {
 
-    //Atributos
+    // Atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_RUBRO")
@@ -33,7 +31,7 @@ public class Rubro {
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
 
-    //Constructor
+    // Constructor
     public Rubro(String descripcion, String estado, LocalDateTime fechaCrea) {
         this.descripcion = descripcion;
         this.estado = estado;

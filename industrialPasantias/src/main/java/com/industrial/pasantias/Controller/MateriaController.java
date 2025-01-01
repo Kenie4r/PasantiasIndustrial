@@ -1,61 +1,117 @@
 package com.industrial.pasantias.Controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.industrial.pasantias.Model.Empresa;
+import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.Materia;
-import com.industrial.pasantias.Servicio.EmpresaService;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
+import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.MateriaService;
 
 @Controller
 @RequestMapping("/materias")
 public class MateriaController {
-    private final MateriaService materia;
-    public MateriaController(MateriaService materia){
-        this.materia=materia;
+    private final MateriaService materiaService;
+
+    @Autowired
+    private CarreraService carreraService;
+
+    public MateriaController(MateriaService materia) {
+        this.materiaService = materia;
     }
+
+    // Mostrar materias
     @GetMapping
     public String listarMaterias(Model model) {
-        model.addAttribute("materia", materia.listar());
-        return "materia/index"; // Vista HTML llamada "empresas.html"
+        List<Materia> materias = materiaService.listar();
+        model.addAttribute("materias", materias);
+        return "materia/index";
     }
+
+    // Mostrar form nueva materia
     @GetMapping("/nueva")
-    public String nuevaEmpresaForm(Model model) {
+    public String nuevaMateriaForm(Model model) {
+        List<Carrera> carrerasActivas = carreraService.obtenerCarrerasActivas();
         model.addAttribute("materia", new Materia());
-        return "materia/materiaNueva";
+        model.addAttribute("carreras", carrerasActivas);
+        return "materia/crear_editar_materia";
     }
+
+    // Guardar materia
     @PostMapping("/guardar")
-    public String guardarEmpresa(@ModelAttribute("materia") Materia empresa) {
-      
-       materia.crear(empresa);  // Guardar o actualizar
-       return "redirect:/materias";  // Redirigir al listado
-   }
-   @GetMapping("/editar/{id}")
-   public String EditarEmpresaForm(Model model) {
-       model.addAttribute("materia", new Materia());
-       return "materia/materiaNueva";
-   }
-   @PostMapping("/editar")
-   public String editarEmpresa(Materia empresa) {
-       materia.actualizarEmpresa(empresa);
-       return "redirect:/materias"; // Redirige de nuevo a la lista
-   }
-   
-  // Eliminar un usuario
-  @GetMapping("/eliminar/{id}")
-  public String eliminarMateria(@PathVariable Integer id) {
-      materia.eliminarMateria(id);  // Call to the service to delete the materia
-      return "redirect:/materias";  // Redirect to the list of materias
-  }
+    public String guardarMateria(@ModelAttribute Materia materia, RedirectAttributes redirectAttributes) {
+        try {
+            materiaService.guardar(materia);
+            redirectAttributes.addFlashAttribute("mensaje", "La materia se guardó correctamente.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar la materia.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+        }
+        return "redirect:/materias";
+    }
+
+    // Mostrar form editar materia
+    @GetMapping("/editar/{id}")
+    public String EditarMateriaForm(@PathVariable Integer id, Model model) {
+        Materia materia = materiaService.obtenerPorId(id);
+        if (materia == null) {
+            return "redirect:/materias";
+        }
+
+        List<Carrera> carrerasActivas = carreraService.obtenerCarrerasActivas();
+        model.addAttribute("materia", materia);
+        model.addAttribute("carreras", carrerasActivas);
+        return "materia/crear_editar_materia";
+    }
+
+    // Editar materia
+    @PostMapping("/editar/{id}")
+    public String editarMateria(@PathVariable Integer id, @ModelAttribute Materia materia,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Materia materiaExistente = materiaService.obtenerPorId(id);
+            if (materia == null) {
+                return "redirect:/materias";
+            }
+            System.out.println("materia:" + materia);
+            materiaExistente.setNombre(materia.getNombre());
+            materiaExistente.setCarrera(materia.getCarrera());
+            materiaExistente.setEstado(materia.getEstado());
+            materiaExistente.setHoras(materia.getHoras());
+
+            materiaService.guardar(materiaExistente);
+            redirectAttributes.addFlashAttribute("mensaje", "La materia se actualizó correctamente.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al actualizar la materia.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+        }
+        return "redirect:/materias";
+    }
+
+    // Eliminar materia
+    @GetMapping("/eliminar/{id}")
+    public String eliminarMateria(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            materiaService.eliminarMateria(id);
+            redirectAttributes.addFlashAttribute("mensaje", "La materia se eliminó correctamente.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al eliminar la materia.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+        }
+        return "redirect:/materias";
+    }
 }
