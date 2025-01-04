@@ -33,7 +33,7 @@
 
                         <div class="mb-3">
                             <label for="idCarrera" class="form-label">Carrera *</label>
-                            <select id="idCarrera" name="idCarrera" class="form-control select-2" th:field="*{carrera.idCarrera}" required>
+                            <select id="idCarrera" name="idCarrera" class="form-control" th:field="*{carrera.idCarrera}" required>
                                 <option value="0">Seleccionar carrera...</option>
                                 <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
                                 </option>
@@ -77,7 +77,7 @@
     <!-- Custom Javascript -->
      <script>
         $(document).ready(() => {
-            document.querySelector("#idCarrera").addEventListener("change", function(){
+            $('#idCarrera').on("change", function(){
                 $.ajax({
                     url: "/pasantias/obtenerCarrera/" + this.value,
                     type: "GET",
