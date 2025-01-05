@@ -19,6 +19,10 @@ public class PasantiaService {
         return pasantiaRepository.findAll();
     }
 
+    public Pasantia obtenerPorIdPasantia(int id) {
+        return pasantiaRepository.findByIdPasantia(id);
+    }
+
     public Pasantia guardar(Pasantia pasantia) {
         return pasantiaRepository.save(pasantia);
     }

@@ -46,7 +46,7 @@
                                     <td th:text="${p.estudiante.APELLIDOS}"></td>
                                     <td th:text="${#strings.equals(p.estado, 'E')} ? 'En Proceso' : 'Finalizado'"></td>
                                     <td>
-                                        <!---->
+                                        <a th:href="@{/pasantias/proyectos/{id}(id=${p.idPasantia})}" class="btn btn-info mb-3">Ver proyectos</a>
                                     </td>
                                 </tr>
                             </tbody>

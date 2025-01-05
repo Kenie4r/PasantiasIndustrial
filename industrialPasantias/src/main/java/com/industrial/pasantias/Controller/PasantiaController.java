@@ -102,6 +102,14 @@ public class PasantiaController {
         }
     }
 
+    // Proyectos -----------------------------------------------------------
+    @GetMapping("/proyectos/{id}")
+    public String listarProyectos(@PathVariable Integer id, Model model) {
+        Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(id);
+        model.addAttribute("pasantia", pasantia);
+        return "pasantias/proyectos";
+    }
+
     // Endpoint
     @GetMapping("/obtenerCarrera/{id}")
     public ResponseEntity<?> obtenerCarrera(@PathVariable Integer id) {

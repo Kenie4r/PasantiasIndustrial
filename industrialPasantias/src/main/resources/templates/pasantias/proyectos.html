@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Inicio')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet" type="text/css">
+    <title>Pasantias</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <div id="content">
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">Proyectos de práctica profesional</h1>
+                    
+                    <div class="form-group">
+                        <p>Código de práctica profesional</p>
+                        <p th:text="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <p>Información de estudiante</p>
+                        <p th:text="${pasantia.estudiante.NOMBRES}"></p>
+                        <p th:text="${pasantia.estudiante.APELLIDOS}"></p>
+                        <p th:text="${pasantia.carrera.descripcion}"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <p>Estado de la pasantía</p>
+                        <p th:text="${pasantia.estado}"></p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <!---->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+    <div th:replace="fragments/userModal :: userModal"></div>
+    
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>
