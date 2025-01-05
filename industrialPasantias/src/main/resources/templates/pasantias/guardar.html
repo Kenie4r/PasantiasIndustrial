@@ -42,14 +42,14 @@
 
                         <div class="mb-3">
                             <label for="carnet" class="form-label">Estudiante *</label>
-                            <select id="carnet" name="carnet" class="form-control" th:field="*{carnet}" required>
+                            <select id="carnet" name="carnet" class="form-control select-2" th:field="*{estudiante.carnet}" required>
                                 <option value="0">Seleccionar...</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado de la Práctica *</label>
-                            <select id="estado" name="estado" class="form-control" th:field="*{estado}" required>
+                            <select id="estado" name="estado" class="form-control select-2" th:field="*{estado}" required>
                                 <option value="0">Seleccionar un estado...</option>
                                 <option th:each="est : ${estados}" th:value="${est.value}" th:text="${est.text}">
                                 </option>
@@ -78,6 +78,7 @@
      <script>
         $(document).ready(() => {
             $('#idCarrera').on("change", function(){
+                // Obtener codigo de la carrera
                 $.ajax({
                     url: "/pasantias/obtenerCarrera/" + this.value,
                     type: "GET",
@@ -86,6 +87,16 @@
                     }
                 });
 
+                // Obtener correlativo de la carrera
+                $.ajax({
+                    url: "/pasantias/obtenerCorrelativoPorCarrera/" + this.value,
+                    type: "GET",
+                    success: function(data){
+                        document.querySelector("#correlativo").value = data;
+                    }
+                });
+
+                // Obtener estudiantes de la carrera
                 $.ajax({
                     url: "/pasantias/obtenerEstudiantesPorCarrera/" + this.value,
                     type: "GET",
@@ -107,10 +118,9 @@
                 });
             });
 
-            document.querySelector('#carnet').addEventListener('change', function(){
+            $('#carnet').on('change', function(){
                 let anioEstudiante = '0' + this.value.slice(2,4);
                 document.querySelector('#anioEstudiante').value = anioEstudiante;
-                console.log(anioEstudiante);
             });
         });
      </script>

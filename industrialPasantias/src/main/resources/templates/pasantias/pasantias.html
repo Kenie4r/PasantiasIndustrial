@@ -25,12 +25,12 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Código de la carrera</th>
+                                    <th>Código carrera</th>
                                     <th>Correlativo</th>
-                                    <th>Año del estudiante</th>
-                                    <th>Carnet del estudiante</th>
-                                    <th>Empresa</th>
-                                    <th>Programa</th>
+                                    <th>Año estudiante</th>
+                                    <th>Carnet estudiante</th>
+                                    <th>Nombres estudiante</th>
+                                    <th>Apellidos estudiantes</th>
                                     <th>Estado</th>
                                     <th>Operaciones</th>
                                 </tr>
@@ -41,9 +41,9 @@
                                     <td th:text="${p.carrera.codCarrera}"></td>
                                     <td th:text="${p.correlativo}"></td>
                                     <td th:text="${p.anioEstudiante}"></td>
-                                    <td th:text="${p.carnet}"></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td th:text="${p.estudiante.carnet}"></td>
+                                    <td th:text="${p.estudiante.NOMBRES}"></td>
+                                    <td th:text="${p.estudiante.APELLIDOS}"></td>
                                     <td th:text="${p.estado == 'E' ? 'En Proceso' : 'Finalizado'}"></td>
                                     <td>
                                         <!---->
