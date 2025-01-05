@@ -61,6 +61,15 @@
                                 required>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="carrera" class="form-label">Seleccione una carrera.</label>
+                            <select class="form-select" name="carrera" id="carrera" th:field="*{ID_CARRERA}">
+                                <option th:each="carrera : ${carreras}" 
+                                th:text="${carrera.descripcion}"
+                                th:value="${carrera.idCarrera}" 
+                                ></option>
+                            </select>
+                          </div>
 
                         <div class="mb-3">
                             <label for="HojaDeVida">Hoja de Vida</label>
