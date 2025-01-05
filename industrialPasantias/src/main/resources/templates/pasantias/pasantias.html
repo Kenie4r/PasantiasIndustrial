@@ -44,7 +44,7 @@
                                     <td th:text="${p.estudiante.carnet}"></td>
                                     <td th:text="${p.estudiante.NOMBRES}"></td>
                                     <td th:text="${p.estudiante.APELLIDOS}"></td>
-                                    <td th:text="${p.estado == 'E' ? 'En Proceso' : 'Finalizado'}"></td>
+                                    <td th:text="${#strings.equals(p.estado, 'E')} ? 'En Proceso' : 'Finalizado'"></td>
                                     <td>
                                         <!---->
                                     </td>
