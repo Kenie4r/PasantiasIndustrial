@@ -39,6 +39,7 @@
                                     <th>Apellidos</th>
                                     <th>Telefono</th>
                                     <th>Correo</th>
+                                    <th>Carrera</th>
                                     <th>Hoja de Vida</th>
                                     <th>Foto URL</th>
                                     <th>Fecha Crea</th>
@@ -49,15 +50,13 @@
                             <tbody>
                                 <tr th:each="estudiantes : ${estudiantes}">
                                     <td th:text="${estudiantes.carnet}"></td>
-
                                     <td th:text="${estudiantes.NOMBRES}"></td>
                                     <td th:text="${estudiantes.APELLIDOS}"></td>
                                     <td th:text="${estudiantes.TELEFONO}"></td>
-
                                     <td th:text="${estudiantes.CORREO}"></td>
+                                    <td th:text="${estudiantes.Carrera.descripcion}"></td>
                                     <td th:text="${estudiantes.HOJA_DE_VIDA}"></td>
                                     <td th:text="${estudiantes.FOTO_URL}"></td>
-
                                     <td th:text="${estudiantes.FECHA_CREA}"></td>
                                     <td th:text="${estudiantes.FECHA_MOD}"></td>
 

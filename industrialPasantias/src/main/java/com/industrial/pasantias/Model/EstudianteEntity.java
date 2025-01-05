@@ -5,6 +5,8 @@ import java.sql.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +33,9 @@ public class EstudianteEntity {
 
     private String HOJA_DE_VIDA;
 
-    private int ID_CARRERA;
+    @ManyToOne
+    @JoinColumn(name = "ID_CARRERA", referencedColumnName = "ID_CARRERA")
+    private Carrera Carrera;
 
     private String FOTO_URL;
 
