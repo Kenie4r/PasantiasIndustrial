@@ -1,35 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PP_UDB_F1_01" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9dfeb747-af47-4b61-9889-81e90992aac9">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ppudbf101" pageWidth="612" pageHeight="792" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="9dfeb747-af47-4b61-9889-81e90992aac9">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MSSQL_PASANTIAS_INDUSTRIAL"/>
-	<property name="com.jaspersoft.studio.data.sql.tables">
-		<![CDATA[IkNBUlJFUkEiICwzNjQsMzY2LDVmNzQ0MTgzLTg3OGUtNDRhMi1iZDkyLThjNjZmNTE5ZTg0NDsi
-UEFTQU5USUEiICw1NDMsMzM5LDk1MDlkZTBiLTczMzYtNDk1ZC1iNjdkLTJiMjQ3ZThmYzQ5NTsi
-RU1QUkVTQSIgLDE1LDU0Nyw2NjA1ZjllMS1iNmQ1LTRjNGYtYWZlNi02OTIzNjIxMGY4NzI7IkVT
-VFVESUFOVEUiICwzNjQsMTUsZGY0ZmEzMmYtOWI5Mi00Y2M4LTg0YjctOTc4Mjg5NGFjZjMyOyJQ
-QVNBTlRJQV9QUk9HUkFNQSIgLDM2NCw2MzgsNGViYWRmYmMtY2NkNi00NGE1LWI5MWYtNTQ3ZGUz
-N2M0YThjOyJQUk9HUkFNQSIgLDE2Nyw0ODEsOTZkYjg5YzQtNmMwYS00ZGJiLWFiMzMtMDNhMDQ1
-ZGIyNGMzOw==]]>
-	</property>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<parameter name="ID_PASANTIA" class="java.lang.String"/>
 	<parameter name="ID_CARRERA" class="java.lang.String"/>
 	<parameter name="CARNET" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT pa."CARNET" AS CARNET,
+		<![CDATA[
+SELECT pa."CARNET" AS CARNET,
 	CONCAT( e.NOMBRES,' ',e.APELLIDOS) AS NOMBRE,
 	e."TELEFONO",
 	e."TELEFONO2",
 	e."CORREO",
-	CONCAT( '[',c.ID_CARRERA,']',c.DESCRIPCION) AS NOMBRE_CARRERA,
+	CONCAT( '[',c.COD_CARRERA,']',c.DESCRIPCION) AS NOMBRE_CARRERA,
 	pa."ANIO_ESTUDIANTE",
 	(SELECT COUNT( 1)
 FROM "MATERIA"
 WHERE 
 	 "MATERIA"."ID_CARRERA" = '1' ) AS MATERIAS_CUR,
 	0 AS UVA,
-	em."NOMBRE",
+	em."NOMBRE" as NOMBRE_EMPRESA,
 	em."UBICACION",
-	em."TELEFONO",
+	em."TELEFONO" AS TEL_EMPRESA,
 	em."SITIO_WEB",
 	pr."NOMBRE_PROGRAMA",
 	pr."NOMBRE_RESPONSABLE",
@@ -54,8 +48,8 @@ FROM "PASANTIA" pa
 	 em."ID_EMPRESA" = pr."ID_EMPRESA") 
 WHERE 
 	 pa."CARNET" =  $P{CARNET} 
-	 AND pa."CORRELATIVO" =  $P{ID_PASANTIA} 
-	 AND pa."ID_CARRERA" =  $P{ID_CARRERA} ]]>
+	 AND pa."ID_PASANTIA" =  $P{ID_PASANTIA} 
+	 AND pa."ID_CARRERA" =  $P{ID_CARRERA}]]>
 	</queryString>
 	<field name="CARNET" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="CARNET"/>
@@ -93,17 +87,17 @@ WHERE
 		<property name="com.jaspersoft.studio.field.name" value="UVA"/>
 		<property name="com.jaspersoft.studio.field.label" value="UVA"/>
 	</field>
-	<field name="COLUMN_10" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="NOMBRE"/>
-		<property name="com.jaspersoft.studio.field.label" value="NOMBRE"/>
+	<field name="NOMBRE_EMPRESA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="NOMBRE_EMPRESA"/>
+		<property name="com.jaspersoft.studio.field.label" value="NOMBRE_EMPRESA"/>
 	</field>
 	<field name="UBICACION" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="UBICACION"/>
 		<property name="com.jaspersoft.studio.field.label" value="UBICACION"/>
 	</field>
-	<field name="COLUMN_12" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="TELEFONO"/>
-		<property name="com.jaspersoft.studio.field.label" value="TELEFONO"/>
+	<field name="TEL_EMPRESA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="TEL_EMPRESA"/>
+		<property name="com.jaspersoft.studio.field.label" value="TEL_EMPRESA"/>
 	</field>
 	<field name="SITIO_WEB" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="SITIO_WEB"/>
@@ -325,7 +319,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{CARNET}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="121" width="181" height="39" uuid="613c615a-ffcb-4c33-8ea2-ab2dd8b4f095">
+				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="121" width="181" height="39" uuid="613c615a-ffcb-4c33-8ea2-ab2dd8b4f095">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -339,23 +333,8 @@ WHERE
 				</textElement>
 				<text><![CDATA[Nombre del Estudiante:]]></text>
 			</staticText>
-			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="181" y="121" width="229" height="39" uuid="2101b48b-f241-4e9d-b346-7cd088867593">
-					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="rtf">
-					<paragraph leftIndent="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="410" y="121" width="161" height="39" uuid="5851d251-1c9e-46d8-b00a-c8d7884fb27e">
+				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="410" y="121" width="161" height="39" uuid="5851d251-1c9e-46d8-b00a-c8d7884fb27e">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -572,7 +551,7 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_10}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{NOMBRE_EMPRESA}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="280" y="350" width="291" height="20" uuid="7db60223-7cce-4987-b5d0-e70d4c027511">
@@ -623,7 +602,7 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_12}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{TEL_EMPRESA}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="280" y="401" width="69" height="20" uuid="fd537096-5304-4f51-abe9-492005f4ba41">
@@ -797,6 +776,21 @@ WHERE
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Alumno(a)]]></text>
 			</staticText>
+			<textField textAdjust="ScaleFont">
+				<reportElement positionType="Float" x="181" y="121" width="229" height="39" uuid="f14ad052-922d-4b3b-a227-e198299d2695">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
