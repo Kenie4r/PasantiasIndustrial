@@ -144,7 +144,8 @@ public class EstudianteController {
                             nameFileCV);
 
                     hojaDeVida.transferTo(new File(destinyRouteCV));
-                    rutas.put("rutaCV", destinyRouteCV);
+                    //rutas.put("rutaCV", destinyRouteCV);
+                    rutas.put("rutaCV", nameFileCV);
                 }
             }
 
@@ -165,7 +166,8 @@ public class EstudianteController {
                             nameFileFU);
 
                     fotoUrl.transferTo(new File(destinyRouteFU));
-                    rutas.put("rutaFoto", destinyRouteFU);
+                    //rutas.put("rutaFoto", destinyRouteFU);
+                    rutas.put("rutaFoto", nameFileFU);
                 }
             }
             return rutas;
