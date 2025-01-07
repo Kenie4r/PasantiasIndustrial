@@ -110,7 +110,7 @@ public class PasantiaController {
         return "pasantias/proyectos";
     }
 
-    // Proyecto nuevo ------------------------------------------------------
+    // Crear proyecto ------------------------------------------------------
     @GetMapping("/proyectos/nuevo/{idPasantia}")
     public String nuevoProyecto(@PathVariable Integer idPasantia, Model model) {
         //
@@ -138,15 +138,47 @@ public class PasantiaController {
             pasantiaPrograma.setFechaCrea(LocalDateTime.now());
             pasantiaPrograma.setUsuCrea("test");
 
-            
-
+            System.out.println("---------------------------------------");
+            System.out.println('/' + pasantiaPrograma.getEstado() + '/');
+            System.out.println("---------------------------------------");
             pasantiaProgramaService.guardar(pasantiaPrograma);
             return "redirect:/pasantias/proyectos/" + pasantiaPrograma.getId().getPasantia().getIdPasantia();
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             System.out.println(pasantiaPrograma);
+
+            //
+            Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(pasantiaPrograma.getId().getPasantia().getIdPasantia());
+            List<EmpresaPrograma> empresasProgramas = programaService.ObternerTodo();
+            
+            // Estados
+            List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
+
+            model.addAttribute("proyecto", pasantiaPrograma);
+            model.addAttribute("pasantia", pasantia);
+            model.addAttribute("empresasProgramas", empresasProgramas);
+            model.addAttribute("estados", estados);
             return "pasantias/proyectoGuardar";
         }
+    }
+
+    // Editar proyecto ------------------------------------------------------
+    @GetMapping("/proyectos/editar/pasantia/{idPasantia}/programa/{idPrograma}")
+    public String editarProyecto(@PathVariable Integer idPasantia, @PathVariable Integer idPrograma, Model model) {
+        //
+        Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(idPasantia);
+        List<EmpresaPrograma> empresasProgramas = programaService.ObternerTodo();
+        //
+        Optional<PasantiaPrograma> pasantiaPrograma = pasantiaProgramaService.obtenerPorIdPasantiaPrograma(idPasantia, idPrograma);
+        
+        // Estados
+        List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
+
+        model.addAttribute("proyecto", pasantiaPrograma);
+        model.addAttribute("pasantia", pasantia);
+        model.addAttribute("empresasProgramas", empresasProgramas);
+        model.addAttribute("estados", estados);
+        return "pasantias/proyectoGuardar";
     }
 
     // Endpoint
