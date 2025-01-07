@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
+import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EstudianteService;
 
 @Controller
@@ -33,6 +35,9 @@ public class EstudianteController {
 
     @Autowired
     private EstudianteService service;
+
+    @Autowired
+    private CarreraService carreraService;
 
     @Autowired
     private Environment environment;
@@ -45,6 +50,7 @@ public class EstudianteController {
 
         if (roles.isPresent()) {
             model.addAttribute("estudiantes", roles.orElse(new ArrayList<>()));
+
         }
 
         if (!roles.isPresent()) {
@@ -56,14 +62,27 @@ public class EstudianteController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioEstudiante(Model model) {
+
+        List<Carrera> carreras = carreraService.obtenerCarrerasActivas();
+
         model.addAttribute("estudiante", new EstudianteEntity());
+
+        if (carreras != null) {
+            model.addAttribute("carreras", carreras);
+        }
+
+        if (carreras == null) {
+            model.addAttribute("carreras", new Carrera());
+        }
+
         return "estudiante/crear_editar_estudiante";
     }
 
     @PostMapping("/crear")
     public String guardarEstudiante(@ModelAttribute EstudianteEntity estudiante,
             @RequestParam("HojaDeVida") MultipartFile hojaDeVida,
-            @RequestParam("FotoUrl") MultipartFile fotoUrl, RedirectAttributes redirectAttributes) {
+            @RequestParam("FotoUrl") MultipartFile fotoUrl, RedirectAttributes redirectAttributes,
+            @RequestParam("carrera") Integer CarreraValue) {
         try {
 
             HashMap<String, String> rutas = rutasDeDestino(fotoUrl, hojaDeVida);
@@ -78,8 +97,12 @@ public class EstudianteController {
                 estudiante.setHOJA_DE_VIDA(rutas.get("rutaCV"));
             }
 
-            estudiante.setID_CARRERA(1); //PENDIENTE
             estudiante.setFECHA_CREA(new Date(System.currentTimeMillis()));
+            Carrera carrera = new Carrera();
+
+            carrera.setIdCarrera(CarreraValue);
+            estudiante.setCarrera(carrera);
+
             Optional<EstudianteEntity> response = service.crearEstudiante(estudiante);
             if (!response.isPresent()) {
                 logger.info("No se pudo guardar el estudiante.");
@@ -156,7 +179,8 @@ public class EstudianteController {
     @PostMapping("/editar/{carnet}")
     public String editarEstudiante(@PathVariable String carnet, RedirectAttributes redirectAttributes,
             @ModelAttribute EstudianteEntity estudiante, @RequestParam("HojaDeVida") MultipartFile hojaDeVida,
-            @RequestParam("FotoUrl") MultipartFile fotoUrl) {
+            @RequestParam("FotoUrl") MultipartFile fotoUrl,
+            @RequestParam("carrera") Integer CarreraValue) {
         try {
             Optional<EstudianteEntity> optional = service.obtenerDataModificar(carnet);
             if (optional.isPresent()) {
@@ -175,8 +199,10 @@ public class EstudianteController {
                     estudianteExistente.setHOJA_DE_VIDA(rutas.get("rutaCV"));
                 }
 
+                Carrera carrera = new Carrera();
+                carrera.setIdCarrera(CarreraValue);
                 estudianteExistente.setCarnet(estudiante.getCarnet());
-                estudianteExistente.setID_CARRERA(1); //PENDIENTE
+                estudianteExistente.setCarrera(carrera); // PENDIENTE
                 estudianteExistente.setFECHA_CREA(estudianteExistente.getFECHA_CREA());
                 estudianteExistente.setCORREO(estudiante.getCORREO());
                 estudianteExistente.setAPELLIDOS(estudiante.getAPELLIDOS());
@@ -188,7 +214,7 @@ public class EstudianteController {
                 service.modificarEstudiante(estudianteExistente);
                 redirectAttributes.addFlashAttribute("mensaje", "El estudiante se editó correctamente.");
                 redirectAttributes.addFlashAttribute("tipoMensaje", "success");
-            }else{
+            } else {
                 System.out.println("NO HAY OPCIONAL");
             }
         } catch (Exception e) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ppudbf101" pageWidth="612" pageHeight="792" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="9dfeb747-af47-4b61-9889-81e90992aac9">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PPUDBF" pageWidth="612" pageHeight="792" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="9dfeb747-af47-4b61-9889-81e90992aac9">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MSSQL_PASANTIAS_INDUSTRIAL"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
@@ -8,8 +8,7 @@
 	<parameter name="ID_CARRERA" class="java.lang.String"/>
 	<parameter name="CARNET" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[
-SELECT pa."CARNET" AS CARNET,
+		<![CDATA[SELECT pa."CARNET" AS CARNET,
 	CONCAT( e.NOMBRES,' ',e.APELLIDOS) AS NOMBRE,
 	e."TELEFONO",
 	e."TELEFONO2",
@@ -145,7 +144,7 @@ WHERE
 			</staticText>
 			<staticText>
 				<reportElement positionType="Float" x="217" y="0" width="120" height="30" uuid="3a1be6cd-3b58-4e61-9e63-15132587f8e6"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Práctica Profesional No.]]></text>
 			</staticText>
 			<staticText>
@@ -750,7 +749,7 @@ WHERE
 			<textField>
 				<reportElement positionType="Float" x="0" y="601" width="571" height="30" uuid="15f15609-b5a4-4c9e-9e36-22d3d547b82a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["San Salvador, " +DATEFORMAT(new Date(), "dd/MM/yyyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA["San Salvador, "  + new SimpleDateFormat( "dd/MM/yyyy" ).format(new Date())]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="20" y="660" width="187" height="31" uuid="2b5e35d0-f2f5-4a63-9c11-505b92b113f1"/>

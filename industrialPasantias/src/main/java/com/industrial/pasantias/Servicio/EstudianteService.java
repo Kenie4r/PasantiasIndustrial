@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.industrial.pasantias.Model.EstudianteEntity;
-
 import com.industrial.pasantias.Repository.EstudianteRepository;
 
 @Service
@@ -81,7 +80,7 @@ public class EstudianteService {
         entity.setHOJA_DE_VIDA(dto.getHOJA_DE_VIDA());
         entity.setFOTO_URL(dto.getFOTO_URL());
         entity.setNOMBRES(dto.getNOMBRES());
-        entity.setID_CARRERA(dto.getID_CARRERA());
+        entity.setCarrera(dto.getCarrera());
 
 
         entity.setFECHA_MOD(new Date(System.currentTimeMillis()));
