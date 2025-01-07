@@ -17,34 +17,33 @@
             <div th:replace="fragments/topbar :: topbar"></div>
             <div id="content">
                 <div class="container-fluid">
-                    <h1 class="mb-4">Nueva Practica</h1>
+                    <h1 class="mb-4">Nuevo proyecto</h1>
 
-                    <form th:action="${'/pasantias'}" th:object="${pasantia}" method="post">
+                    <form th:action="${'/pasantias/proyectos'}" th:object="${proyecto}" method="post">
+
                         <div class="mb-3">
-                            <label class="form-label">Prática profesional N°</label>
-                            <div class="container">
-                                <div class="row">
-                                    <input type="text" id="num-carrera" name="num-carrera" class="form-control col" readonly>
-                                    <input type="text" id="correlativo" name="correlativo" th:field="*{correlativo}" class="form-control col" readonly>
-                                    <input type="text" id="anioEstudiante" name="anioEstudiante" th:field="*{anioEstudiante}" class="form-control col" readonly>
-                                </div>
-                            </div>
+                            <label for="codPasantia" class="form-label">Practica profesional *</label>
+                            <input type="text" name="codPasantia" id="codPasantia" class="form-control" th:value="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}" readonly>
+                            <input type="hidden" name="idPasantia" id="idPasantia" th:field="*{id.pasantia.idPasantia}">
                         </div>
 
                         <div class="mb-3">
-                            <label for="idCarrera" class="form-label">Carrera *</label>
-                            <select id="idCarrera" name="idCarrera" class="form-control select-2" th:field="*{carrera.idCarrera}" required>
-                                <option value="0">Seleccionar carrera...</option>
-                                <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
+                            <label for="idPrograma" class="form-label">Programa *</label>
+                            <select id="idPrograma" name="idPrograma" class="form-control select-2" th:field="*{id.programa.idPrograma}" required>
+                                <option value="0">Seleccionar programa...</option>
+                                <option th:each="programa : ${empresasProgramas}" th:value="${programa.idPrograma}" th:text="${'[' + programa.empresa.nombre +'] ' + programa.nombrePrograma}">
                                 </option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="carnet" class="form-label">Estudiante *</label>
-                            <select id="carnet" name="carnet" class="form-control select-2" th:field="*{estudiante.carnet}" required>
-                                <option value="0">Seleccionar...</option>
-                            </select>
+                            <label for="materiasCursadasCantidad" class="form-label">Cantidad de materias cursadas *</label>
+                            <input type="number" name="materiasCursadasCantidad" id="materiasCursadasCantidad" th:field="*{materiasCursadasCantidad}" min="0" step="1" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="materiasCursadasUv" class="form-label">UV de materias cursadas *</label>
+                            <input type="number" name="materiasCursadasUv" id="materiasCursadasUv" th:field="*{materiasCursadasUv}" min="0" step="1" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
@@ -57,7 +56,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-success">Guardar</button>
-                        <a href="/pasantias" class="btn btn-secondary">Cancelar</a>
+                        <a th:href="@{/pasantias/proyectos/{id}(id=${pasantia.idPasantia})}" class="btn btn-secondary">Cancelar</a>
                     </form>
                 </div>
             </div>

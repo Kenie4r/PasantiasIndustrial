@@ -1,6 +1,8 @@
 package com.industrial.pasantias.Servicio;
 
+import java.lang.StackWalker.Option;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +80,7 @@ public class EstudianteService {
         entity.setHOJA_DE_VIDA(dto.getHOJA_DE_VIDA());
         entity.setFOTO_URL(dto.getFOTO_URL());
         entity.setNOMBRES(dto.getNOMBRES());
-        entity.setID_CARRERA(dto.getID_CARRERA());
+        entity.setCarrera(dto.getCarrera());
 
 
         entity.setFECHA_MOD(new Date(System.currentTimeMillis()));
@@ -116,5 +118,9 @@ public class EstudianteService {
             return Optional.empty();
         }
 
+    }
+
+    public List<EstudianteEntity> obtenerPorIdCarrera(int id) {
+        return repository.encontrarPorCarrera(id);
     }
 }

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Inicio')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet" type="text/css">
+    <title>Pasantias</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <div id="content">
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">Proyectos de práctica profesional #<span th:text="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}"></span></h1>
+                    <a th:href="@{/pasantias/proyectos/nuevo/{idPasantia}(idPasantia = ${pasantia.idPasantia})}" class="btn btn-primary mb-3">Agregar proyecto</a>
+                    <a id="practica-cambiar-estado" th:attr="data-id-pasantia=${pasantia.idPasantia}, data-estado-pasantia=${pasantia.estado}" class="btn btn-success mb-3">Cambiar estado</a>
+                    <a href="/pasantias" class="btn btn-secondary mb-3">Regresar</a>
+
+                    <div class="row m-3">
+                        <div class="col-sm-4">
+                            <p class="font-weight-bold">Carnet del estudiante:</p>
+                            <p th:text="${pasantia.estudiante.carnet}"></p>
+                        </div>
+    
+                        <div class="col-sm-4">
+                            <p class="font-weight-bold">Nombres del estudiante:</p>
+                            <p th:text="${pasantia.estudiante.NOMBRES}"></p>
+                        </div>
+    
+                        <div class="col-sm-4">
+                            <p class="font-weight-bold">Apellidos del estudiante:</p>
+                            <p th:text="${pasantia.estudiante.APELLIDOS}"></p>
+                        </div>
+    
+                        <div class="col-sm-4">
+                            <p class="font-weight-bold">Carrera del estudiante:</p>
+                            <p th:text="${pasantia.carrera.descripcion}"></p>
+                        </div>
+    
+                        <div class="col-sm-4">
+                            <p class="font-weight-bold">Estado de la práctica profesional:</p>
+                            <p th:text="${pasantia.estado == 'E'} ? 'En Proceso' : 'Finalizado'"></p>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Nombre programa</th>
+                                    <th>Materias cursadas</th>
+                                    <th>UV obtenidos</th>
+                                    <th>Estado</th>
+                                    <th>Operaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p : ${programas}">
+                                    <td th:text="${p.id.programa.empresa.nombre}"></td>
+                                    <td th:text="${p.id.programa.nombrePrograma}"></td>
+                                    <td th:text="${p.materiasCursadasCantidad}"></td>
+                                    <td th:text="${p.materiasCursadasUv}"></td>
+                                    <td th:text="${p.estado == 'E'} ? 'En Proceso' : 'Finalizado'"></td>
+                                    <td>
+                                        <a th:href="@{/pasantias/proyectos/editar/pasantia/{idPasantia}/programa/{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idPrograma = ${p.id.programa.idPrograma})}" class="btn btn-success mb-3">Editar</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+    <div th:replace="fragments/userModal :: userModal"></div>
+    
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+
+    <!-- Custom Javascript -->
+    <script>
+        $(document).ready(function() {
+            $('#practica-cambiar-estado').on("click", function(){
+                Swal.fire({
+                    title: "¿Cambiar el estado de la práctica profesional?",
+                    //html: "<p></p>",
+                    icon: "question",
+                    confirmButtonText: "Aceptar",
+                    showCancelButton: true,
+                    cancelButtonText: "Cancelar",
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        let idPasantia = $(this).data('id-pasantia');
+                        let estadoPasantia = $(this).data('estado-pasantia');
+
+                        $.ajax({
+                            url: "/pasantias/cambiarEstadoPractica",
+                            contentType: "application/json",
+                            dataType: "json",
+                            type: "POST",
+                            data: JSON.stringify({
+                                idPasantia: parseInt(idPasantia),
+                                //estadoOriginal: estadoPasantia
+                            }),
+                            success: function(data){
+                                if(data){
+                                    Swal.fire({
+                                        title: "Estado cambiado",
+                                        icon: "success",
+                                        confirmButtonText: "Aceptar"
+                                    }).then((result) => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: "Error al cambiar el estado",
+                                        icon: "error",
+                                        confirmButtonText: "Aceptar"
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

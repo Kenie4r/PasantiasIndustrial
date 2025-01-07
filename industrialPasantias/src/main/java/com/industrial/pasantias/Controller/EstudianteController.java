@@ -48,11 +48,8 @@ public class EstudianteController {
 
         Optional<List<EstudianteEntity>> roles = service.obtenerTodos();
 
-        
-
         if (roles.isPresent()) {
             model.addAttribute("estudiantes", roles.orElse(new ArrayList<>()));
-
 
         }
 
@@ -84,7 +81,8 @@ public class EstudianteController {
     @PostMapping("/crear")
     public String guardarEstudiante(@ModelAttribute EstudianteEntity estudiante,
             @RequestParam("HojaDeVida") MultipartFile hojaDeVida,
-            @RequestParam("FotoUrl") MultipartFile fotoUrl, RedirectAttributes redirectAttributes) {
+            @RequestParam("FotoUrl") MultipartFile fotoUrl, RedirectAttributes redirectAttributes,
+            @RequestParam("carrera") Integer CarreraValue) {
         try {
 
             HashMap<String, String> rutas = rutasDeDestino(fotoUrl, hojaDeVida);
@@ -100,6 +98,11 @@ public class EstudianteController {
             }
 
             estudiante.setFECHA_CREA(new Date(System.currentTimeMillis()));
+            Carrera carrera = new Carrera();
+
+            carrera.setIdCarrera(CarreraValue);
+            estudiante.setCarrera(carrera);
+
             Optional<EstudianteEntity> response = service.crearEstudiante(estudiante);
             if (!response.isPresent()) {
                 logger.info("No se pudo guardar el estudiante.");
@@ -141,7 +144,8 @@ public class EstudianteController {
                             nameFileCV);
 
                     hojaDeVida.transferTo(new File(destinyRouteCV));
-                    rutas.put("rutaCV", destinyRouteCV);
+                    //rutas.put("rutaCV", destinyRouteCV);
+                    rutas.put("rutaCV", nameFileCV);
                 }
             }
 
@@ -162,7 +166,8 @@ public class EstudianteController {
                             nameFileFU);
 
                     fotoUrl.transferTo(new File(destinyRouteFU));
-                    rutas.put("rutaFoto", destinyRouteFU);
+                    //rutas.put("rutaFoto", destinyRouteFU);
+                    rutas.put("rutaFoto", nameFileFU);
                 }
             }
             return rutas;
@@ -176,7 +181,8 @@ public class EstudianteController {
     @PostMapping("/editar/{carnet}")
     public String editarEstudiante(@PathVariable String carnet, RedirectAttributes redirectAttributes,
             @ModelAttribute EstudianteEntity estudiante, @RequestParam("HojaDeVida") MultipartFile hojaDeVida,
-            @RequestParam("FotoUrl") MultipartFile fotoUrl) {
+            @RequestParam("FotoUrl") MultipartFile fotoUrl,
+            @RequestParam("carrera") Integer CarreraValue) {
         try {
             Optional<EstudianteEntity> optional = service.obtenerDataModificar(carnet);
             if (optional.isPresent()) {
@@ -195,8 +201,10 @@ public class EstudianteController {
                     estudianteExistente.setHOJA_DE_VIDA(rutas.get("rutaCV"));
                 }
 
+                Carrera carrera = new Carrera();
+                carrera.setIdCarrera(CarreraValue);
                 estudianteExistente.setCarnet(estudiante.getCarnet());
-                estudianteExistente.setID_CARRERA(1); // PENDIENTE
+                estudianteExistente.setCarrera(carrera); // PENDIENTE
                 estudianteExistente.setFECHA_CREA(estudianteExistente.getFECHA_CREA());
                 estudianteExistente.setCORREO(estudiante.getCORREO());
                 estudianteExistente.setAPELLIDOS(estudiante.getAPELLIDOS());

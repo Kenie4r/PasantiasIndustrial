@@ -50,8 +50,11 @@
                                     <td th:text="${empresa.ubicacion}"></td>
                                     <td th:text="${empresa.telefono}"></td>
                                     <td>
-                                        <a th:href="'http://' + ${empresa.sitioWeb}" th:text="${empresa.sitioWeb}"
-                                            target="_blank"></a>
+                                        <span th:if="${!#strings.isEmpty(empresa.sitioWeb)}">
+                                            <a th:href="'http://' + ${empresa.sitioWeb}" th:text="${empresa.sitioWeb}"
+                                                target="_blank"></a>
+                                        </span>
+                                        <span th:if="${#strings.isEmpty(empresa.sitioWeb)}" th:text="'-'"></span>
                                     </td>
                                     <td>
                                         <a th:href="@{/empresas/editar/{id}(id=${empresa.idEmpresa})}">
@@ -60,9 +63,8 @@
                                         <a th:href="@{/empresas/eliminar/{id}(id=${empresa.idEmpresa})}"
                                             onclick="return confirm('¿Estás seguro de que deseas eliminar esta empresa?');">
                                             <i class="fas fa-trash-alt" style="color: #085691;"></i></a>
-                                        <a class="btn btn-success btn-sm"
-                                            th:href="@{/empresaPrograma/{id}(id=${empresa.idEmpresa})}">
-                                            Programas
+                                        <a th:href="@{/programas/empresa/{id}(id=${empresa.idEmpresa})}">
+                                            <i class="fas fa-binoculars" style="color: #085691;"></i></a>
                                         </a>
                                     </td>
                                 </tr>

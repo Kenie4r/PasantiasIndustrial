@@ -1,11 +1,22 @@
 package com.industrial.pasantias.Servicio;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.industrial.pasantias.Model.RolEntity;
 import com.industrial.pasantias.Model.Usuario;
 import com.industrial.pasantias.Repository.UsuarioRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -28,4 +39,5 @@ public class UsuarioService {
     public void eliminar(Integer id) {
         usuarioRepository.deleteById(id);
     }
+
 }

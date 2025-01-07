@@ -22,15 +22,17 @@
                             </div>
                             <div class="card-body">
                                 <div>
-                                    <label for="tipos">Reporte</label>
-                                    <select name="tipos" id="Nreportes" class="form-control" >
-                                        <option value="">---Seleccione tipos----</option>
+                                    <label for="tipos">Formulario a generar</label>
+                                    <select name="tipos" id="Nreportes" class="form-control select-2" th:field="${reporte}"  >
+                                        <option value="">Seleccione un formulario...</option>
                                         <option value="PPUDBF101" >PP-UDB-FI-01</option>
+
+                                        <option value="PPUDBF102" >PP-UDB-FI-02</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="idpasantia">
-                                        Codigo de pasantia:
+                                        Número de pasantia:
                                     </label>
                                     <input type="text" id="idpasantia" class="form-control"/>
                                 </div>
@@ -74,15 +76,15 @@
                             <div class="collapse show" id="collapseCardExample">
                                 <div class="card-body">
                                     <div>
-                                        <label for="tipos">Reporte</label>
-                                        <select name="tipos" id="Nreportes2" class="form-control" >
-                                            <option>---Seleccione tipos----</option>
+                                        <label for="tipos">Formulario a generar</label>
+                                        <select name="tipos" id="Nreportes2" class="form-control select-2" th:field="${reporte2}"   >
+                                            <option value="">Seleccione un formulario...</option>
                                             <option value="PPUDBF101" >PP-UDB-FI-01</option>
                                         </select>
                                     </div>
                                     <div>
                                         <label for="idpasantia2">
-                                            Codigo de pasantia:
+                                            Número de pasantia:
                                         </label>
                                         <input type="text" id="idpasantia2" class="form-control"/>
                                     </div>
