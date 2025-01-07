@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.industrial.pasantias.Model.Empresa;
@@ -33,12 +34,24 @@ public class ProgramaController {
     }
 
     // Mostrar programas
-    @GetMapping(path = { "", "/" })
-    public String listarProgramas(Model model) {
-        List<EmpresaPrograma> programas = programaService.ObternerTodo();
-        model.addAttribute("programas", programas);
-        return "empresaPrograma/index";
+   @GetMapping(path = { "", "/" })
+public String listarProgramas(@RequestParam(value = "idEmpresa", required = false) Integer idEmpresa, Model model) {
+    List<Empresa> empresas = empresaService.listarEmpresas(); // Listado de empresas para el select
+    List<EmpresaPrograma> programas;
+
+    if (idEmpresa != null) {
+        // Filtrar programas por la empresa seleccionada
+        programas = programaService.obtenerPorIdEmpresa(idEmpresa);
+        model.addAttribute("idEmpresa", idEmpresa); // Preseleccionar empresa en el select
+    } else {
+        // Mostrar todos los programas si no hay filtro
+        programas = programaService.ObternerTodo();
     }
+
+    model.addAttribute("empresas", empresas);
+    model.addAttribute("programas", programas);
+    return "empresaPrograma/index";
+}
 
     // Mostrar programa por id
     @GetMapping("/{id}")
@@ -74,7 +87,7 @@ public class ProgramaController {
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
 
-        return "redirect:/empresaPrograma";
+        return "empresaPrograma/index";
     }
 
     // Mostrar formulario para editar el programa
@@ -84,7 +97,7 @@ public class ProgramaController {
 
         EmpresaPrograma empresaPrograma = programaService.obtenerPorId(id);
         if (empresaPrograma == null) {
-            return "redirect:/empresaPrograma";
+            return "empresaPrograma/index";
         }
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
