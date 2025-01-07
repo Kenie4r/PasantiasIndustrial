@@ -19,7 +19,7 @@
                 <div class="container-fluid">
                     <h1 class="h3 mb-4 text-gray-800">Proyectos de práctica profesional #<span th:text="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}"></span></h1>
                     <a th:href="@{/pasantias/proyectos/nuevo/{idPasantia}(idPasantia = ${pasantia.idPasantia})}" class="btn btn-primary mb-3">Agregar proyecto</a>
-                    <a href="/pasantias" class="btn btn-success mb-3">Cambiar estado</a>
+                    <a id="practica-cambiar-estado" th:attr="data-id-pasantia=${pasantia.idPasantia}, data-estado-pasantia=${pasantia.estado}" class="btn btn-success mb-3">Cambiar estado</a>
                     <a href="/pasantias" class="btn btn-secondary mb-3">Regresar</a>
 
                     <div class="row m-3">
@@ -89,6 +89,55 @@
     <div th:replace="fragments/userModal :: userModal"></div>
     
     <div th:replace="fragments/jsComponents :: jsScripts"></div>
+
+    <!-- Custom Javascript -->
+    <script>
+        $(document).ready(function() {
+            $('#practica-cambiar-estado').on("click", function(){
+                Swal.fire({
+                    title: "¿Cambiar el estado de la práctica profesional?",
+                    //html: "<p></p>",
+                    icon: "question",
+                    confirmButtonText: "Aceptar",
+                    showCancelButton: true,
+                    cancelButtonText: "Cancelar",
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        let idPasantia = $(this).data('id-pasantia');
+                        let estadoPasantia = $(this).data('estado-pasantia');
+
+                        $.ajax({
+                            url: "/pasantias/cambiarEstadoPractica",
+                            contentType: "application/json",
+                            dataType: "json",
+                            type: "POST",
+                            data: JSON.stringify({
+                                idPasantia: parseInt(idPasantia),
+                                //estadoOriginal: estadoPasantia
+                            }),
+                            success: function(data){
+                                if(data){
+                                    Swal.fire({
+                                        title: "Estado cambiado",
+                                        icon: "success",
+                                        confirmButtonText: "Aceptar"
+                                    }).then((result) => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: "Error al cambiar el estado",
+                                        icon: "error",
+                                        confirmButtonText: "Aceptar"
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
