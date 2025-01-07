@@ -38,4 +38,7 @@ public class PasantiaPrograma {
 
     @Column(name = "USU_MOD")
     private String usuMod;
+
+    @Column(name = "ENLACE_DRIVE")
+    private String enlaceDrive;
 }

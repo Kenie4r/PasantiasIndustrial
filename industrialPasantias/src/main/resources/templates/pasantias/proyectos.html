@@ -87,6 +87,9 @@
                                     <td>
                                         <a th:href="@{/pasantias/proyectos/editar/pasantia/{idPasantia}/programa/{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idPrograma = ${p.id.programa.idPrograma})}"
                                             class="btn btn-success mb-3">Editar</a>
+                                        <a th:href="${p.enlaceDrive}" class="btn btn-success mb-3" target="_blank">
+                                            <i class="fab fa-google-drive" style="color: #fff;"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>
