@@ -35,9 +35,10 @@ public class ParametroController {
         return "parametros/crear_editar_parametro";
     }
 
-    // Guardar parametro 
+    // Guardar parametro
     @PostMapping("/parametros")
-    public String guardarParametro(@ModelAttribute Parametro parametro, RedirectAttributes redirectAttributes) {
+    public String guardarParametro(@ModelAttribute Parametro parametro, RedirectAttributes redirectAttributes,
+            Model model) {
         try {
             if (parametro.getIdParametro() == null) {
                 parametro.setFechaCre(LocalDateTime.now());
@@ -48,8 +49,9 @@ public class ParametroController {
             redirectAttributes.addFlashAttribute("mensaje", "El parámetro se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el parámetro.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al guardar el parámetro.");
+            return "parametros/crear_editar_parametro";
         }
         return "redirect:/parametros";
     }
@@ -68,7 +70,7 @@ public class ParametroController {
     // Actualizar parametro
     @PostMapping("/parametros/editar/{id}")
     public String actualizarParametro(@PathVariable Integer id, @ModelAttribute Parametro parametro,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, Model model) {
         try {
             Parametro parametroExistente = parametroService.obtenerPorId(id);
             if (parametro == null) {
@@ -83,11 +85,12 @@ public class ParametroController {
             parametroService.guardar(parametroExistente);
             redirectAttributes.addFlashAttribute("mensaje", "El parámetro se actualizó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/parametros";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al actualizar el parámetro.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al actualizar el parámetro.");
+            return "parametros/crear_editar_parametro";
         }
-        return "redirect:/parametros";
     }
 
     // Eliminar un parametro

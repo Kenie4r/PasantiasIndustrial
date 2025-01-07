@@ -43,16 +43,18 @@ public class EmpresaController {
 
     // Guardar nueva empresa
     @PostMapping("/guardar")
-    public String guardarEmpresa(@ModelAttribute("empresa") Empresa empresa, RedirectAttributes redirectAttributes) {
+    public String guardarEmpresa(@ModelAttribute("empresa") Empresa empresa, RedirectAttributes redirectAttributes,
+            Model model) {
         try {
             empresaService.guardar(empresa);
             redirectAttributes.addFlashAttribute("mensaje", "La empresa se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/empresas";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar la empresa.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al guardar la empresa.");
+            return "empresas/crear_editar_empresa";
         }
-        return "redirect:/empresas";
     }
 
     // Mostrar formulario editar empresa
@@ -70,7 +72,7 @@ public class EmpresaController {
     // Actualizar empresa
     @PostMapping("/editar/{id}")
     public String actualizarEmpresa(@PathVariable Integer id, @ModelAttribute Empresa empresa,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, Model model) {
         try {
             Empresa empresaExistente = empresaService.obtenerPorId(id);
             if (empresa == null) {
@@ -87,11 +89,13 @@ public class EmpresaController {
             empresaService.guardar(empresaExistente);
             redirectAttributes.addFlashAttribute("mensaje", "La empresa se actualizó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/empresas";
+
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al actualizar la empresa.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al actualizar la empresa.");
+            return "empresas/crear_editar_empresa";
         }
-        return "redirect:/empresas";
     }
 
     // Eliminar empresa

@@ -17,46 +17,65 @@
             <div th:replace="fragments/topbar :: topbar"></div>
             <div id="content">
                 <div class="container-fluid">
-                    <h1 class="mb-4">Nuevo proyecto</h1>
+                    <h1 class="mb-4"
+                        th:text="${accion == 'guardar' ? 'Nuevo proyecto' : 'Editar proyecto'}">
+                    </h1>
+
+                    <div th:if="${mensaje}"
+                        th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"
+                        role="alert">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
                     <form th:action="${'/pasantias/proyectos'}" th:object="${proyecto}" method="post">
-
                         <div class="mb-3">
                             <label for="codPasantia" class="form-label">Practica profesional *</label>
-                            <input type="text" name="codPasantia" id="codPasantia" class="form-control" th:value="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}" readonly>
+                            <input type="text" name="codPasantia" id="codPasantia" class="form-control"
+                                th:value="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}"
+                                readonly>
                             <input type="hidden" name="idPasantia" id="idPasantia" th:field="*{id.pasantia.idPasantia}">
                         </div>
 
                         <div class="mb-3">
                             <label for="idPrograma" class="form-label">Programa *</label>
-                            <select id="idPrograma" name="idPrograma" class="form-control select-2" th:field="*{id.programa.idPrograma}" required>
-                                <option value="0">Seleccionar programa...</option>
-                                <option th:each="programa : ${empresasProgramas}" th:value="${programa.idPrograma}" th:text="${'[' + programa.empresa.nombre +'] ' + programa.nombrePrograma}">
+                            <select id="idPrograma" name="idPrograma" class="form-control select-2"
+                                th:field="*{id.programa.idPrograma}" required>
+                                <option value="0" disabled selected>Seleccionar programa...</option>
+                                <option th:each="programa : ${empresasProgramas}" th:value="${programa.idPrograma}"
+                                    th:text="${'[' + programa.empresa.nombre +'] ' + programa.nombrePrograma}">
                                 </option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="materiasCursadasCantidad" class="form-label">Cantidad de materias cursadas *</label>
-                            <input type="number" name="materiasCursadasCantidad" id="materiasCursadasCantidad" th:field="*{materiasCursadasCantidad}" min="0" step="1" class="form-control" required>
+                            <label for="materiasCursadasCantidad" class="form-label">Cantidad de materias cursadas
+                                *</label>
+                            <input type="number" name="materiasCursadasCantidad" id="materiasCursadasCantidad"
+                                th:field="*{materiasCursadasCantidad}" min="0" step="1" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="materiasCursadasUv" class="form-label">UV de materias cursadas *</label>
-                            <input type="number" name="materiasCursadasUv" id="materiasCursadasUv" th:field="*{materiasCursadasUv}" min="0" step="1" class="form-control" required>
+                            <input type="number" name="materiasCursadasUv" id="materiasCursadasUv"
+                                th:field="*{materiasCursadasUv}" min="0" step="1" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado de la Práctica *</label>
-                            <select id="estado" name="estado" class="form-control select-2" th:field="*{estado}" required>
-                                <option value="0">Seleccionar un estado...</option>
+                            <select id="estado" name="estado" class="form-control select-2" th:field="*{estado}"
+                                required>
+                                <option value="0" disabled selected>Seleccionar un estado...</option>
                                 <option th:each="est : ${estados}" th:value="${est.value}" th:text="${est.text}">
                                 </option>
                             </select>
                         </div>
 
                         <button type="submit" class="btn btn-success">Guardar</button>
-                        <a th:href="@{/pasantias/proyectos/{id}(id=${pasantia.idPasantia})}" class="btn btn-secondary">Cancelar</a>
+                        <a th:href="@{/pasantias/proyectos/{id}(id=${pasantia.idPasantia})}"
+                            class="btn btn-secondary">Cancelar</a>
                     </form>
                 </div>
             </div>
@@ -74,14 +93,14 @@
     <div th:replace="fragments/jsComponents :: jsScripts"></div>
 
     <!-- Custom Javascript -->
-     <script>
+    <script>
         $(document).ready(() => {
-            $('#idCarrera').on("change", function(){
+            $('#idCarrera').on("change", function () {
                 // Obtener codigo de la carrera
                 $.ajax({
                     url: "/pasantias/obtenerCarrera/" + this.value,
                     type: "GET",
-                    success: function(data){
+                    success: function (data) {
                         document.querySelector("#num-carrera").value = data.codCarrera;
                     }
                 });
@@ -90,7 +109,7 @@
                 $.ajax({
                     url: "/pasantias/obtenerCorrelativoPorCarrera/" + this.value,
                     type: "GET",
-                    success: function(data){
+                    success: function (data) {
                         document.querySelector("#correlativo").value = data;
                     }
                 });
@@ -99,7 +118,7 @@
                 $.ajax({
                     url: "/pasantias/obtenerEstudiantesPorCarrera/" + this.value,
                     type: "GET",
-                    success: function(data){
+                    success: function (data) {
                         // LImpiar opciones
                         document.querySelector("#carnet").innerHTML = '';
 
@@ -109,7 +128,7 @@
 
                         // Agregar opciones
                         data.forEach((element, index) => {
-                            let valueOption = '['+ element.carnet +'] ' + element.nombres + ' ' + element.apellidos;
+                            let valueOption = '[' + element.carnet + '] ' + element.nombres + ' ' + element.apellidos;
                             let option = new Option(valueOption, element.carnet);
                             document.querySelector("#carnet").add(option);
                         });
@@ -117,12 +136,12 @@
                 });
             });
 
-            $('#carnet').on('change', function(){
-                let anioEstudiante = '0' + this.value.slice(2,4);
+            $('#carnet').on('change', function () {
+                let anioEstudiante = '0' + this.value.slice(2, 4);
                 document.querySelector('#anioEstudiante').value = anioEstudiante;
             });
         });
-     </script>
+    </script>
 </body>
 
 </html>

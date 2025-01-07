@@ -40,18 +40,20 @@ public class RubroController {
     }
 
     @PostMapping
-    public String guardarRubro(@ModelAttribute Rubro rubro, RedirectAttributes redirectAttributes) {
+    public String guardarRubro(@ModelAttribute Rubro rubro, RedirectAttributes redirectAttributes, Model model) {
         try {
             rubro.setEstado("A");
             rubro.setFechaCrea(LocalDateTime.now());
             rubroService.guardar(rubro);
             redirectAttributes.addFlashAttribute("mensaje", "El rubro de empresa se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/rubros";
+
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el rubro de empresa.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al guardar el rubro de empresa.");
+            return "rubros/guardar";
         }
-        return "redirect:/rubros";
     }
 
     // Editar rubro -----------------------------------------------------
@@ -69,7 +71,7 @@ public class RubroController {
 
     @PostMapping("/editar/{id}")
     public String actualizarRubro(@PathVariable Integer id, @ModelAttribute Rubro rubro,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, Model model) {
         Rubro rubroExiste = rubroService.obtenerPorId(id);
 
         if (rubroExiste == null) {
@@ -81,12 +83,14 @@ public class RubroController {
             rubroService.guardar(rubroExiste);
             redirectAttributes.addFlashAttribute("mensaje", "El rubro de empresa se editó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/rubros";
+
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al editar el rubro de empresa.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al editar el rubro de empresa.");
+            return "rubros/guardar";
         }
 
-        return "redirect:/rubros";
     }
 
     // Eliminar rubro -----------------------------------------------------
@@ -115,7 +119,8 @@ public class RubroController {
             }
 
             rubroService.guardar(rubro);
-            redirectAttributes.addFlashAttribute("mensaje", "El estado del rubro de empresa se actualizó correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje",
+                    "El estado del rubro de empresa se actualizó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         }
 

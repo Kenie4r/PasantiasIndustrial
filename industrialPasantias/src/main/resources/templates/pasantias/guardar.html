@@ -19,39 +19,55 @@
                 <div class="container-fluid">
                     <h1 class="mb-4">Nueva Practica</h1>
 
+                    <div th:if="${mensaje}"
+                        th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"
+                        role="alert">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
                     <form th:action="${'/pasantias'}" th:object="${pasantia}" method="post">
                         <div class="mb-3">
                             <label class="form-label">Prática profesional N°</label>
                             <div class="container">
                                 <div class="row">
-                                    <input type="text" id="num-carrera" name="num-carrera" class="form-control col" readonly>
-                                    <input type="text" id="correlativo" name="correlativo" th:field="*{correlativo}" class="form-control col" readonly>
-                                    <input type="text" id="anioEstudiante" name="anioEstudiante" th:field="*{anioEstudiante}" class="form-control col" readonly>
+                                    <input type="text" id="num-carrera" name="num-carrera" class="form-control col"
+                                        readonly>
+                                    <input type="text" id="correlativo" name="correlativo" th:field="*{correlativo}"
+                                        class="form-control col" readonly>
+                                    <input type="text" id="anioEstudiante" name="anioEstudiante"
+                                        th:field="*{anioEstudiante}" class="form-control col" readonly>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="idCarrera" class="form-label">Carrera *</label>
-                            <select id="idCarrera" name="idCarrera" class="form-control select-2" th:field="*{carrera.idCarrera}" required>
-                                <option value="0">Seleccionar carrera...</option>
-                                <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
+                            <select id="idCarrera" name="idCarrera" class="form-control select-2"
+                                th:field="*{carrera.idCarrera}" required>
+                                <option value="0" selected>Seleccionar carrera...</option>
+                                <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}"
+                                    th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
                                 </option>
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label for="carnet" class="form-label">Estudiante *</label>
-                            <select id="carnet" name="carnet" class="form-control select-2" th:field="*{estudiante.carnet}" required>
-                                <option value="0">Seleccionar...</option>
+                            <select id="carnet" name="carnet" class="form-control select-2"
+                                th:field="*{estudiante.carnet}" required>
+                                <option value="0" disabled selected>Seleccionar...</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado de la Práctica *</label>
-                            <select id="estado" name="estado" class="form-control select-2" th:field="*{estado}" required>
-                                <option value="0">Seleccionar un estado...</option>
-                                <option th:each="est : ${estados}" th:value="${est.value}" th:text="${est.text}">
+                            <select id="estado" name="estado" class="form-control select-2" th:field="*{estado}"
+                                required>
+                                <option value="0" disabled selected>Seleccionar un estado...</option>
+                                <option th:each="est : ${estados}" th:value="${est.value}" th:text="${est.text}"> 
                                 </option>
                             </select>
                         </div>
@@ -75,14 +91,14 @@
     <div th:replace="fragments/jsComponents :: jsScripts"></div>
 
     <!-- Custom Javascript -->
-     <script>
+    <script>
         $(document).ready(() => {
-            $('#idCarrera').on("change", function(){
+            $('#idCarrera').on("change", function () {
                 // Obtener codigo de la carrera
                 $.ajax({
                     url: "/pasantias/obtenerCarrera/" + this.value,
                     type: "GET",
-                    success: function(data){
+                    success: function (data) {
                         document.querySelector("#num-carrera").value = data.codCarrera;
                     }
                 });
@@ -91,7 +107,7 @@
                 $.ajax({
                     url: "/pasantias/obtenerCorrelativoPorCarrera/" + this.value,
                     type: "GET",
-                    success: function(data){
+                    success: function (data) {
                         document.querySelector("#correlativo").value = data;
                     }
                 });
@@ -100,7 +116,7 @@
                 $.ajax({
                     url: "/pasantias/obtenerEstudiantesPorCarrera/" + this.value,
                     type: "GET",
-                    success: function(data){
+                    success: function (data) {
                         // LImpiar opciones
                         document.querySelector("#carnet").innerHTML = '';
 
@@ -110,7 +126,7 @@
 
                         // Agregar opciones
                         data.forEach((element, index) => {
-                            let valueOption = '['+ element.carnet +'] ' + element.nombres + ' ' + element.apellidos;
+                            let valueOption = '[' + element.carnet + '] ' + element.nombres + ' ' + element.apellidos;
                             let option = new Option(valueOption, element.carnet);
                             document.querySelector("#carnet").add(option);
                         });
@@ -118,12 +134,12 @@
                 });
             });
 
-            $('#carnet').on('change', function(){
-                let anioEstudiante = '0' + this.value.slice(2,4);
+            $('#carnet').on('change', function () {
+                let anioEstudiante = '0' + this.value.slice(2, 4);
                 document.querySelector('#anioEstudiante').value = anioEstudiante;
             });
         });
-     </script>
+    </script>
 </body>
 
 </html>
