@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.industrial.pasantias.Model.Empresa;
@@ -20,7 +21,7 @@ import com.industrial.pasantias.Servicio.MateriaService;
 import com.industrial.pasantias.Servicio.ProgramaService;
 
 @Controller
-@RequestMapping("/empresaPrograma")
+@RequestMapping("/programas")
 public class ProgramaController {
     private final ProgramaService programaService;
     private final EmpresaService empresaService;
@@ -36,28 +37,45 @@ public class ProgramaController {
     @GetMapping(path = { "", "/" })
     public String listarProgramas(Model model) {
         List<EmpresaPrograma> programas = programaService.ObternerTodo();
-        model.addAttribute("programas", programas);
-        return "empresaPrograma/index";
+        model.addAttribute("programasEmpresa", programas);
+        return "programas/index";
     }
 
-    // Mostrar programa por id
-    @GetMapping("/{id}")
-    public String listarPrograma(@PathVariable Integer id, Model model) {
+    // Mostrar programa por empresa
+    @GetMapping("/empresa/{id}")
+    public String listarProgramasEmpresa(@PathVariable Integer id, Model model) {
         List<EmpresaPrograma> programas = programaService.obtenerPorIdEmpresa(id);
-        model.addAttribute("programas", programas);
-        return "empresaPrograma/index";
+        Empresa empresa = null;
+
+        if (id != null) {
+            empresa = empresaService.obtenerPorId(id);
+            model.addAttribute("empresa", empresa.getNombre());
+        }
+
+        model.addAttribute("programasEmpresa", programas);
+        model.addAttribute("empresaId", id);
+        return "programas/index";
     }
 
     // Mostrar form nuevo programa
     @GetMapping("/nuevo")
-    public String FormGuardar(Model model) {
+    public String FormGuardar(@RequestParam(value = "idEmpresa", required = false) Integer idEmpresa, Model model) {
+        Empresa empresa = null;
+
+        // Si se proporciona un ID de empresa, intenta obtener la empresa
+        if (idEmpresa != null) {
+            empresa = empresaService.obtenerPorId(idEmpresa);
+            model.addAttribute("empresaId", empresa.getIdEmpresa());
+            model.addAttribute("empresa", empresa.getNombre());
+        }
+
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
 
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
         model.addAttribute("programa", new EmpresaPrograma());
-        return "empresaPrograma/crear_editar_programa";
+        return "programas/crear_editar_programa";
     }
 
     // Maneja la solicitud POST para guardar el nuevo programa
@@ -67,14 +85,15 @@ public class ProgramaController {
         try {
             // Guarda el nuevo programa en la base de datos
             programaService.guardar(programa);
-            redirectAttributes.addFlashAttribute("mensaje", "La carrera se guardó correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje", "El programa se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar la carrera.");
+            redirectAttributes.addFlashAttribute("mensaje",
+                    "Ocurrió un error al guardar el programa." + e.getMessage());
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
 
-        return "redirect:/empresaPrograma";
+        return "redirect:/programas/empresa/" + programa.getEmpresa().getIdEmpresa();
     }
 
     // Mostrar formulario para editar el programa
@@ -82,42 +101,44 @@ public class ProgramaController {
     public String mostrarFormularioModificarPrograma(@PathVariable Integer id,
             Model model) {
 
-        EmpresaPrograma empresaPrograma = programaService.obtenerPorId(id);
-        if (empresaPrograma == null) {
-            return "redirect:/empresaPrograma";
+        EmpresaPrograma programas = programaService.obtenerPorId(id);
+        if (programas == null) {
+            return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
+
         }
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
 
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
-        model.addAttribute("programa", empresaPrograma);
-        System.out.println("programa: " + empresaPrograma);
-        return "empresaPrograma/crear_editar_programa";
+        model.addAttribute("programa", programas);
+        System.out.println("programa: " + programas);
+        return "programas/crear_editar_programa";
     }
 
-    // Actualizar empresaPrograma
+    // Actualizar programas
 
+    @SuppressWarnings("null")
     @PostMapping("/editar/{id}")
-    public String actualizarPrograma(@PathVariable Integer id, @ModelAttribute EmpresaPrograma empresaPrograma,
+    public String actualizarPrograma(@PathVariable Integer id, @ModelAttribute EmpresaPrograma programas,
             RedirectAttributes redirectAttributes) {
         try {
             EmpresaPrograma programaExistente = programaService.obtenerPorId(id);
-            if (empresaPrograma == null) {
-                return "redirect:/empresaPrograma";
+            if (programas == null) {
+                return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
             }
 
-            programaExistente.setNombrePrograma(empresaPrograma.getNombrePrograma());
-            programaExistente.setTipoPrograma(empresaPrograma.getTipoPrograma());
-            programaExistente.setFechaIni(empresaPrograma.getFechaIni());
-            programaExistente.setFechaFi(empresaPrograma.getFechaFi());
-            programaExistente.setEmpresa(empresaPrograma.getEmpresa());
-            programaExistente.setMateria(empresaPrograma.getMateria());
-            programaExistente.setEstado(empresaPrograma.getEstado());
-            programaExistente.setNombreResponsable(empresaPrograma.getNombreResponsable());
-            programaExistente.setAreaRealizacion(empresaPrograma.getAreaRealizacion());
-            programaExistente.setOtrosDetalles(empresaPrograma.getOtrosDetalles());
-            programaExistente.setObservaciones(empresaPrograma.getObservaciones());
+            programaExistente.setNombrePrograma(programas.getNombrePrograma());
+            programaExistente.setTipoPrograma(programas.getTipoPrograma());
+            programaExistente.setFechaIni(programas.getFechaIni());
+            programaExistente.setFechaFi(programas.getFechaFi());
+            programaExistente.setEmpresa(programas.getEmpresa());
+            programaExistente.setMateria(programas.getMateria());
+            programaExistente.setEstado(programas.getEstado());
+            programaExistente.setNombreResponsable(programas.getNombreResponsable());
+            programaExistente.setAreaRealizacion(programas.getAreaRealizacion());
+            programaExistente.setOtrosDetalles(programas.getOtrosDetalles());
+            programaExistente.setObservaciones(programas.getObservaciones());
 
             programaService.guardar(programaExistente);
             redirectAttributes.addFlashAttribute("mensaje",
@@ -128,38 +149,38 @@ public class ProgramaController {
                     "Ocurrió un error al actualizar el programa.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
-        return "redirect:/empresaPrograma";
+        return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
     }
 
     // Eliminar un programa
     @GetMapping("/eliminar/{id}")
     public String eliminarPrograma(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        EmpresaPrograma programas = programaService.obtenerPorId(id);
         try {
             programaService.eliminar(id);
-            redirectAttributes.addFlashAttribute("mensaje", "La carrera se eliminó correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje", "El programa se eliminó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al eliminar la carrera.");
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al eliminar el programa.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
-        return "redirect:/empresaPrograma";
+        return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
     }
 
-    // Método para cambiar el estado del carrera a inactivo
-
+    // Método para cambiar el estado del programa a inactivo
+    @SuppressWarnings("null")
     @PostMapping("/cambiarEstado/{id}")
     public String cambiarEstado(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        EmpresaPrograma programas = programaService.obtenerPorId(id);
         try {
-            EmpresaPrograma empresaPrograma = programaService.obtenerPorId(id);
-
-            if (empresaPrograma != null) {
-                if ("A".equals(empresaPrograma.getEstado())) {
-                    empresaPrograma.setEstado("I");
+            if (programas != null) {
+                if ("A".equals(programas.getEstado())) {
+                    programas.setEstado("I");
                 } else {
-                    empresaPrograma.setEstado("A");
+                    programas.setEstado("A");
                 }
-                empresaPrograma.setFechaMod(LocalDateTime.now());
-                programaService.guardar(empresaPrograma);
+                programas.setFechaMod(LocalDateTime.now());
+                programaService.guardar(programas);
             }
             redirectAttributes.addFlashAttribute("mensaje",
                     "El estado del programa se actualizó correctamente.");
@@ -170,7 +191,6 @@ public class ProgramaController {
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
 
-        return "redirect:/empresaPrograma";
+        return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
     }
-
 }

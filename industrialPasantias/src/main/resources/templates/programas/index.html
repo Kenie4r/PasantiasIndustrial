@@ -18,10 +18,16 @@
             <div th:replace="fragments/topbar :: topbar"></div>
             <!-- Main Content -->
             <div id="content">
-                <!-- Begin Page Content -->
+                <!-- Begin Page Contents -->
                 <div class="container-fluid">
-                    <h1 class="h3 mb-4 text-gray-800">Programas</h1>
-                    <a th:href="@{/empresaPrograma/nuevo}" class="btn btn-primary mb-3">Nuevo Programa</a>
+                    <h1 class="h3 mb-4 text-gray-800">
+                        Programas
+                        <span th:if="${empresa != null}" th:text="' - ' + ${empresa}"></span>
+                    </h1>
+                    <span th:if="${empresaId != null}">
+                        <a th:href="@{/programas/nuevo(idEmpresa=${empresaId})}" class="btn btn-primary mb-3">Nuevo
+                            Programa</a>
+                    </span>
 
                     <div th:if="${mensaje}"
                         th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"
@@ -42,41 +48,44 @@
                                     <th>Estado</th>
                                     <th>Tipo de Programa</th>
                                     <th>Empresa</th>
-                                    <th>Acciones</th>
+                                    <span th:if="${empresaId != null}">
+                                        <th>Acciones</th>
+                                    </span>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="programa : ${programas}">
+                                <tr th:each="programa : ${programasEmpresa}">
                                     <td th:text="${programa.nombrePrograma}"></td>
                                     <td th:text="${programa.nombreResponsable}"></td>
                                     <td th:text="${programa.areaRealizacion}"></td>
                                     <td th:text="${programa.estado == 'A' ? 'Activo' : 'Inactivo'}"></td>
                                     <td th:text="${programa.tipoPrograma}"></td>
                                     <td th:text="${programa.empresa.nombre}"></td>
-                                    <td>
-                                        <!-- Cambiar Estado -->
-                                        <form
-                                            th:action="@{/empresaPrograma/cambiarEstado/{id}(id=${programa.idPrograma})}"
-                                            method="post" style="display: inline;">
-                                            <button type="submit"
-                                                style="background: none; border: none; padding: 0; cursor: pointer;">
-                                                <i th:classappend="${programa.estado == 'A' ? 'fas fa-lock-open' : 'fas fa-lock'}"
-                                                    style="color: #085691;"></i>
-                                            </button>
-                                        </form>
+                                    <span th:if="${empresaId != null}">
+                                        <td>
+                                            <!-- Cambiar Estado -->
+                                            <form
+                                                th:action="@{/programas/cambiarEstado/{id}(id=${programa.idPrograma})}"
+                                                method="post" style="display: inline;">
+                                                <button type="submit"
+                                                    style="background: none; border: none; padding: 0; cursor: pointer;">
+                                                    <i th:classappend="${programa.estado == 'A' ? 'fas fa-lock-open' : 'fas fa-lock'}"
+                                                        style="color: #085691;"></i>
+                                                </button>
+                                            </form>
 
-                                        <!-- Editar -->
-                                        <a th:href="@{/empresaPrograma/editar/{id}(id=${programa.idPrograma})}">
-                                            <i class="fas fa-edit" style="color: #085691;"></i>
-                                        </a>
+                                            <!-- Editar -->
+                                            <a th:href="@{/programas/editar/{id}(id=${programa.idPrograma})}">
+                                                <i class="fas fa-edit" style="color: #085691;"></i>
+                                            </a>
 
-                                        <!-- Eliminar -->
-                                        <a th:href="@{/empresaPrograma/eliminar/{id}(id=${programa.idPrograma})}"
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este programa?');">
-                                            <i class="fas fa-trash-alt" style="color: #085691;"></i>
-                                        </a>
-
-                                    </td>
+                                            <!-- Eliminar -->
+                                            <a th:href="@{/programas/eliminar/{id}(id=${programa.idPrograma})}"
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este programa?');">
+                                                <i class="fas fa-trash-alt" style="color: #085691;"></i>
+                                            </a>
+                                        </td>
+                                    </span>
                                 </tr>
                             </tbody>
                         </table>
