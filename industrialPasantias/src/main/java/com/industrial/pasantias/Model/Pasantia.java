@@ -18,8 +18,9 @@ public class Pasantia {
     @Column(name = "ID_PASANTIA")
     private Integer idPasantia;
 
-    //@Column(name = "ID_CARRERA", nullable = false)
-    //private Integer idCarrera;
+    @ManyToOne
+    @JoinColumn(name = "ID_CARRERA", nullable = false)
+    private Carrera carrera;
 
     @Column(name = "CORRELATIVO", nullable = false)
     private Integer correlativo;
@@ -27,8 +28,9 @@ public class Pasantia {
     @Column(name = "ANIO_ESTUDIANTE", nullable = false)
     private String anioEstudiante;
 
-    @Column(name = "CARNET", nullable = false)
-    private String carnet;
+    @ManyToOne
+    @JoinColumn(name = "CARNET", nullable = false)
+    private EstudianteEntity estudiante;
 
     @Column(name = "ESTADO", nullable = false)
     private String estado;
@@ -45,7 +47,6 @@ public class Pasantia {
     @Column(name = "USU_MOD")
     private String usuMod;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_CARRERA", nullable = false)
-    private Carrera carrera;
+    @Column(name = "FECHA_INGRESO_UNIVERSIDAD", nullable = false)
+    private LocalDateTime fechaIngresoUniversidad;
 }

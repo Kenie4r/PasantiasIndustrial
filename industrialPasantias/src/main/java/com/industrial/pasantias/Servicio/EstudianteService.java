@@ -1,6 +1,8 @@
 package com.industrial.pasantias.Servicio;
 
+import java.lang.StackWalker.Option;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,5 +118,9 @@ public class EstudianteService {
             return Optional.empty();
         }
 
+    }
+
+    public List<EstudianteEntity> obtenerPorIdCarrera(int id) {
+        return repository.encontrarPorCarrera(id);
     }
 }
