@@ -16,15 +16,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.Empresa;
 import com.industrial.pasantias.Model.EmpresaPrograma;
 import com.industrial.pasantias.Model.EstudianteEntity;
 import com.industrial.pasantias.Model.Pasantia;
+import com.industrial.pasantias.Model.PasantiaPrograma;
+import com.industrial.pasantias.Model.PK.PasantiaProgramaPK;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EmpresaService;
 import com.industrial.pasantias.Servicio.EstudianteService;
+import com.industrial.pasantias.Servicio.PasantiaProgramaService;
 import com.industrial.pasantias.Servicio.PasantiaService;
 import com.industrial.pasantias.Servicio.ProgramaService;
 import com.industrial.pasantias.ViewModel.SelectListItem;
@@ -47,6 +51,9 @@ public class PasantiaController {
     @Autowired
     private EmpresaService empresaService;
 
+    @Autowired
+    private PasantiaProgramaService pasantiaProgramaService;
+
     // Index -----------------------------------------------------------
     @GetMapping
     public String listarPasantias(Model model) {
@@ -60,15 +67,6 @@ public class PasantiaController {
     public String nuevaPasantia(Model model) {
         // Carreras
         List<Carrera> carreras = carreraService.obtenerTodos();
-
-        // Programas de empresa
-        //List<EmpresaPrograma> programasEmpresas = programaService.ObternerTodo();
-        //List<SelectListItem> programas = new ArrayList<>();
-        //for (EmpresaPrograma p : programasEmpresas) {
-        //    String nombreEmpresa = p.getEmpresa().getNombre();
-        //    SelectListItem programa = new SelectListItem(String.valueOf(p.getIdPrograma()), "[" + nombreEmpresa + "] " + p.getNombrePrograma());
-        //    programas.add(programa);
-        //}
 
         // Estados
         List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
@@ -106,8 +104,49 @@ public class PasantiaController {
     @GetMapping("/proyectos/{id}")
     public String listarProyectos(@PathVariable Integer id, Model model) {
         Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(id);
+        List<PasantiaPrograma> pasantiaProgramas = pasantiaProgramaService.obtenerPorIdPasantia(id);
         model.addAttribute("pasantia", pasantia);
+        model.addAttribute("programas", pasantiaProgramas);
         return "pasantias/proyectos";
+    }
+
+    // Proyecto nuevo ------------------------------------------------------
+    @GetMapping("/proyectos/nuevo/{idPasantia}")
+    public String nuevoProyecto(@PathVariable Integer idPasantia, Model model) {
+        //
+        Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(idPasantia);
+        List<EmpresaPrograma> empresasProgramas = programaService.ObternerTodo();
+        //
+        PasantiaPrograma pasantiaPrograma = new PasantiaPrograma();
+        PasantiaProgramaPK id = new PasantiaProgramaPK();
+        id.setPasantia(pasantia);
+        pasantiaPrograma.setId(id);
+        
+        // Estados
+        List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
+
+        model.addAttribute("proyecto", pasantiaPrograma);
+        model.addAttribute("pasantia", pasantia);
+        model.addAttribute("empresasProgramas", empresasProgramas);
+        model.addAttribute("estados", estados);
+        return "pasantias/proyectoGuardar";
+    }
+
+    @PostMapping("/proyectos")
+    public String guardarProyecto(@ModelAttribute PasantiaPrograma pasantiaPrograma, Model model) {
+        try {
+            pasantiaPrograma.setFechaCrea(LocalDateTime.now());
+            pasantiaPrograma.setUsuCrea("test");
+
+            
+
+            pasantiaProgramaService.guardar(pasantiaPrograma);
+            return "redirect:/pasantias/proyectos/" + pasantiaPrograma.getId().getPasantia().getIdPasantia();
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            System.out.println(pasantiaPrograma);
+            return "pasantias/proyectoGuardar";
+        }
     }
 
     // Endpoint

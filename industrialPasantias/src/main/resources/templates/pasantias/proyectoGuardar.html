@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Inicio')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet" type="text/css">
+    <title>Nueva Práctica</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <div id="content">
+                <div class="container-fluid">
+                    <h1 class="mb-4">Nuevo proyecto</h1>
+
+                    <form th:action="${'/pasantias/proyectos'}" th:object="${proyecto}" method="post">
+
+                        <div class="mb-3">
+                            <label for="codPasantia" class="form-label">Practica profesional *</label>
+                            <input type="text" name="codPasantia" id="codPasantia" class="form-control" th:value="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}" readonly>
+                            <input type="hidden" name="idPasantia" id="idPasantia" th:field="*{id.pasantia.idPasantia}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="idPrograma" class="form-label">Programa *</label>
+                            <select id="idPrograma" name="idPrograma" class="form-control select-2" th:field="*{id.programa.idPrograma}" required>
+                                <option value="0">Seleccionar programa...</option>
+                                <option th:each="programa : ${empresasProgramas}" th:value="${programa.idPrograma}" th:text="${'[' + programa.empresa.nombre +'] ' + programa.nombrePrograma}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="materiasCursadasCantidad" class="form-label">Cantidad de materias cursadas *</label>
+                            <input type="number" name="materiasCursadasCantidad" id="materiasCursadasCantidad" th:field="*{materiasCursadasCantidad}" min="0" step="1" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="materiasCursadasUv" class="form-label">UV de materias cursadas *</label>
+                            <input type="number" name="materiasCursadasUv" id="materiasCursadasUv" th:field="*{materiasCursadasUv}" min="0" step="1" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado de la Práctica *</label>
+                            <select id="estado" name="estado" class="form-control select-2" th:field="*{estado}" required>
+                                <option value="0">Seleccionar un estado...</option>
+                                <option th:each="est : ${estados}" th:value="${est.value}" th:text="${est.text}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a th:href="@{/pasantias/proyectos/{id}(id=${pasantia.idPasantia})}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+    <div th:replace="fragments/userModal :: userModal"></div>
+
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+
+    <!-- Custom Javascript -->
+     <script>
+        $(document).ready(() => {
+            $('#idCarrera').on("change", function(){
+                // Obtener codigo de la carrera
+                $.ajax({
+                    url: "/pasantias/obtenerCarrera/" + this.value,
+                    type: "GET",
+                    success: function(data){
+                        document.querySelector("#num-carrera").value = data.codCarrera;
+                    }
+                });
+
+                // Obtener correlativo de la carrera
+                $.ajax({
+                    url: "/pasantias/obtenerCorrelativoPorCarrera/" + this.value,
+                    type: "GET",
+                    success: function(data){
+                        document.querySelector("#correlativo").value = data;
+                    }
+                });
+
+                // Obtener estudiantes de la carrera
+                $.ajax({
+                    url: "/pasantias/obtenerEstudiantesPorCarrera/" + this.value,
+                    type: "GET",
+                    success: function(data){
+                        // LImpiar opciones
+                        document.querySelector("#carnet").innerHTML = '';
+
+                        // Agregar opcion default
+                        let option = new Option('Seleccionar un estudiante...', '0');
+                        document.querySelector("#carnet").add(option);
+
+                        // Agregar opciones
+                        data.forEach((element, index) => {
+                            let valueOption = '['+ element.carnet +'] ' + element.nombres + ' ' + element.apellidos;
+                            let option = new Option(valueOption, element.carnet);
+                            document.querySelector("#carnet").add(option);
+                        });
+                    }
+                });
+            });
+
+            $('#carnet').on('change', function(){
+                let anioEstudiante = '0' + this.value.slice(2,4);
+                document.querySelector('#anioEstudiante').value = anioEstudiante;
+            });
+        });
+     </script>
+</body>
+
+</html>

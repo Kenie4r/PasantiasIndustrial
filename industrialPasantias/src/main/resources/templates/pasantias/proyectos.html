@@ -17,12 +17,9 @@
             <div th:replace="fragments/topbar :: topbar"></div>
             <div id="content">
                 <div class="container-fluid">
-                    <h1 class="h3 mb-4 text-gray-800">Proyectos de práctica profesional</h1>
-                    
-                    <div class="form-group">
-                        <p>Código de práctica profesional</p>
-                        <p th:text="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}"></p>
-                    </div>
+                    <h1 class="h3 mb-4 text-gray-800">Proyectos de práctica profesional #<span th:text="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}"></span></h1>
+                    <a th:href="@{/pasantias/proyectos/nuevo/{idPasantia}(idPasantia = ${pasantia.idPasantia})}" class="btn btn-primary mb-3">Agregar proyecto</a>
+                    <a href="/pasantias" class="btn btn-secondary mb-3">Regresar</a>
 
                     <div class="form-group">
                         <p>Información de estudiante</p>
@@ -37,7 +34,30 @@
                     </div>
 
                     <div class="table-responsive">
-                        <!---->
+                        <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Nombre programa</th>
+                                    <th>Materias cursadas</th>
+                                    <th>UV obtenidos</th>
+                                    <th>Estado</th>
+                                    <th>Operaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p : ${programas}">
+                                    <td th:text="${p.id.programa.empresa.nombre}"></td>
+                                    <td th:text="${p.id.programa.nombrePrograma}"></td>
+                                    <td th:text="${p.materiasCursadasCantidad}"></td>
+                                    <td th:text="${p.materiasCursadasUv}"></td>
+                                    <td th:text="${#strings.equals(p.estado, 'E')} ? 'En Proceso' : 'Finalizado'"></td>
+                                    <td>
+                                        <a th:href="@{/pasantias/proyectos/{id}(id=${p.idPasantia})}" class="btn btn-info mb-3">Ver proyectos</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
