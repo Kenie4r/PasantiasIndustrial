@@ -129,6 +129,22 @@ public String listarProgramas(@RequestParam(value = "idEmpresa", required = fals
         return "programas/crear_editar_programa";
     }
 
+    // Mostrar programa por empresa
+    @GetMapping("/empresa/{id}")
+    public String listarProgramasEmpresa(@PathVariable Integer id, Model model) {
+        List<EmpresaPrograma> programas = programaService.obtenerPorIdEmpresa(id);
+        Empresa empresa = null;
+
+        if (id != null) {
+            empresa = empresaService.obtenerPorId(id);
+            model.addAttribute("empresa", empresa.getNombre());
+        }
+
+        model.addAttribute("programasEmpresa", programas);
+        model.addAttribute("empresaId", id);
+        return "programas/index";
+    }
+
     // Actualizar programas
 
     @SuppressWarnings("null")
