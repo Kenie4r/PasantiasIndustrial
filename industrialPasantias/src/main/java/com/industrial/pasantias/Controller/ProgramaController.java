@@ -50,7 +50,7 @@ public String listarProgramas(@RequestParam(value = "idEmpresa", required = fals
 
     model.addAttribute("empresas", empresas);
     model.addAttribute("programas", programas);
-    return "empresaPrograma/index";
+    return "programas/index";
 }
 
     // Mostrar programa por id

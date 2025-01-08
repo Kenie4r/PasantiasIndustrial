@@ -39,7 +39,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="empresaSelect" class="form-label">Filtrar por Empresa</label>
-                        <form th:action="@{/empresaPrograma}" method="get" class="d-flex align-items-center">
+                        <form th:action="@{/programas}" method="get" class="d-flex align-items-center">
                             <select id="empresaSelect" name="idEmpresa" class="form-control mr-2  select-2">
                                
                                 <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}" th:text="${empresa.nombre}"
