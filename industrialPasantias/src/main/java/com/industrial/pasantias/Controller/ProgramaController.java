@@ -33,25 +33,25 @@ public class ProgramaController {
         this.materiaService = materiaService;
     }
 
-    // Mostrar programas
-   @GetMapping(path = { "", "/" })
-public String listarProgramas(@RequestParam(value = "idEmpresa", required = false) Integer idEmpresa, Model model) {
-    List<Empresa> empresas = empresaService.listarEmpresas(); // Listado de empresas para el select
-    List<EmpresaPrograma> programas;
-
-    if (idEmpresa != null) {
-        // Filtrar programas por la empresa seleccionada
-        programas = programaService.obtenerPorIdEmpresa(idEmpresa);
-        model.addAttribute("idEmpresa", idEmpresa); // Preseleccionar empresa en el select
-    } else {
-        // Mostrar todos los programas si no hay filtro
-        programas = programaService.ObternerTodo();
+    @GetMapping(path = { "", "/" })
+    public String listarProgramas(@RequestParam(value = "idEmpresa", required = false) Integer idEmpresa, Model model) {
+        List<Empresa> empresas = empresaService.listarEmpresas(); // Listado de empresas para el select
+        List<EmpresaPrograma> programas;
+    
+        if (idEmpresa != null) {
+            // Filtrar programas por la empresa seleccionada
+            programas = programaService.obtenerPorIdEmpresa(idEmpresa);
+            model.addAttribute("idEmpresa", idEmpresa); // Preseleccionar empresa en el select
+        } else {
+            // Mostrar todos los programas si no hay filtro
+            programas = programaService.ObternerTodo();
+        }
+    
+        model.addAttribute("empresas", empresas);
+        model.addAttribute("programasEmpresa", programas); // Cambia "programas" a "programasEmpresa"
+        return "programas/index";
     }
-
-    model.addAttribute("empresas", empresas);
-    model.addAttribute("programas", programas);
-    return "programas/index";
-}
+    
 
     // Mostrar programa por id
     @GetMapping("/{id}")
