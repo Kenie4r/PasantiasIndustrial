@@ -50,16 +50,17 @@ public class MateriaController {
 
     // Guardar materia
     @PostMapping("/guardar")
-    public String guardarMateria(@ModelAttribute Materia materia, RedirectAttributes redirectAttributes) {
+    public String guardarMateria(@ModelAttribute Materia materia, RedirectAttributes redirectAttributes, Model model) {
         try {
             materiaService.guardar(materia);
             redirectAttributes.addFlashAttribute("mensaje", "La materia se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/materias";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar la materia.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al guardar la materia.");
+            return "materia/crear_editar_materia";
         }
-        return "redirect:/materias";
     }
 
     // Mostrar form editar materia
@@ -79,7 +80,7 @@ public class MateriaController {
     // Editar materia
     @PostMapping("/editar/{id}")
     public String editarMateria(@PathVariable Integer id, @ModelAttribute Materia materia,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, Model model) {
         try {
             Materia materiaExistente = materiaService.obtenerPorId(id);
             if (materia == null) {
@@ -94,11 +95,12 @@ public class MateriaController {
             materiaService.guardar(materiaExistente);
             redirectAttributes.addFlashAttribute("mensaje", "La materia se actualizó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/materias";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al actualizar la materia.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al actualizar la materia.");
+            return "materia/crear_editar_materia";
         }
-        return "redirect:/materias";
     }
 
     // Eliminar materia

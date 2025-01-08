@@ -99,16 +99,17 @@ public String listarProgramas(@RequestParam(value = "idEmpresa", required = fals
             programaService.guardar(programa);
             redirectAttributes.addFlashAttribute("mensaje", "El programa se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/programas/empresa/" + programa.getEmpresa().getIdEmpresa();
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje",
-                    "Ocurrió un error al guardar el programa." + e.getMessage());
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al guardar el programa.");
+            return "programas/crear_editar_programa";
         }
 
-        return "redirect:/programas/empresa/" + programa.getEmpresa().getIdEmpresa();
     }
 
     // Mostrar formulario para editar el programa
+    @SuppressWarnings("null")
     @GetMapping("/editar/{id}")
     public String mostrarFormularioModificarPrograma(@PathVariable Integer id,
             Model model) {

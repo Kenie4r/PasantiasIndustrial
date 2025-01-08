@@ -17,6 +17,16 @@
                     <h1 class="mb-4"
                         th:text="${#strings.isEmpty(parametro.idParametro) ? 'Crear Parámetro' : 'Editar Parámetro'}">
                     </h1>
+
+                    <div th:if="${mensaje}"
+                        th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"
+                        role="alert">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
                     <form
                         th:action="@{${parametro.idParametro == null} ? '/parametros' : '/parametros/editar/' + ${parametro.idParametro}}"
                         th:object="${parametro}" method="post">

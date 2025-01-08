@@ -15,19 +15,26 @@
             <div id="content">
                 <div class="container-fluid">
                     <h1 class="mb-4"
-                        th:text="${#strings.isEmpty(rubro.idRubro) ? 'Crear rubro de empresa' : 'Editar rubro de usuario'}"></h1>
+                        th:text="${#strings.isEmpty(rubro.idRubro) ? 'Crear rubro de empresa' : 'Editar rubro de usuario'}">
+                    </h1>
+
+                    <div th:if="${mensaje}"
+                        th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"
+                        role="alert">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
                     <form
                         th:action="@{${#strings.isEmpty(rubro.idRubro)} ? '/rubros' : '/rubros/editar/' + ${rubro.idRubro}}"
                         th:object="${rubro}" method="post">
 
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
-                            <input type="text" id="descripcion" name="descripcion" class="form-control" th:field="*{descripcion}"
-                                required>
-                        </div>
-
-                        <div th:if="${error}">
-                            <p style="color: red;">${error}</p>
+                            <input type="text" id="descripcion" name="descripcion" class="form-control"
+                                th:field="*{descripcion}" required>
                         </div>
 
                         <button type="submit" class="btn btn-success">Guardar</button>

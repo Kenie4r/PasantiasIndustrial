@@ -2,13 +2,10 @@ package com.industrial.pasantias.Controller;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,17 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.industrial.pasantias.Model.Carrera;
-import com.industrial.pasantias.Model.Empresa;
 import com.industrial.pasantias.Model.EmpresaPrograma;
 import com.industrial.pasantias.Model.EstudianteEntity;
 import com.industrial.pasantias.Model.Pasantia;
 import com.industrial.pasantias.Model.PasantiaPrograma;
 import com.industrial.pasantias.Model.PK.PasantiaProgramaPK;
 import com.industrial.pasantias.Servicio.CarreraService;
-import com.industrial.pasantias.Servicio.EmpresaService;
 import com.industrial.pasantias.Servicio.EstudianteService;
 import com.industrial.pasantias.Servicio.PasantiaProgramaService;
 import com.industrial.pasantias.Servicio.PasantiaService;
@@ -49,9 +44,6 @@ public class PasantiaController {
 
     @Autowired
     private ProgramaService programaService;
-
-    @Autowired
-    private EmpresaService empresaService;
 
     @Autowired
     private PasantiaProgramaService pasantiaProgramaService;
@@ -77,27 +69,31 @@ public class PasantiaController {
         Pasantia pasantia = new Pasantia();
 
         model.addAttribute("carreras", carreras);
-        //model.addAttribute("programas", programas);
+        // model.addAttribute("programas", programas);
         model.addAttribute("estados", estados);
         model.addAttribute("pasantia", pasantia);
-        
+
         return "pasantias/guardar";
     }
 
     @PostMapping
-    public String guardarPasantia(@ModelAttribute Pasantia pasantia, Model model) {
+    public String guardarPasantia(@ModelAttribute Pasantia pasantia, Model model,
+            RedirectAttributes redirectAttributes) {
         try {
-            //pasantia.setFechaInicio(LocalDateTime.now());;
+            // pasantia.setFechaInicio(LocalDateTime.now());;
             pasantia.setFechaCrea(LocalDateTime.now());
             pasantia.setUsuCrea("test");
             String anioFull = '2' + pasantia.getAnioEstudiante();
             LocalDateTime fecha = LocalDateTime.of(Integer.parseInt(anioFull), Month.JANUARY, 1, 0, 0, 0);
             pasantia.setFechaIngresoUniversidad(fecha);
             pasantiaService.guardar(pasantia);
+            redirectAttributes.addFlashAttribute("mensaje", "La práctica profesional se guardó correctamente.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
             return "redirect:/pasantias";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            System.out.println(pasantia);
+            model.addAttribute("mensaje", "Ocurrió un error al guardar la práctica profesional.");
+            model.addAttribute("tipoMensaje", "error");
             return "pasantias/guardar";
         }
     }
@@ -112,7 +108,8 @@ public class PasantiaController {
         return "pasantias/proyectos";
     }
 
-    // Crear proyecto ------------------------------------------------------
+    // Formulario Crear proyecto
+    // ------------------------------------------------------
     @GetMapping("/proyectos/nuevo/{idPasantia}")
     public String nuevoProyecto(@PathVariable Integer idPasantia, Model model) {
         //
@@ -123,7 +120,7 @@ public class PasantiaController {
         PasantiaProgramaPK id = new PasantiaProgramaPK();
         id.setPasantia(pasantia);
         pasantiaPrograma.setId(id);
-        
+
         // Estados
         List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
 
@@ -131,28 +128,32 @@ public class PasantiaController {
         model.addAttribute("pasantia", pasantia);
         model.addAttribute("empresasProgramas", empresasProgramas);
         model.addAttribute("estados", estados);
+        model.addAttribute("accion", "guardar");
         return "pasantias/proyectoGuardar";
+
     }
 
+    // Guardar proyecto
     @PostMapping("/proyectos")
-    public String guardarProyecto(@ModelAttribute PasantiaPrograma pasantiaPrograma, Model model) {
+    public String guardarProyecto(@ModelAttribute PasantiaPrograma pasantiaPrograma, Model model,
+            RedirectAttributes redirectAttributes) {
         try {
             pasantiaPrograma.setFechaCrea(LocalDateTime.now());
-            pasantiaPrograma.setUsuCrea("test");
+            pasantiaPrograma.setUsuCrea("test");// PENDIENTE
 
-            System.out.println("---------------------------------------");
-            System.out.println('/' + pasantiaPrograma.getEstado() + '/');
-            System.out.println("---------------------------------------");
             pasantiaProgramaService.guardar(pasantiaPrograma);
+            redirectAttributes.addFlashAttribute("mensaje", "La práctica profesional se guardó correctamente.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
             return "redirect:/pasantias/proyectos/" + pasantiaPrograma.getId().getPasantia().getIdPasantia();
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            System.out.println(pasantiaPrograma);
+            System.out.println("pasantiaPrograma" + pasantiaPrograma);
 
             //
-            Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(pasantiaPrograma.getId().getPasantia().getIdPasantia());
+            Pasantia pasantia = pasantiaService
+                    .obtenerPorIdPasantia(pasantiaPrograma.getId().getPasantia().getIdPasantia());
             List<EmpresaPrograma> empresasProgramas = programaService.ObternerTodo();
-            
+
             // Estados
             List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
 
@@ -160,19 +161,24 @@ public class PasantiaController {
             model.addAttribute("pasantia", pasantia);
             model.addAttribute("empresasProgramas", empresasProgramas);
             model.addAttribute("estados", estados);
+
+            model.addAttribute("mensaje", "Ocurrió un error al guardar la práctica profesional.");
+            model.addAttribute("tipoMensaje", "error");
             return "pasantias/proyectoGuardar";
         }
     }
 
-    // Editar proyecto ------------------------------------------------------
+    // Formulario Editar proyecto
+    // ------------------------------------------------------
     @GetMapping("/proyectos/editar/pasantia/{idPasantia}/programa/{idPrograma}")
     public String editarProyecto(@PathVariable Integer idPasantia, @PathVariable Integer idPrograma, Model model) {
         //
         Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(idPasantia);
         List<EmpresaPrograma> empresasProgramas = programaService.ObternerTodo();
         //
-        Optional<PasantiaPrograma> pasantiaPrograma = pasantiaProgramaService.obtenerPorIdPasantiaPrograma(idPasantia, idPrograma);
-        
+        Optional<PasantiaPrograma> pasantiaPrograma = pasantiaProgramaService.obtenerPorIdPasantiaPrograma(idPasantia,
+                idPrograma);
+
         // Estados
         List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
 
@@ -180,6 +186,7 @@ public class PasantiaController {
         model.addAttribute("pasantia", pasantia);
         model.addAttribute("empresasProgramas", empresasProgramas);
         model.addAttribute("estados", estados);
+        model.addAttribute("accion", "editar");
         return "pasantias/proyectoGuardar";
     }
 
@@ -191,23 +198,23 @@ public class PasantiaController {
     }
 
     @GetMapping("/obtenerEstudiantesPorCarrera/{id}")
-    public ResponseEntity<?> obtenerEstudiantesPorCarrera(@PathVariable Integer id){
+    public ResponseEntity<?> obtenerEstudiantesPorCarrera(@PathVariable Integer id) {
         List<EstudianteEntity> estudiantes = estudianteService.obtenerPorIdCarrera(id);
         return ResponseEntity.ok(estudiantes);
     }
 
     @GetMapping("/obtenerCorrelativoPorCarrera/{id}")
-    public ResponseEntity<?> obtenerCorrelativoPorCarrera(@PathVariable Integer id){
+    public ResponseEntity<?> obtenerCorrelativoPorCarrera(@PathVariable Integer id) {
         Integer correlativo = pasantiaService.ObtenerCorrelativoParaNuevaPasantia(id);
         return ResponseEntity.ok(correlativo);
     }
 
     @PostMapping("/cambiarEstadoPractica")
-    public ResponseEntity<?> cambiarEstadoPractica(@RequestBody Pasantia pasantia){
+    public ResponseEntity<?> cambiarEstadoPractica(@RequestBody Pasantia pasantia) {
         pasantia = pasantiaService.obtenerPorIdPasantia(pasantia.getIdPasantia());
-        
+
         String estadoNuevo = pasantia.getEstado().equals("E") ? "F" : "E";
-        
+
         pasantia.setEstado(estadoNuevo);
         pasantiaService.guardar(pasantia);
         return ResponseEntity.ok(pasantia);

@@ -34,7 +34,7 @@ public class UsuarioController {
     @GetMapping("/usuarios")
     public String listarUsuarios(Model model) {
         List<Usuario> usuarios = usuarioService.obtenerTodos();
-        model.addAttribute("usuarios", usuarios);        
+        model.addAttribute("usuarios", usuarios);
         return "usuarios/listado_usuarios";
     }
 
@@ -49,7 +49,7 @@ public class UsuarioController {
 
     // Guardar usuario
     @PostMapping("/usuarios")
-    public String guardarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
+    public String guardarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes, Model model) {
         try {
             // Hashear la contraseña solo al crear el usuario
             if (usuario.getIdUsuario() == null) {
@@ -63,11 +63,13 @@ public class UsuarioController {
             usuarioService.guardar(usuario);
             redirectAttributes.addFlashAttribute("mensaje", "El usuario se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/usuarios";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el usuario.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al guardar el usuario.");
+            return "usuarios/crear_editar_usuario";
         }
-        return "redirect:/usuarios";
+
     }
 
     // Mostrar formulario para editar un usuario
@@ -87,7 +89,7 @@ public class UsuarioController {
     // Actualizar usuario
     @PostMapping("/usuarios/editar/{id}")
     public String actualizarUsuario(@PathVariable Integer id, @ModelAttribute Usuario usuario,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, Model model) {
         try {
             Usuario usuarioExistente = usuarioService.obtenerPorId(id);
             if (usuario == null) {
@@ -109,11 +111,12 @@ public class UsuarioController {
             usuarioService.guardar(usuarioExistente);
             redirectAttributes.addFlashAttribute("mensaje", "El usuario se actualizó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/usuarios";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al actualizar el usuario.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al actualizar el usuario.");
+            return "usuarios/crear_editar_usuario";
         }
-        return "redirect:/usuarios";
     }
 
     // Eliminar un usuario

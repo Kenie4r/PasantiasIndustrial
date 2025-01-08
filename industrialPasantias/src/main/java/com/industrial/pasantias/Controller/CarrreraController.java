@@ -36,26 +36,28 @@ public class CarrreraController {
         return "carreras/crear_editar_carrera";
     }
 
-    // Guardar carrera 
+    // Guardar carrera
     @PostMapping("/carreras")
-    public String guardarCarrera(@ModelAttribute Carrera carrera, RedirectAttributes redirectAttributes) {
+    public String guardarCarrera(@ModelAttribute Carrera carrera, RedirectAttributes redirectAttributes, Model model) {
         try {
             if (carrera.getIdCarrera() == null) {
                 carrera.setFechaCre(LocalDateTime.now());
                 carrera.setEstado("A");
-                carrera.setUsuCrea("USUARIO"); //PENDIENTE
+                carrera.setUsuCrea("USUARIO"); // PENDIENTE
             } else {
                 carrera.setFechaMod(LocalDateTime.now());
-                carrera.setUsuMod("USUARIO"); //PENDIENTE
+                carrera.setUsuMod("USUARIO"); // PENDIENTE
             }
             carreraService.guardar(carrera);
             redirectAttributes.addFlashAttribute("mensaje", "La carrera se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/carreras";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar la carrera.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al guardar la carrera.");
+            return "carreras/crear_editar_carrera";
         }
-        return "redirect:/carreras";
+
     }
 
     // Mostrar formulario para editar un carrera
@@ -71,7 +73,7 @@ public class CarrreraController {
 
     // Actualizar carrera
     @PostMapping("/carreras/editar/{id}")
-    public String actualizarCarrera(@PathVariable Integer id, @ModelAttribute Carrera carrera,
+    public String actualizarCarrera(@PathVariable Integer id, @ModelAttribute Carrera carrera, Model model,
             RedirectAttributes redirectAttributes) {
         try {
             Carrera carreraExistente = carreraService.obtenerPorId(id);
@@ -81,17 +83,19 @@ public class CarrreraController {
 
             carreraExistente.setDescripcion(carrera.getDescripcion());
             carreraExistente.setFechaMod(carrera.getFechaMod());
-            carreraExistente.setUsuMod(carrera.getUsuMod()); //PENDIENTE
+            carreraExistente.setUsuMod(carrera.getUsuMod()); // PENDIENTE
             carreraExistente.setCodCarrera(carrera.getCodCarrera());
 
             carreraService.guardar(carreraExistente);
             redirectAttributes.addFlashAttribute("mensaje", "La carrera se actualizó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/carreras";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al actualizar la carrera.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            model.addAttribute("tipoMensaje", "error");
+            model.addAttribute("mensaje", "Ocurrió un error al actualizar la carrera.");
+            return "carreras/crear_editar_carrera";
         }
-        return "redirect:/carreras";
+
     }
 
     // Eliminar un carrera
