@@ -34,7 +34,7 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/login", "/css/**", "/js/**", "/img/**", "/reports/**", "/vendor/**", "/scss/**").permitAll().anyRequest().authenticated()).formLogin(form->
         form.loginPage("/login").loginProcessingUrl("/access").defaultSuccessUrl("/inicio", true).failureUrl("/login?error=true").permitAll()).logout(
             logout-> logout.logoutUrl("/logout").logoutSuccessUrl("/login").permitAll()
-        ).csrf().disable().cors(); 
+        ).csrf().disable().cors().and().headers().frameOptions().sameOrigin();; 
         
         return http.build();
     }
