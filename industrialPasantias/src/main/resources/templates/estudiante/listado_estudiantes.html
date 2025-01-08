@@ -55,15 +55,29 @@
                                     <td th:text="${estudiantes.TELEFONO}"></td>
                                     <td th:text="${estudiantes.CORREO}"></td>
                                     <td th:text="${estudiantes.Carrera.descripcion}"></td>
+
                                     <td>
-                                        <a th:href="@{/pdfs/{nombre}(nombre=${estudiantes.HOJA_DE_VIDA})}"
-                                            target="_blank" class="btn btn-primary">
-                                            Ver PDF <i class="fas fa-file-pdf"></i>
-                                        </a>
+                                        <a th:if="${estudiantes.HOJA_DE_VIDA != null and !estudiantes.HOJA_DE_VIDA.isEmpty()}"
+                                        th:href="@{/pdfs/{nombre}(nombre=${estudiantes.HOJA_DE_VIDA})}"
+                                        target="_blank" class="btn btn-primary">
+                                         Ver PDF <i class="fas fa-file-pdf"></i>
+                                     </a>
+                                 
+                                     <span th:unless="${estudiantes.HOJA_DE_VIDA != null and !estudiantes.HOJA_DE_VIDA.isEmpty()}">
+                                         <button class="btn btn-warning" disabled>Documento no subido</button>
+                                     </span>
                                     </td>
+                     
                                     <td>
-                                        <img th:src="@{/images/{img}(img=${estudiantes.FOTO_URL})}"
-                                            alt="Imagen de estudiante" style="width: 100px; height: auto;" />
+
+                                    <img th:if="${estudiantes.FOTO_URL != null and !estudiantes.FOTO_URL.isEmpty()}"
+                                        th:src="@{/images/{img}(img=${estudiantes.FOTO_URL})}"
+                                        alt="Imagen de estudiante" style="width: 100px; height: auto;" />
+                                        
+  
+                                    <img th:unless="${estudiantes.FOTO_URL != null and !estudiantes.FOTO_URL.isEmpty()}"
+                                        th:src="@{/images/sin_foto.png}"
+                                        alt="Imagen predeterminada" style="width: 100px; height: auto;" />
                                     </td>
                                     <td th:text="${estudiantes.FECHA_CREA}"></td>
                                     <td th:text="${estudiantes.FECHA_MOD}"></td>

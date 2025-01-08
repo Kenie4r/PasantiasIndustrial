@@ -144,7 +144,7 @@ public class EstudianteController {
                             nameFileCV);
 
                     hojaDeVida.transferTo(new File(destinyRouteCV));
-                    //rutas.put("rutaCV", destinyRouteCV);
+                    // rutas.put("rutaCV", destinyRouteCV);
                     rutas.put("rutaCV", nameFileCV);
                 }
             }
@@ -166,7 +166,7 @@ public class EstudianteController {
                             nameFileFU);
 
                     fotoUrl.transferTo(new File(destinyRouteFU));
-                    //rutas.put("rutaFoto", destinyRouteFU);
+                    // rutas.put("rutaFoto", destinyRouteFU);
                     rutas.put("rutaFoto", nameFileFU);
                 }
             }
@@ -184,7 +184,9 @@ public class EstudianteController {
             @RequestParam("FotoUrl") MultipartFile fotoUrl,
             @RequestParam("carrera") Integer CarreraValue) {
         try {
-            Optional<EstudianteEntity> optional = service.obtenerDataModificar(carnet);
+
+            Optional<EstudianteEntity> optional = service.obtenerDataModificar(estudiante.getCarnet());
+
             if (optional.isPresent()) {
 
                 EstudianteEntity estudianteExistente = optional.orElse(new EstudianteEntity());
@@ -220,6 +222,7 @@ public class EstudianteController {
                 System.out.println("NO HAY OPCIONAL");
             }
         } catch (Exception e) {
+            logger.error("Error al editar el estudiante {}", e.getMessage());
             redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al editar el estudiante.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
@@ -232,17 +235,24 @@ public class EstudianteController {
 
             List<Carrera> carreras = carreraService.obtenerCarrerasActivas();
 
+            Optional<EstudianteEntity> estudiante = service.obtenerDataModificar(carnet);
+
+            if (estudiante.isPresent()) {
+                model.addAttribute("estudiante", estudiante.get());
+            }
+
             if (carreras != null) {
+
+                Carrera carreraSeleccionada = estudiante.get().getCarrera();
+
+                carreras.remove(carreraSeleccionada);
+                carreras.add(0, carreraSeleccionada);
+
                 model.addAttribute("carreras", carreras);
             }
 
             if (carreras == null) {
                 model.addAttribute("carreras", new Carrera());
-            }
-            
-            Optional<EstudianteEntity> estudiante = service.obtenerDataModificar(carnet);
-            if (estudiante.isPresent()) {
-                model.addAttribute("estudiante", estudiante.get());
             }
             return "estudiante/crear_editar_estudiante";
         } catch (Exception e) {
