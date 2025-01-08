@@ -229,6 +229,17 @@ public class EstudianteController {
     @GetMapping("/editar/{carnet}")
     public String editarEstudianteForm(@PathVariable String carnet, Model model) {
         try {
+
+            List<Carrera> carreras = carreraService.obtenerCarrerasActivas();
+
+            if (carreras != null) {
+                model.addAttribute("carreras", carreras);
+            }
+
+            if (carreras == null) {
+                model.addAttribute("carreras", new Carrera());
+            }
+            
             Optional<EstudianteEntity> estudiante = service.obtenerDataModificar(carnet);
             if (estudiante.isPresent()) {
                 model.addAttribute("estudiante", estudiante.get());
