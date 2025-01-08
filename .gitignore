@@ -3,3 +3,9 @@ industrialPasantias\src\main\resources\application.properties
 industrialPasantias/src/main/resources/application.properties
 *.properties
 industrialPasantias/src/main/resources/application.properties
+
+# Ignorar carpeta pdfs
+industrialPasantias/src/main/resources/static/pdfs/
+
+# Ignorar carpeta images
+industrialPasantias/src/main/resources/static/images/
