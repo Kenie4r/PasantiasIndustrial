@@ -123,4 +123,6 @@ public class EstudianteService {
     public List<EstudianteEntity> obtenerPorIdCarrera(int id) {
         return repository.encontrarPorCarrera(id);
     }
+
+    
 }

@@ -8,48 +8,56 @@
 	<parameter name="ID_CARRERA" class="java.lang.String"/>
 	<parameter name="CARNET" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT pa."CARNET" AS CARNET,
-	CONCAT( e.NOMBRES,' ',e.APELLIDOS) AS NOMBRE,
-	e."TELEFONO",
-	e."TELEFONO2",
-	e."CORREO",
-	CONCAT( '[',c.COD_CARRERA,']',c.DESCRIPCION) AS NOMBRE_CARRERA,
-	pa."ANIO_ESTUDIANTE",
-	(SELECT COUNT( 1)
-FROM "MATERIA"
+		<![CDATA[SELECT 
+FORMAT(P.CORRELATIVO,'000') AS CORRELATIVO, 
+COD_CARRERA, 
+P.CARNET AS CARNET , 
+CONCAT(E.NOMBRES, ' ', E.APELLIDOS) AS NOMBRE, 
+E.TELEFONO, 
+E.TELEFONO2, 
+E.CORREO,
+p.FECHA_INGRESO_UNIVERSIDAD,
+CONCAT('[' , c.COD_CARRERA, '] ', c.DESCRIPCION) as NOMBRE_CARRERA, 
+p.ANIO_ESTUDIANTE,
+PP.MATERIAS_CURSADAS_CANTIDAD,
+PP.MATERIAS_CURSADAS_UV, 
+EM.NOMBRE AS NOMBRE_EMPRESA, 
+em.UBICACION, 
+EM.SITIO_WEB, 
+em.TELEFONO AS TEL_EMPRESA, 
+pr.NOMBRE_PROGRAMA, 
+PR.NOMBRE_RESPONSABLE, 
+PR.AREA_REALIZACION, 
+PR.OTROS_DETALLES, 
+pr.OBSERVACIONES
+FROM DBO.PASANTIA P 
+INNER JOIN DBO.ESTUDIANTE E
+ON (E.CARNET = P.CARNET) 
+INNER JOIN DBO.CARRERA C 
+ON (C.ID_CARRERA  = P.ID_CARRERA)
+INNER JOIN DBO.PASANTIA_PROGRAMA PP 
+ON (PP.ID_PASANTIA = P.ID_PASANTIA) 
+INNER JOIN DBO.PROGRAMA PR 
+ON (PR.ID_PROGRAMA = PP.ID_PROGRAMA) 
+LEFT JOIN DBO.EMPRESA EM 
+ON (EM.ID_EMPRESA = PR.ID_EMPRESA)
+LEFT JOIN DBO.MATERIA MT 
+ON (MT.ID_MATERIA = PR.ID_MATERIA AND 
+MT.ID_CARRERA = P.ID_CARRERA) 
+
 WHERE 
-	 "MATERIA"."ID_CARRERA" = '1' ) AS MATERIAS_CUR,
-	0 AS UVA,
-	em."NOMBRE" as NOMBRE_EMPRESA,
-	em."UBICACION",
-	em."TELEFONO" AS TEL_EMPRESA,
-	em."SITIO_WEB",
-	pr."NOMBRE_PROGRAMA",
-	pr."NOMBRE_RESPONSABLE",
-	pr."AREA_REALIZACION",
-	pr."OTROS_DETALLES",
-	pr."OBSERVACIONES"
-FROM "PASANTIA" pa
-	INNER JOIN "ESTUDIANTE" e ON 
-	  ( 
-	 e."CARNET" = pa."CARNET") 
-	INNER JOIN "CARRERA" c ON 
-	  ( 
-	 c."ID_CARRERA" = pa."ID_CARRERA") 
-	INNER JOIN "PASANTIA_PROGRAMA" pp ON 
-	  ( 
-	 pp."ID_PASANTIA" = pa."ID_PASANTIA") 
-	INNER JOIN "PROGRAMA" pr ON 
-	  ( 
-	 pr."ID_PROGRAMA" = pp."ID_PROGRAMA") 
-	INNER JOIN "EMPRESA" em ON 
-	  ( 
-	 em."ID_EMPRESA" = pr."ID_EMPRESA") 
-WHERE 
-	 pa."CARNET" =  $P{CARNET} 
-	 AND pa."ID_PASANTIA" =  $P{ID_PASANTIA} 
-	 AND pa."ID_CARRERA" =  $P{ID_CARRERA}]]>
+	 p."CARNET" =  $P{CARNET} 
+	 AND p."ID_PASANTIA" =  $P{ID_PASANTIA} 
+	 AND p."ID_CARRERA" =  $P{ID_CARRERA}]]>
 	</queryString>
+	<field name="CORRELATIVO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="CORRELATIVO"/>
+		<property name="com.jaspersoft.studio.field.label" value="CORRELATIVO"/>
+	</field>
+	<field name="COD_CARRERA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="COD_CARRERA"/>
+		<property name="com.jaspersoft.studio.field.label" value="COD_CARRERA"/>
+	</field>
 	<field name="CARNET" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="CARNET"/>
 		<property name="com.jaspersoft.studio.field.label" value="CARNET"/>
@@ -70,6 +78,10 @@ WHERE
 		<property name="com.jaspersoft.studio.field.name" value="CORREO"/>
 		<property name="com.jaspersoft.studio.field.label" value="CORREO"/>
 	</field>
+	<field name="FECHA_INGRESO_UNIVERSIDAD" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="FECHA_INGRESO_UNIVERSIDAD"/>
+		<property name="com.jaspersoft.studio.field.label" value="FECHA_INGRESO_UNIVERSIDAD"/>
+	</field>
 	<field name="NOMBRE_CARRERA" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="NOMBRE_CARRERA"/>
 		<property name="com.jaspersoft.studio.field.label" value="NOMBRE_CARRERA"/>
@@ -78,13 +90,13 @@ WHERE
 		<property name="com.jaspersoft.studio.field.name" value="ANIO_ESTUDIANTE"/>
 		<property name="com.jaspersoft.studio.field.label" value="ANIO_ESTUDIANTE"/>
 	</field>
-	<field name="MATERIAS_CUR" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="MATERIAS_CUR"/>
-		<property name="com.jaspersoft.studio.field.label" value="MATERIAS_CUR"/>
+	<field name="MATERIAS_CURSADAS_CANTIDAD" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="MATERIAS_CURSADAS_CANTIDAD"/>
+		<property name="com.jaspersoft.studio.field.label" value="MATERIAS_CURSADAS_CANTIDAD"/>
 	</field>
-	<field name="UVA" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="UVA"/>
-		<property name="com.jaspersoft.studio.field.label" value="UVA"/>
+	<field name="MATERIAS_CURSADAS_UV" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="MATERIAS_CURSADAS_UV"/>
+		<property name="com.jaspersoft.studio.field.label" value="MATERIAS_CURSADAS_UV"/>
 	</field>
 	<field name="NOMBRE_EMPRESA" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="NOMBRE_EMPRESA"/>
@@ -94,13 +106,13 @@ WHERE
 		<property name="com.jaspersoft.studio.field.name" value="UBICACION"/>
 		<property name="com.jaspersoft.studio.field.label" value="UBICACION"/>
 	</field>
-	<field name="TEL_EMPRESA" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="TEL_EMPRESA"/>
-		<property name="com.jaspersoft.studio.field.label" value="TEL_EMPRESA"/>
-	</field>
 	<field name="SITIO_WEB" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="SITIO_WEB"/>
 		<property name="com.jaspersoft.studio.field.label" value="SITIO_WEB"/>
+	</field>
+	<field name="TEL_EMPRESA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="TEL_EMPRESA"/>
+		<property name="com.jaspersoft.studio.field.label" value="TEL_EMPRESA"/>
 	</field>
 	<field name="NOMBRE_PROGRAMA" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="NOMBRE_PROGRAMA"/>
@@ -147,8 +159,8 @@ WHERE
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Práctica Profesional No.]]></text>
 			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="337" y="0" width="21" height="21" uuid="b45b2186-96e3-49ae-abe2-4ef58081811c"/>
+			<textField>
+				<reportElement positionType="Float" x="337" y="0" width="21" height="21" uuid="8ba5c5a6-ebbc-4969-b5ac-19aef56101a7"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -156,10 +168,10 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="358" y="0" width="21" height="21" uuid="cb30092c-dbe5-4329-ab72-497c8dce6b49"/>
+				<textFieldExpression><![CDATA[$F{COD_CARRERA}.toString().charAt(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="358" y="0" width="21" height="21" uuid="e3bed6f0-7d81-47fe-8d5a-0f8bcbe55de9"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -167,10 +179,10 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="379" y="0" width="21" height="21" uuid="7ea2cc72-dd83-474d-97e9-9539677a85f3"/>
+				<textFieldExpression><![CDATA[$F{COD_CARRERA}.toString().charAt(1)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="379" y="0" width="21" height="21" uuid="1cb54674-5203-4d16-89b8-c6c5e9cf10d9"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -178,8 +190,8 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$F{COD_CARRERA}.toString().charAt(2)]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="400" y="0" width="21" height="21" uuid="5fd6ec68-1463-4f13-a741-31512bb7ba0f"/>
 				<box>
@@ -191,8 +203,8 @@ WHERE
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[-]]></text>
 			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="421" y="0" width="21" height="21" uuid="5d7e04a3-e617-4797-9a42-21e2836fa747"/>
+			<textField>
+				<reportElement positionType="Float" x="421" y="0" width="21" height="21" uuid="44241c16-831b-4361-a46f-ce76f59a7950"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -200,10 +212,10 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="442" y="0" width="21" height="21" uuid="2df2acf1-ddb2-4490-8acb-a667023807ed"/>
+				<textFieldExpression><![CDATA[$F{CORRELATIVO}.charAt(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="442" y="0" width="21" height="21" uuid="144d0ade-05d8-426f-a55b-28b3fa20ca39"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -211,10 +223,10 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="463" y="0" width="21" height="21" uuid="fd49a130-f469-4bab-a498-645dd177fe0b"/>
+				<textFieldExpression><![CDATA[$F{CORRELATIVO}.charAt(1)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="463" y="0" width="21" height="21" uuid="3499a1c7-506e-4633-8f18-9e7f1e9034a4"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -222,8 +234,8 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$F{CORRELATIVO}.charAt(2)]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="484" y="0" width="21" height="21" uuid="48f6e50a-bd66-4482-9e70-3bb53a14c693"/>
 				<box>
@@ -235,8 +247,8 @@ WHERE
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[-]]></text>
 			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="505" y="0" width="21" height="21" uuid="75a4d3ba-13ef-4255-89c1-4bc4965e3a77"/>
+			<textField>
+				<reportElement positionType="Float" x="505" y="0" width="21" height="21" uuid="6e92b06e-5f04-43f9-8bbc-21f8267bc617"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -244,10 +256,10 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="527" y="0" width="21" height="21" uuid="0b28e9d1-f869-4752-be92-42059f9cf4ca"/>
+				<textFieldExpression><![CDATA[$F{ANIO_ESTUDIANTE}.charAt(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="527" y="0" width="21" height="21" uuid="d9564c19-8d74-46c6-9a95-16c9424f15b7"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -255,10 +267,10 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="548" y="0" width="21" height="21" uuid="63cacc86-7067-4604-ab7d-cd154687f0c2"/>
+				<textFieldExpression><![CDATA[$F{ANIO_ESTUDIANTE}.charAt(1)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="548" y="0" width="21" height="21" uuid="d5564864-74bc-48bd-b440-7f2d4385d410"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -266,8 +278,8 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[0]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$F{ANIO_ESTUDIANTE}.charAt(2)]]></textFieldExpression>
+			</textField>
 			<line>
 				<reportElement positionType="Float" x="337" y="25" width="232" height="1" uuid="4a7921d6-7d97-4780-a78e-f121f08c176d"/>
 				<graphicElement>
@@ -467,7 +479,7 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{ANIO_ESTUDIANTE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy").format($F{FECHA_INGRESO_UNIVERSIDAD})]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="181" y="250" width="139" height="20" uuid="774f0b4c-2763-4972-ab14-bb487b6d6c67"/>
@@ -501,7 +513,7 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{MATERIAS_CUR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{MATERIAS_CURSADAS_CANTIDAD}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
 				<reportElement positionType="Float" x="320" y="270" width="251" height="31" uuid="f6b8c5a0-6438-4215-9649-925cab5f6431"/>
@@ -511,7 +523,7 @@ WHERE
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{UVA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{MATERIAS_CURSADAS_UV}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="-2" y="310" width="573" height="20" uuid="9611f872-b06c-4c36-ba4b-0346bb17e57e"/>

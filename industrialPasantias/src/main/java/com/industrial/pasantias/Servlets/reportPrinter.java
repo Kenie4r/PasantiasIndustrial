@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.industrial.pasantias.Servicio.EstudianteService;
+
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
@@ -26,6 +28,9 @@ import javax.sql.DataSource;
 public class reportPrinter {
     @Autowired
     private DataSource dataSource; 
+
+    @Autowired
+    private EstudianteService restudianteService; 
 
     @GetMapping("/reportPrinter")
     @ResponseBody
@@ -87,11 +92,12 @@ public class reportPrinter {
     
 
 
-    @GetMapping("/reportPrinter/{nombre}/{pasantia}")
+    @GetMapping("/formularios/{nombre}/{pasantia}")
     @ResponseBody
     public void generarReportePDFparams(HttpServletResponse response, 
                                   @RequestParam(required = false) String parametroEjemplo, @PathVariable String nombre, @PathVariable String pasantia) {
         try {
+            String reportName = "FI01"; 
             String[] datosPasantia = pasantia.split("-"); 
             // Ruta del archivo .jasper en el directorio de recursos
             InputStream jasperStream = getClass().getResourceAsStream("/static/reports/"+ nombre + ".jasper");
@@ -116,9 +122,13 @@ public class reportPrinter {
                 // Llenar el reporte con los parámetros y la conexión
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
 
+
+                //Obtenemo el nombre del estudiante
+                reportName += restudianteService.obtenerDataModificar( datosPasantia[2]).get().getAPELLIDOS(); 
+
                 // Establecer las cabeceras de la respuesta HTTP
                 response.setContentType("application/pdf");
-                response.setHeader("Content-Disposition", "inline; filename=\"reporte.pdf\"");
+                response.setHeader("Content-Disposition", "inline; filename=\""+reportName+ ".pdf\"");
 
                 // Exportar el reporte a PDF y escribir en la respuesta
                 JRPdfExporter exporter = new JRPdfExporter();
