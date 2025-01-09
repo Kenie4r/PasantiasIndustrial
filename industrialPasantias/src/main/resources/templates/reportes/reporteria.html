@@ -17,51 +17,53 @@
                 <div class="row h-100">
                     <div class="col-md-12 col-xl-4"> 
                         <div class="card mb-4 d-xl-block d-none ">
-                            <div class="card-header">
-                                Filtros de reporte
-                            </div>
-                            <div class="card-body">
-                                <div>
-                                    <label for="tipos">Formulario a generar</label>
-                                    <select name="tipos" id="Nreportes" class="form-control select-2" th:field="${reporte}"  >
-                                        <option value="">Seleccione un formulario...</option>
-                                        <option value="PPUDBF101" >PP-UDB-FI-01</option>
+                        
+                                <div class="card-header">
+                                    Filtros de reporte
+                                </div>
+                                <div class="card-body">
+                                    <div>
+                                        <label for="tipos">Formulario a generar</label>
+                                        <select name="tipos" id="Nreportes" class="form-control select-2" th:field="${reporte}"  >
+                                            <option value="">Seleccione un formulario...</option>
+                                            <option value="PPUDBF101" >PP-UDB-FI-01</option>
 
-                                        <option value="PPUDBF102" >PP-UDB-FI-02</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="idpasantia">
-                                        Número de pasantia:
-                                    </label>
-                                    <input type="text" id="idpasantia" class="form-control"/>
-                                </div>
-                                <div>
-                                    <label for="idCarrera" class="form-label" >
-                                        Carrera: 
-                                    </label>
-                                    <select id="idCarrera" name="idCarrera" class="form-control select-2"  >
-                                        <option value="0">Seleccionar carrera...</option>
-                                        <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
-                                        </option>
-                                    </select>
+                                            <option value="PPUDBF102" >PP-UDB-FI-02</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="idpasantia">
+                                            Número de pasantia:
+                                        </label>
+                                        <input type="text" id="idpasantia" class="form-control"/>
+                                    </div>
+                                    <div>
+                                        <label for="idCarrera" class="form-label" >
+                                            Carrera: 
+                                        </label>
+                                        <select id="idCarrera" name="idCarrera" class="form-control select-2"  >
+                                            <option value="0">Seleccionar carrera...</option>
+                                            <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
+                                            </option>
+                                        </select>
 
+                                    </div>
+                            
+                                    <div>
+                                        <label for="codEstudiante">
+                                            Código de estudiante: 
+                                        </label>
+                                        <input type="text" id="codEstudiante"class="form-control"/>
+                                    </div>
+                                        
+                                    <br/>
+                                    <br/>
+                                    <button class="btn btn-success" id="btnGenerar">
+                                        Generar Formulario
+                                    </button>
+                                    
                                 </div>
-                       
-                                <div>
-                                    <label for="codEstudiante">
-                                        Código de estudiante: 
-                                    </label>
-                                    <input type="text" id="codEstudiante"class="form-control"/>
-                                </div>
-                                   
-                                <br/>
-                                <br/>
-                                <button class="btn btn-success" id="btnGenerar">
-                                    Generar Formulario
-                                </button>
-                                
-                            </div>
+                            
                         </div>
 
 
@@ -75,11 +77,13 @@
                             <!-- Card Content - Collapse -->
                             <div class="collapse show" id="collapseCardExample">
                                 <div class="card-body">
+                                    
                                     <div>
                                         <label for="tipos">Formulario a generar</label>
                                         <select name="tipos" id="Nreportes2" class="form-control select-2" th:field="${reporte2}"   >
                                             <option value="">Seleccione un formulario...</option>
                                             <option value="PPUDBF101" >PP-UDB-FI-01</option>
+                                            <option value="PPUDBF102" >PP-UDB-FI-02</option>
                                         </select>
                                     </div>
                                     <div>
@@ -111,6 +115,7 @@
                                     <button class="btn btn-success" id="btnGenerar2">
                                         Generar Formulario
                                     </button>
+                                 
                                 </div>
                             </div>
                         </div>
