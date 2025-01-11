@@ -85,8 +85,7 @@ public class MateriaController {
             Materia materiaExistente = materiaService.obtenerPorId(id);
             if (materia == null) {
                 return "redirect:/materias";
-            }
-            System.out.println("materia:" + materia);
+            }            
             materiaExistente.setNombre(materia.getNombre());
             materiaExistente.setCarrera(materia.getCarrera());
             materiaExistente.setEstado(materia.getEstado());
