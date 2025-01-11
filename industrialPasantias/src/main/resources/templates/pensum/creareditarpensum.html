@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Roles')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Barra de navegación -->
+        <div th:replace="fragments/navbar :: navbar"></div>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Barra superior -->
+            <div th:replace="fragments/topbar :: topbar"></div>
+
+            <div id="content">
+                <div class="container-fluid">
+                    <!-- Título dinámico basado en el contexto -->
+                    <h1 class="mb-4" th:text="${pensum.ID_PENSUM == null ? 'Crear Pensum' : 'Editar Pensum'}"></h1>
+
+                    <!-- Formulario para crear/editar rol -->
+                    <form
+                        th:action="@{${pensum.ID_PENSUM == null ? '/pensums/crear' : '/pensums/editar/' + pensum.ID_PENSUM}}"
+                        th:object="${pensum}" method="post">
+
+                        <!-- Campo DESCRIPCION -->
+                        <div class="mb-3">
+                            <label for="NOMBRE" class="form-label">NOMBRE</label>
+                            <input type="text" id="NOMBRE" name="NOMBRE" class="form-control" th:field="*{NOMBRE}"
+                                required>
+                        </div>
+                       
+                        <!-- Botones -->
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="/pensums/obtenerTodos" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Pie de página -->
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+
+    <!-- Modales y scripts -->
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>
