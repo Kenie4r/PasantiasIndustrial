@@ -25,8 +25,12 @@ public class MainController {
         Usuario datosUsuario = new Usuario();
         if (username != "Anónimo" && username != null) {
             datosUsuario = usuarioService.obtenerPorUsername(username);        
+            model.addAttribute("datosUsuario", datosUsuario);
         }
-        model.addAttribute("datosUsuario", datosUsuario);
+        else {
+            model.addAttribute("datosUsuario", null);
+        }
+        
         return "index.html";
     }
 
