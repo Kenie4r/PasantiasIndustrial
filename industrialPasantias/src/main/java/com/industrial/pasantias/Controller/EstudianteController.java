@@ -1,6 +1,7 @@
 package com.industrial.pasantias.Controller;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,11 +9,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.springframework.http.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.core.io.Resource;
 
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
@@ -34,7 +42,7 @@ import com.industrial.pasantias.Servicio.EstudianteService;
 public class EstudianteController {
 
     @Autowired
-    private EstudianteService service;
+    private EstudianteService estudianteService;
 
     @Autowired
     private CarreraService carreraService;
@@ -43,28 +51,25 @@ public class EstudianteController {
     private Environment environment;
     private static Logger logger = LoggerFactory.getLogger(EstudianteController.class);
 
+    // Listar todos los estudiantes
     @GetMapping("/obtenerTodos")
     public String listarTodos(Model model) {
-
-        Optional<List<EstudianteEntity>> roles = service.obtenerTodos();
+        Optional<List<EstudianteEntity>> roles = estudianteService.obtenerTodos();
 
         if (roles.isPresent()) {
             model.addAttribute("estudiantes", roles.orElse(new ArrayList<>()));
-
         }
 
         if (!roles.isPresent()) {
             model.addAttribute("estudiantes", new ArrayList<>());
         }
-
         return "estudiante/listado_estudiantes";
     }
 
+    // Mostrar formulario crear estudiante
     @GetMapping("/nuevo")
     public String mostrarFormularioEstudiante(Model model) {
-
         List<Carrera> carreras = carreraService.obtenerCarrerasActivas();
-
         model.addAttribute("estudiante", new EstudianteEntity());
 
         if (carreras != null) {
@@ -74,178 +79,209 @@ public class EstudianteController {
         if (carreras == null) {
             model.addAttribute("carreras", new Carrera());
         }
-
         return "estudiante/crear_editar_estudiante";
     }
 
+    // Guardar estudiante
     @PostMapping("/crear")
-    public String guardarEstudiante(@ModelAttribute EstudianteEntity estudiante,
-            @RequestParam("HojaDeVida") MultipartFile hojaDeVida,
-            @RequestParam("FotoUrl") MultipartFile fotoUrl, RedirectAttributes redirectAttributes,
-            @RequestParam("carrera") Integer CarreraValue) {
+    public String guardarEstudiante(
+            @ModelAttribute EstudianteEntity estudianteEntity,
+            @RequestParam(value = "HojaDeVida", required = false) MultipartFile hojaDeVida,
+            @RequestParam(value = "FotoUrl", required = false) MultipartFile fotoUrl,
+            RedirectAttributes redirectAttributes) {
+
         try {
-
+            // Procesar rutas de destino para los archivos
             HashMap<String, String> rutas = rutasDeDestino(fotoUrl, hojaDeVida);
-            estudiante.setFOTO_URL("");
-            estudiante.setHOJA_DE_VIDA("");
 
-            if (rutas.containsKey("rutaFoto")) {
-                estudiante.setFOTO_URL(rutas.get("rutaFoto"));
+            estudianteEntity.setFOTO_URL(
+                    rutas != null && rutas.containsKey("rutaFoto") ? rutas.get("rutaFoto") : "");
+            estudianteEntity.setHOJA_DE_VIDA(
+                    rutas != null && rutas.containsKey("rutaCV") ? rutas.get("rutaCV") : "");
+
+            // Establecer datos del estudiante
+            estudianteEntity.setFECHA_CREA(new Date(System.currentTimeMillis()));
+
+            // Guardar en base de datos
+            Optional<EstudianteEntity> response = estudianteService.crearEstudiante(estudianteEntity);
+
+            if (response.isPresent()) {
+                redirectAttributes.addFlashAttribute("mensaje", "El estudiante se guardó correctamente.");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            } else {
+                redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el estudiante.");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "error");
             }
-
-            if (rutas.containsKey("rutaCV")) {
-                estudiante.setHOJA_DE_VIDA(rutas.get("rutaCV"));
-            }
-
-            estudiante.setFECHA_CREA(new Date(System.currentTimeMillis()));
-            Carrera carrera = new Carrera();
-
-            carrera.setIdCarrera(CarreraValue);
-            estudiante.setCarrera(carrera);
-
-            Optional<EstudianteEntity> response = service.crearEstudiante(estudiante);
-            if (!response.isPresent()) {
-                logger.info("No se pudo guardar el estudiante.");
-            }
-            redirectAttributes.addFlashAttribute("mensaje", "El estudiante se guardó correctamente.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
+            logger.error("Error al guardar estudiante: {}", e.getMessage());
             redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el estudiante.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
         return "redirect:/estudiantes/obtenerTodos";
     }
 
+    // Obtener imagenes de la carpeta
+    @Value("${route.destiny.files}")
+    private String uploadDir;
+
+    @GetMapping("/images/{filename}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(uploadDir + "/fotos").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (!resource.exists()) {
+                throw new RuntimeException("Archivo no encontrado: " + filename);
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Obtener pdfs de la carpeta
+    @GetMapping("/pdfs/{filename}")
+    public ResponseEntity<Resource> getCv(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(uploadDir + "/cv").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (!resource.exists()) {
+                throw new RuntimeException("Archivo no encontrado: " + filename);
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Rutas para los archivos
     public HashMap<String, String> rutasDeDestino(MultipartFile fotoUrl, MultipartFile hojaDeVida) {
         HashMap<String, String> rutas = new HashMap<>();
         try {
             DateTimeFormatter format = DateTimeFormatter.ofPattern("MMddyyyyHHmmss");
-            String contentTypeCV = hojaDeVida.getContentType();
-            String contentTypeFU = fotoUrl.getContentType();
-            String nameFileCV = "";
-            String nameFileFU = "";
 
-            if (contentTypeCV != null) {
+            if (hojaDeVida != null && !hojaDeVida.isEmpty()) {
+                String contentTypeCV = hojaDeVida.getContentType();
                 String[] contentTypeCVS = contentTypeCV.split("/");
+                String nameFileCV = String.format("%s_CV.%s", format.format(LocalDateTime.now()), contentTypeCVS[1]);
+                String destinyRouteCV = environment.getProperty("route.destiny.files") + File.separator + "CV"
+                        + File.separator + nameFileCV;
 
-                boolean noFile = (contentTypeCV.equals("application/octet-stream") ? false : true);
-
-                if (noFile) {
-                    nameFileCV = String.format("%s_CV.%s", format.format(LocalDateTime.now()), contentTypeCVS[1]);
-
-                    String destinyRouteCV = String.format("%s%s%s%s%s",
-                            environment.getProperty("route.destiny.files", String.class),
-                            File.separator,
-                            "CV",
-                            File.separator,
-                            nameFileCV);
-
-                    hojaDeVida.transferTo(new File(destinyRouteCV));
-                    // rutas.put("rutaCV", destinyRouteCV);
-                    rutas.put("rutaCV", nameFileCV);
-                }
+                hojaDeVida.transferTo(new File(destinyRouteCV));
+                rutas.put("rutaCV", nameFileCV);
             }
 
-            if (contentTypeFU != null) {
+            if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                String contentTypeFU = fotoUrl.getContentType();
+                String[] contentTypeFUS = contentTypeFU.split("/");
+                String nameFileFU = String.format("%s_FU.%s", format.format(LocalDateTime.now()), contentTypeFUS[1]);
+                String destinyRouteFU = environment.getProperty("route.destiny.files") + File.separator + "fotos"
+                        + File.separator + nameFileFU;
 
-                boolean noFile = (contentTypeFU.equals("application/octet-stream") ? false : true);
-
-                if (noFile) {
-                    String[] contentTypeFUS = contentTypeFU.split("/");
-
-                    nameFileFU = String.format("%s_FU.%s", format.format(LocalDateTime.now()), contentTypeFUS[1]);
-
-                    String destinyRouteFU = String.format("%s%s%s%s%s",
-                            environment.getProperty("route.destiny.files", String.class),
-                            File.separator,
-                            "fotos",
-                            File.separator,
-                            nameFileFU);
-
-                    fotoUrl.transferTo(new File(destinyRouteFU));
-                    // rutas.put("rutaFoto", destinyRouteFU);
-                    rutas.put("rutaFoto", nameFileFU);
-                }
+                fotoUrl.transferTo(new File(destinyRouteFU));
+                rutas.put("rutaFoto", nameFileFU);
             }
-            return rutas;
+
         } catch (Exception e) {
-            logger.error("Error al obtener las rutas de los archivos: {}", e.getMessage());
-            return rutas;
+            logger.error("Error al procesar archivos: {}", e.getMessage());
         }
-
+        return rutas;
     }
 
+    // Editar estudiante
     @PostMapping("/editar/{carnet}")
-    public String editarEstudiante(@PathVariable String carnet, RedirectAttributes redirectAttributes,
-            @ModelAttribute EstudianteEntity estudiante, @RequestParam("HojaDeVida") MultipartFile hojaDeVida,
-            @RequestParam("FotoUrl") MultipartFile fotoUrl,
-            @RequestParam("carrera") Integer CarreraValue) {
+    public String editarEstudiante(
+            RedirectAttributes redirectAttributes,
+            @ModelAttribute EstudianteEntity estudianteEntity,
+            @RequestParam(value = "HojaDeVida", required = false) MultipartFile hojaDeVida,
+            @RequestParam(value = "FotoUrl", required = false) MultipartFile fotoUrl) {
+        System.out.println("carnet: " + estudianteEntity.getCarnet());
         try {
+            // Verificar si el estudiante existe
+            estudianteService.obtenerDataModificar(estudianteEntity.getCarnet())
+                    .ifPresentOrElse(estudianteExistente -> {
+                        // Eliminar archivo antiguo y cargar uno nuevo si aplica
+                        HashMap<String, String> rutas = new HashMap<>();
+                        
+                        if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                            // Eliminar archivo antiguo de la foto si existía
+                            if (estudianteExistente.getFOTO_URL() != null
+                                    && !estudianteExistente.getFOTO_URL().isEmpty()) {
+                                eliminarArchivoAntiguo(uploadDir + "/fotos/" + estudianteExistente.getFOTO_URL());
+                            }
+                            // Guardar nueva foto
+                            rutas.putAll(rutasDeDestino(fotoUrl, null));
+                        }
 
-            Optional<EstudianteEntity> optional = service.obtenerDataModificar(estudiante.getCarnet());
+                        if (hojaDeVida != null && !hojaDeVida.isEmpty()) {
+                            // Eliminar archivo antiguo del CV si existía
+                            if (estudianteExistente.getHOJA_DE_VIDA() != null
+                                    && !estudianteExistente.getHOJA_DE_VIDA().isEmpty()) {
+                                eliminarArchivoAntiguo(uploadDir + "/cv/" + estudianteExistente.getHOJA_DE_VIDA());
+                            }
+                            // Guardar nuevo CV
+                            rutas.putAll(rutasDeDestino(null, hojaDeVida));
+                        }
 
-            if (optional.isPresent()) {
+                        // Actualizar datos del estudiante
+                        if (rutas.containsKey("rutaFoto")) {
+                            estudianteExistente.setFOTO_URL(rutas.get("rutaFoto"));
+                        }
+                        if (rutas.containsKey("rutaCV")) {
+                            estudianteExistente.setHOJA_DE_VIDA(rutas.get("rutaCV"));
+                        }
 
-                EstudianteEntity estudianteExistente = optional.orElse(new EstudianteEntity());
-                estudianteExistente.setHOJA_DE_VIDA(estudianteExistente.getHOJA_DE_VIDA());
-                estudianteExistente.setFOTO_URL(estudianteExistente.getFOTO_URL());
+                        estudianteExistente.setCarrera(estudianteEntity.getCarrera());
+                        estudianteExistente.setCORREO(estudianteEntity.getCORREO());
+                        estudianteExistente.setAPELLIDOS(estudianteEntity.getAPELLIDOS());
+                        estudianteExistente.setNOMBRES(estudianteEntity.getNOMBRES());
+                        estudianteExistente.setTELEFONO(estudianteEntity.getTELEFONO());
+                        estudianteExistente.setTELEFONO2(estudianteEntity.getTELEFONO2());
+                        estudianteExistente.setFECHA_MOD(new Date(System.currentTimeMillis()));
 
-                HashMap<String, String> rutas = rutasDeDestino(fotoUrl, hojaDeVida);
+                        // Guardar cambios
+                        estudianteService.modificarEstudiante(estudianteExistente);
+                        redirectAttributes.addFlashAttribute("mensaje", "El estudiante se editó correctamente.");
+                        redirectAttributes.addFlashAttribute("tipoMensaje", "success");
 
-                if (rutas.containsKey("rutaFoto")) {
-                    estudianteExistente.setFOTO_URL(rutas.get("rutaFoto"));
-                }
-
-                if (rutas.containsKey("rutaCV")) {
-                    estudianteExistente.setHOJA_DE_VIDA(rutas.get("rutaCV"));
-                }
-
-                Carrera carrera = new Carrera();
-                carrera.setIdCarrera(CarreraValue);
-                estudianteExistente.setCarnet(estudiante.getCarnet());
-                estudianteExistente.setCarrera(carrera); // PENDIENTE
-                estudianteExistente.setFECHA_CREA(estudianteExistente.getFECHA_CREA());
-                estudianteExistente.setCORREO(estudiante.getCORREO());
-                estudianteExistente.setAPELLIDOS(estudiante.getAPELLIDOS());
-                estudianteExistente.setFECHA_MOD(new Date(System.currentTimeMillis()));
-                estudianteExistente.setNOMBRES(estudiante.getNOMBRES());
-                estudianteExistente.setTELEFONO(estudiante.getTELEFONO());
-                estudianteExistente.setTELEFONO2(estudiante.getTELEFONO2());
-
-                service.modificarEstudiante(estudianteExistente);
-                redirectAttributes.addFlashAttribute("mensaje", "El estudiante se editó correctamente.");
-                redirectAttributes.addFlashAttribute("tipoMensaje", "success");
-            } else {
-                redirectAttributes.addFlashAttribute("mensaje", "No hay opcional.");
-                redirectAttributes.addFlashAttribute("tipoMensaje", "error");                
-            }
+                    }, () -> {
+                        redirectAttributes.addFlashAttribute("mensaje",
+                                "El estudiante con el carnet proporcionado no existe.");
+                        redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+                    });
         } catch (Exception e) {
-            logger.error("Error al editar el estudiante {}", e.getMessage());
+            logger.error("Error al editar el estudiante: {}", e.getMessage());
             redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al editar el estudiante.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
+
         return "redirect:/estudiantes/obtenerTodos";
     }
 
+    // Mostrar formulario editar estudiante
     @GetMapping("/editar/{carnet}")
     public String editarEstudianteForm(@PathVariable String carnet, Model model) {
         try {
 
             List<Carrera> carreras = carreraService.obtenerCarrerasActivas();
 
-            Optional<EstudianteEntity> estudiante = service.obtenerDataModificar(carnet);
+            Optional<EstudianteEntity> estudiante = estudianteService.obtenerDataModificar(carnet);
 
             if (estudiante.isPresent()) {
                 model.addAttribute("estudiante", estudiante.get());
             }
 
             if (carreras != null) {
-
                 Carrera carreraSeleccionada = estudiante.get().getCarrera();
-
                 carreras.remove(carreraSeleccionada);
                 carreras.add(0, carreraSeleccionada);
-
                 model.addAttribute("carreras", carreras);
             }
 
@@ -258,16 +294,47 @@ public class EstudianteController {
         }
     }
 
+    // Eliminar estudiante
     @GetMapping("/eliminar/{carnet}")
     public String eliminarEstudiante(@PathVariable String carnet, RedirectAttributes redirectAttributes) {
         try {
-            service.eliminarEstudiante(carnet);
-            redirectAttributes.addFlashAttribute("mensaje", "El estudiante se eliminó correctamente.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            EstudianteEntity estudianteEliminado = estudianteService.obtenerPorCarnet(carnet);
+
+            if (estudianteEliminado != null) {
+                // Elimina los archivos asociados (si existen)
+                if (estudianteEliminado.getHOJA_DE_VIDA() != null && !estudianteEliminado.getHOJA_DE_VIDA().isEmpty()) {
+                    eliminarArchivoAntiguo(uploadDir + "/cv/" + estudianteEliminado.getHOJA_DE_VIDA());
+                }
+                if (estudianteEliminado.getFOTO_URL() != null && !estudianteEliminado.getFOTO_URL().isEmpty()) {
+                    eliminarArchivoAntiguo(uploadDir + "/fotos/" + estudianteEliminado.getFOTO_URL());
+                }
+
+                // Elimina el estudiante de la base de datos
+                estudianteService.eliminar(carnet);
+
+                redirectAttributes.addFlashAttribute("mensaje", "El estudiante se eliminó correctamente.");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            } else {
+                redirectAttributes.addFlashAttribute("mensaje", "El estudiante no existe.");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al eliminar el estudiante.");
+            redirectAttributes.addFlashAttribute("mensaje",
+                    "Ocurrió un error al eliminar el estudiante." + e.getMessage());
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
         return "redirect:/estudiantes/obtenerTodos";
+    }
+
+    // Eliminar archivos antiguos
+    public void eliminarArchivoAntiguo(String rutaArchivo) {
+        try {
+            Path filePath = Paths.get(rutaArchivo);
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+            }
+        } catch (Exception e) {
+            logger.error("Error al eliminar el archivo antiguo: {}", e.getMessage());
+        }
     }
 }

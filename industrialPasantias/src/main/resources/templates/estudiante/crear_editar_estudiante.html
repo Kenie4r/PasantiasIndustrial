@@ -44,14 +44,14 @@
                         <div class="mb-3">
                             <label for="TELEFONO" class="form-label">Teléfono</label>
                             <input type="tel" id="TELEFONO" name="TELEFONO" class="form-control" th:field="*{TELEFONO}"
-                                required>
+                                required maxlength="9">
                         </div>
 
                         <!-- Campo para TELEFONO2 -->
                         <div class="mb-3">
                             <label for="TELEFONO2" class="form-label">Teléfono Alternativo</label>
                             <input type="tel" id="TELEFONO2" name="TELEFONO2" class="form-control"
-                                th:field="*{TELEFONO2}">
+                                th:field="*{TELEFONO2}" maxlength="9">
                         </div>
 
                         <!-- Campo para CORREO -->
@@ -63,13 +63,12 @@
 
                         <div class="mb-3">
                             <label for="carrera" class="form-label">Seleccione una carrera.</label>
-                            <select class="form-select" name="carrera" id="carrera">
-                                <option th:each="carrera : ${carreras}" 
-                                th:text="${carrera.descripcion}"
-                                th:value="${carrera.idCarrera}" 
-                                ></option>
+                            <select class="form-select" name="carrera" id="carrera" th:field="*{Carrera}">
+                                <option value="" disabled selected>Seleccione una carrera</option>
+                                <option th:each="carrera : ${carreras}" th:text="${carrera.descripcion}"
+                                    th:value="${carrera.idCarrera}"></option>
                             </select>
-                          </div>
+                        </div>
 
                         <div class="mb-3">
                             <label for="HojaDeVida">Hoja de Vida</label>
@@ -78,9 +77,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="FotoUrl">Foto Url</label>
-                            <input type="file" id="FotoUrl" name="FotoUrl" class="form-control" accept="image/*"
-                            >
+                            <label for="FotoUrl">Foto estudiante</label>
+                            <input type="file" id="FotoUrl" name="FotoUrl" class="form-control"
+                                accept=".png, .jpg, .jpeg">
                         </div>
 
                         <button type="submit" class="btn btn-success">Guardar</button>
@@ -97,6 +96,32 @@
     <!-- Modales y scripts -->
     <div th:replace="fragments/userModal :: userModal"></div>
     <div th:replace="fragments/jsComponents :: jsScripts"></div>
+
+    <script>
+        function formatPhoneInput(event) {
+            let input = event.target;
+            let value = input.value.replace(/[^0-9]/g, "");
+            if (value.length > 4) {
+                value = value.slice(0, 4) + "-" + value.slice(4);
+            }
+            input.value = value;
+        }
+
+        document.getElementById("TELEFONO").addEventListener("input", formatPhoneInput);
+        document.getElementById("TELEFONO2").addEventListener("input", formatPhoneInput);
+
+        // Validacion imagen
+        document.getElementById("FotoUrl").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const validExtensions = ["image/png", "image/jpeg"];
+                if (!validExtensions.includes(file.type)) {
+                    alert("Solo se permiten archivos PNG o JPG.");
+                    event.target.value = "";
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
