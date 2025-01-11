@@ -39,13 +39,26 @@
                         <!-- Campo Carrera -->
                         <div class="mb-3">
                             <label for="carrera" class="form-label">Carrera</label>
-                            <select id="carrera" name="carrera" class="form-control select-2" th:field="*{carrera}" required>
-                                <option value="" disabled selected>Seleccione una carrera</option>
-                                <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${carrera.descripcion}">
+                            <select id="carrera" name="carrera" class="form-control select-2" th:field="*{carrera}"
+                                required>
+                                <option value="" selected disabled>Seleccione una carrera</option>
+                                <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}"
+                                    th:text="${carrera.descripcion}">
                                 </option>
-                                
+
                             </select>
-                        </div>                    
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pensum" class="form-label">Pénsum</label>
+                            <select id="pensum" name="pensum" class="form-control select-2" th:field="*{pensum}"
+                                required>
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <option th:each="pensum : ${pensums}" th:value="${pensum.ID_PENSUM}"
+                                    th:text="${pensum.NOMBRE}">
+                                </option>
+                            </select>
+                        </div>
 
                         <!-- Campo Estado -->
                         <div class="mb-3">

@@ -3,6 +3,7 @@ package com.industrial.pasantias.Servicio;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.industrial.pasantias.Model.Pensum;
@@ -11,13 +12,18 @@ import com.industrial.pasantias.Repository.PensumRepository;
 @Service
 public class PensumService {
 
-    private PensumRepository repository;
+    @Autowired
+    private PensumRepository pensumRepository;
+
+    public List<Pensum> obtenerTodos() {
+        return pensumRepository.findAll();
+    }
 
     public Optional<Pensum> guardar(Pensum pensum) {
 
         try {
 
-            Pensum pensumGuardado = repository.save(pensum);
+            Pensum pensumGuardado = pensumRepository.save(pensum);
 
             return Optional.of(pensumGuardado);
 
@@ -26,25 +32,13 @@ public class PensumService {
         }
     }
 
-    
-    public Optional<List<Pensum>> obtenerTodos() {
 
-        try {
-
-            List<Pensum> lista = repository.findAll();
-
-            return Optional.ofNullable(lista);
-
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
 
     public Optional<Pensum> editarPensum(Pensum pensum) {
 
         try {
 
-            Pensum pensumGuardado = repository.save(pensum);
+            Pensum pensumGuardado = pensumRepository.save(pensum);
 
             return Optional.of(pensumGuardado);
 
@@ -57,7 +51,7 @@ public class PensumService {
 
         try {
 
-            Pensum pensumDatos = repository.findById(id).get();
+            Pensum pensumDatos = pensumRepository.findById(id).get();
 
             return Optional.of(pensumDatos);
 
@@ -70,9 +64,9 @@ public class PensumService {
 
         try {
 
-            Pensum pensumAEliminar = repository.findById(id).get();
+            Pensum pensumAEliminar = pensumRepository.findById(id).get();
 
-            repository.delete(pensumAEliminar);
+            pensumRepository.delete(pensumAEliminar);
 
             return Optional.of(pensumAEliminar);
 

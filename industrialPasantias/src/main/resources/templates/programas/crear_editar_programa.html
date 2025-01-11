@@ -138,7 +138,8 @@
 
                         <!-- Botones -->
                         <button type="submit" class="btn btn-success">Guardar</button>
-                        <a href="/programas" class="btn btn-secondary">Cancelar</a>
+                        <a th:href="@{/programas/empresa/{empresaId}(empresaId=${empresaId})}"
+                            class="btn btn-secondary">Cancelar</a>
                     </form>
                 </div>
             </div>
@@ -152,6 +153,20 @@
     <div th:replace="~{fragments/userModal :: userModal}"></div>
     <div th:replace="~{fragments/jsComponents :: jsScripts}"></div>
 
+    <script>
+        function autoResize(textarea) {
+            // Restablece la altura para calcularla correctamente
+            textarea.style.height = 'auto';
+            // Ajusta la altura en función del contenido
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        // Llama a autoResize al cargar la página para contenido inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.getElementById('observaciones');
+            autoResize(textarea);
+        });
+    </script>
 </body>
 
 </html>

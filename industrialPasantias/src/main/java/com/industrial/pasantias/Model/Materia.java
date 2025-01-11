@@ -43,6 +43,10 @@ public class Materia {
     @Column(name = "USU_MOD")
     private String usuarioMod;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_PENSUM", referencedColumnName = "ID_PENSUM", nullable = false)
+    private Pensum pensum;
+
     @PrePersist
     protected void onCreate() {
         this.fechaCrea = LocalDateTime.now();

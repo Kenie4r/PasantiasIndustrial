@@ -1,6 +1,5 @@
 package com.industrial.pasantias.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,36 +21,28 @@ import com.industrial.pasantias.Servicio.PensumService;
 public class PensumController {
 
     @Autowired
-    private PensumService service;
+    private PensumService pensumService;
 
+    // Obtener todos los pensum
     @GetMapping("/obtenerTodos")
     public String listarTodos(Model model){
-
-        Optional<List<Pensum>> pensums = service.obtenerTodos();
-
-        if(pensums.isPresent()){
-            model.addAttribute("pensum", pensums.orElse(new ArrayList<>()));
-        }
-
-        if(!pensums.isPresent()){
-            model.addAttribute("pensum", new ArrayList<>());
-        }
-        
+        List<Pensum> pensums = pensumService.obtenerTodos();
+        model.addAttribute("pensums", pensums);
         return "pensum/mostrartodos";
     }
 
+    // Mostrar formulario crear
     @GetMapping("/nuevo")
     public String mostrarFormularioPensum(Model model) {
         model.addAttribute("pensum", new Pensum());
-
         return "pensum/creareditarpensum";
     }
 
+    // Guardar pensum
     @PostMapping("/crear")
     public String guardarPensum(@ModelAttribute Pensum pensum, RedirectAttributes redirectAttributes) {
-        try {
-      
-            service.guardar(pensum);
+        try {      
+            pensumService.guardar(pensum);
             redirectAttributes.addFlashAttribute("mensaje", "El pensum se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
@@ -61,11 +52,12 @@ public class PensumController {
         return "redirect:/pensums/obtenerTodos";
     }
 
+    // Editar pensum
     @PostMapping("/editar/{id}")
     public String editarPensum(@PathVariable int id, RedirectAttributes redirectAttributes, @ModelAttribute Pensum nuevoPensum) {
         try {
       
-            Optional<Pensum> optional = service.obtenerPorId(id);
+            Optional<Pensum> optional = pensumService.obtenerPorId(id);
 
             if(optional.isPresent()){
                 
@@ -76,7 +68,7 @@ public class PensumController {
 
                 redirectAttributes.addFlashAttribute("mensaje", "El pensum se editó correctamente.");
                 redirectAttributes.addFlashAttribute("tipoMensaje", "success");
-                service.editarPensum(pensumExistente);
+                pensumService.editarPensum(pensumExistente);
                 return "redirect:/pensums/obtenerTodos";
 
             }
@@ -88,11 +80,12 @@ public class PensumController {
         return "redirect:/pensums/obtenerTodos";
     }
 
+    // Mostrar formulario editar
     @GetMapping("/editar/{id}")
     public String editarPensumForm(@PathVariable int id, Model model) {
         try {
       
-            Optional<Pensum> pensum = service.obtenerPorId(id);
+            Optional<Pensum> pensum = pensumService.obtenerPorId(id);
 
             if(pensum.isPresent()){
 
@@ -106,11 +99,12 @@ public class PensumController {
         
     }
 
+    // Eliminar pensum
     @GetMapping("/eliminar/{id}")
     public String eliminarPensum(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
 
-            service.eliminar(id);
+            pensumService.eliminar(id);
 
             redirectAttributes.addFlashAttribute("mensaje", "El pensum se eliminó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");

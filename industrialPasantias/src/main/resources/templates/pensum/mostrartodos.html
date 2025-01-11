@@ -34,13 +34,15 @@
                         <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Nombre</th>
-                                    
+                                    <th>Operaciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="pensum : ${pensum}">
-                                    <td th:text="${pensum.NOMBRE}"></td> 
+                                <tr th:each="pensum : ${pensums}">
+                                    <td th:text="${pensum.ID_PENSUM}"></td>
+                                    <td th:text="${pensum.NOMBRE}"></td>
                                     <td>
                                         <a th:href="@{/pensums/editar/{id}(id=${pensum.ID_PENSUM})}">
                                             <i class="fas fa-edit" style="color: #085691;"></i></a>
@@ -53,16 +55,11 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <!-- /.container-fluid -->
+                </div>                
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
             <div th:replace="fragments/footer :: footer"></div>
-            <!-- End of Footer -->
         </div>
-    </div>    
+    </div>
     <div th:replace="fragments/userModal :: userModal"></div>
     <div th:replace="fragments/jsComponents :: jsScripts"></div>
 </body>

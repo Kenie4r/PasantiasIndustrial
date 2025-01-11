@@ -37,7 +37,7 @@ public class ProgramaController {
     public String listarProgramas(@RequestParam(value = "idEmpresa", required = false) Integer idEmpresa, Model model) {
         List<Empresa> empresas = empresaService.listarEmpresas(); // Listado de empresas para el select
         List<EmpresaPrograma> programas;
-    
+
         if (idEmpresa != null) {
             // Filtrar programas por la empresa seleccionada
             programas = programaService.obtenerPorIdEmpresa(idEmpresa);
@@ -46,12 +46,11 @@ public class ProgramaController {
             // Mostrar todos los programas si no hay filtro
             programas = programaService.ObternerTodo();
         }
-    
+
         model.addAttribute("empresas", empresas);
         model.addAttribute("programasEmpresa", programas); // Cambia "programas" a "programasEmpresa"
         return "programas/index";
     }
-    
 
     // Mostrar programa por id
     @GetMapping("/{id}")
@@ -69,7 +68,7 @@ public class ProgramaController {
         return "programas/index";
     }
 
-    // Mostrar form nuevo programa
+    // Mostrar formulario nuevo programa
     @GetMapping("/nuevo")
     public String FormGuardar(@RequestParam(value = "idEmpresa", required = false) Integer idEmpresa, Model model) {
         Empresa empresa = null;
@@ -112,19 +111,21 @@ public class ProgramaController {
     @SuppressWarnings("null")
     @GetMapping("/editar/{id}")
     public String mostrarFormularioModificarPrograma(@PathVariable Integer id,
-            Model model) {
-
+            Model model) {        
         EmpresaPrograma programas = programaService.obtenerPorId(id);
         if (programas == null) {
             return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
-
         }
+
+        model.addAttribute("empresaId", programas.getEmpresa().getIdEmpresa());
+        model.addAttribute("empresa", programas.getEmpresa().getNombre());
+
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
 
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
-        model.addAttribute("programa", programas);        
+        model.addAttribute("programa", programas);
         return "programas/crear_editar_programa";
     }
 

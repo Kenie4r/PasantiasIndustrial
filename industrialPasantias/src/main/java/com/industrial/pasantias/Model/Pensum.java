@@ -16,7 +16,7 @@ public class Pensum {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ID_PENSUM;
+    private Integer ID_PENSUM;
 
     private String NOMBRE;
 
