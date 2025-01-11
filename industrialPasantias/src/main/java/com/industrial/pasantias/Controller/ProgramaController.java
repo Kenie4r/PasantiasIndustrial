@@ -124,8 +124,7 @@ public class ProgramaController {
 
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
-        model.addAttribute("programa", programas);
-        System.out.println("programa: " + programas);
+        model.addAttribute("programa", programas);        
         return "programas/crear_editar_programa";
     }
 

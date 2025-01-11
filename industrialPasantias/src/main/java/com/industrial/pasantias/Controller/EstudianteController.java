@@ -125,9 +125,6 @@ public class EstudianteController {
             String nameFileCV = "";
             String nameFileFU = "";
 
-            System.out.println(contentTypeCV);
-            System.out.println(contentTypeFU);
-
             if (contentTypeCV != null) {
                 String[] contentTypeCVS = contentTypeCV.split("/");
 
@@ -219,7 +216,8 @@ public class EstudianteController {
                 redirectAttributes.addFlashAttribute("mensaje", "El estudiante se editó correctamente.");
                 redirectAttributes.addFlashAttribute("tipoMensaje", "success");
             } else {
-                System.out.println("NO HAY OPCIONAL");
+                redirectAttributes.addFlashAttribute("mensaje", "No hay opcional.");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "error");                
             }
         } catch (Exception e) {
             logger.error("Error al editar el estudiante {}", e.getMessage());

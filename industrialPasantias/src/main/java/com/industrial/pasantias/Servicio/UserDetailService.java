@@ -15,39 +15,36 @@ import com.industrial.pasantias.Model.Usuario;
 import com.industrial.pasantias.Repository.UsuarioRepository;
 
 @Service
-public class UserDetailService implements UserDetailsService  {
+public class UserDetailService implements UserDetailsService {
 
-    
     @Autowired
     private UsuarioRepository usuarioRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-         Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado: " + username));
-
-        System.out.println("Se encontro a " + usuario.getUsername()); 
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        
 
-        String roleName = null; 
+        String roleName = null;
         switch (usuario.getIdRol().getID_ROL()) {
             case 1:
-                roleName = "ROLE_ADMIN"; 
+                roleName = "ROLE_ADMIN";
                 break;
-            
+
             default:
-                roleName = "ROLE_USER"; 
+                roleName = "ROLE_USER";
                 break;
         }
-        authorities.add(new SimpleGrantedAuthority(roleName)); 
+        authorities.add(new SimpleGrantedAuthority(roleName));
 
-
-       // final var authorities =; 
+        // final var authorities =;
         return org.springframework.security.core.userdetails.User.builder()
-        .username(usuario.getUsername())
-        .password(usuario.getPassword())
-        .authorities(authorities)
-        .build();
+                .username(usuario.getUsername())
+                .password(usuario.getPassword())
+                .authorities(authorities)
+                .build();
     }
 
 }

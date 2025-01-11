@@ -146,8 +146,7 @@ public class PasantiaController {
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
             return "redirect:/pasantias/proyectos/" + pasantiaPrograma.getId().getPasantia().getIdPasantia();
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            System.out.println("pasantiaPrograma" + pasantiaPrograma);
+            model.addAttribute("error", e.getMessage());            
 
             //
             Pasantia pasantia = pasantiaService
