@@ -1,31 +1,45 @@
 package com.industrial.pasantias.Model;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "ROL", schema = "dbo")
 public class RolEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_ROL")
     private Integer ID_ROL;
 
+    @Column(name = "DESCRIPCION", length = 25, nullable = false)
     private String DESCRIPCION;
 
+    @Column(name = "ESTADO", length = 1, nullable = false)
     private String ESTADO;
 
-    private Date FECHA_CREA;
+    @CreationTimestamp
+    @Column(name = "FECHA_CREA", nullable = false)
+    private LocalDateTime  FECHA_CREA;
 
-    private Date FECHA_MOD;
-
+    @UpdateTimestamp
+    @Column(name = "FECHA_MOD", nullable = true)
+    private LocalDateTime  FECHA_MOD;
 }

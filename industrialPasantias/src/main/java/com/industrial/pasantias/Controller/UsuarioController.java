@@ -54,8 +54,7 @@ public class UsuarioController {
             // Hashear la contraseña solo al crear el usuario
             if (usuario.getIdUsuario() == null) {
                 String hashedPassword = passwordEncoder.encode(usuario.getPassword());
-                usuario.setPassword(hashedPassword);
-                usuario.setFechaCrea(LocalDateTime.now());
+                usuario.setPassword(hashedPassword);                
                 usuario.setEstado("A");
             } else {
                 usuario.setFechaMod(LocalDateTime.now());
@@ -100,8 +99,7 @@ public class UsuarioController {
             usuarioExistente.setApellidos(usuario.getApellidos());
             usuarioExistente.setCorreo(usuario.getCorreo());
             usuarioExistente.setUsername(usuario.getUsername());
-            usuarioExistente.setIdRol(usuario.getIdRol());
-            usuarioExistente.setFechaMod(LocalDateTime.now());
+            usuarioExistente.setIdRol(usuario.getIdRol());            
 
             // Hashea la contraseña solo si el campo no está vacío
             if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {

@@ -61,7 +61,7 @@
                         <div class="mb-3">
                             <label for="telefono" class="form-label">Teléfono</label>
                             <input type="text" id="telefono" name="telefono" class="form-control" th:field="*{telefono}"
-                                placeholder="Teléfono de la empresa">
+                                placeholder="Teléfono de la empresa" maxlength="9">
                         </div>
 
                         <div class="mb-3">
@@ -82,6 +82,19 @@
 
         <div th:replace="/fragments/userModal :: userModal"></div>
         <div th:replace="/fragments/jsComponents :: jsScripts"></div>
+        
+        <script>
+            function formatPhoneInput(event) {
+                let input = event.target;
+                let value = input.value.replace(/[^0-9]/g, "");
+                if (value.length > 4) {
+                    value = value.slice(0, 4) + "-" + value.slice(4);
+                }
+                input.value = value;
+            }
+    
+            document.getElementById("telefono").addEventListener("input", formatPhoneInput);
+        </script>
 </body>
 
 </html>

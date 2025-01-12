@@ -43,10 +43,10 @@ public class PensumController {
     public String guardarPensum(@ModelAttribute Pensum pensum, RedirectAttributes redirectAttributes) {
         try {      
             pensumService.guardar(pensum);
-            redirectAttributes.addFlashAttribute("mensaje", "El pensum se guardó correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje", "El pénsum se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el rol.");
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al guardar el pénsum.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
         return "redirect:/pensums/obtenerTodos";
@@ -66,7 +66,7 @@ public class PensumController {
                
                 pensumExistente.setNOMBRE(nuevoPensum.getNOMBRE());
 
-                redirectAttributes.addFlashAttribute("mensaje", "El pensum se editó correctamente.");
+                redirectAttributes.addFlashAttribute("mensaje", "El pénsum se editó correctamente.");
                 redirectAttributes.addFlashAttribute("tipoMensaje", "success");
                 pensumService.editarPensum(pensumExistente);
                 return "redirect:/pensums/obtenerTodos";
@@ -74,7 +74,7 @@ public class PensumController {
             }
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al editar el rol.");
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al editar el pénsum.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
         return "redirect:/pensums/obtenerTodos";
@@ -106,11 +106,11 @@ public class PensumController {
 
             pensumService.eliminar(id);
 
-            redirectAttributes.addFlashAttribute("mensaje", "El pensum se eliminó correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje", "El pénsum se eliminó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al eliminar el pensum.");
+            redirectAttributes.addFlashAttribute("mensaje", "Ocurrió un error al eliminar el pénsum.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }
         return "redirect:/pensums/obtenerTodos";

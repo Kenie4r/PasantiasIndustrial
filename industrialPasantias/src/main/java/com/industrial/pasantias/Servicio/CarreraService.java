@@ -28,7 +28,7 @@ public class CarreraService {
         carreraRepository.deleteById(id);
     }
 
-     public List<Carrera> obtenerCarrerasActivas() {
-        return carreraRepository.encontrarCarrerasActivas("A"); 
+    public List<Carrera> obtenerCarrerasActivas() {
+        return carreraRepository.encontrarCarrerasActivas("A");
     }
 }

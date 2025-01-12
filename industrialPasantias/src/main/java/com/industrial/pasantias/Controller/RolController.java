@@ -24,33 +24,34 @@ public class RolController {
     @Autowired
     private RolService service;
 
+    // Mostrar roles
     @GetMapping("/obtenerTodos")
-    public String listarTodos(Model model){
+    public String listarTodos(Model model) {
 
         Optional<List<RolEntity>> roles = service.obtenerTodos();
 
-        if(roles.isPresent()){
+        if (roles.isPresent()) {
             model.addAttribute("roles", roles.orElse(new ArrayList<>()));
         }
 
-        if(!roles.isPresent()){
+        if (!roles.isPresent()) {
             model.addAttribute("roles", new ArrayList<>());
         }
-        
+
         return "rol/listado_roles";
     }
 
+    // Form nuevo rol
     @GetMapping("/nuevo")
     public String mostrarFormularioRol(Model model) {
         model.addAttribute("rol", new RolEntity());
-
         return "rol/creareditarrol";
     }
 
+    // Guardar rol
     @PostMapping("/crear")
     public String guardarRol(@ModelAttribute RolEntity rol, RedirectAttributes redirectAttributes) {
         try {
-      
             service.crearRol(rol);
             redirectAttributes.addFlashAttribute("mensaje", "El rol se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
@@ -61,23 +62,20 @@ public class RolController {
         return "redirect:/roles/obtenerTodos";
     }
 
+    // Editar rol
     @PostMapping("/editar/{id}")
-    public String editarRol(@PathVariable int id, RedirectAttributes redirectAttributes, @ModelAttribute RolEntity rol) {
+    public String editarRol(@PathVariable int id, RedirectAttributes redirectAttributes,
+            @ModelAttribute RolEntity rol) {
         try {
-      
             Optional<RolEntity> optional = service.obtenerDataModificar(id);
 
-            if(optional.isPresent()){
-                
+            if (optional.isPresent()) {
                 RolEntity rolExistente = optional.orElse(new RolEntity());
-
-                rolExistente.setFECHA_CREA(rolExistente.getFECHA_CREA());
                 rolExistente.setDESCRIPCION(rol.getDESCRIPCION());
                 rolExistente.setESTADO(rol.getESTADO());
-
+                service.modificarRol(rolExistente);
                 redirectAttributes.addFlashAttribute("mensaje", "El rol se editó correctamente.");
                 redirectAttributes.addFlashAttribute("tipoMensaje", "success");
-                service.modificarRol(rolExistente);
                 return "redirect:/roles/obtenerTodos";
             }
 
@@ -88,24 +86,24 @@ public class RolController {
         return "redirect:/roles/obtenerTodos";
     }
 
+    // Form editar rol
     @GetMapping("/editar/{id}")
     public String editarRolForm(@PathVariable int id, Model model) {
         try {
-      
             Optional<RolEntity> rol = service.obtenerDataModificar(id);
 
-            if(rol.isPresent()){
-
+            if (rol.isPresent()) {
                 model.addAttribute("rol", rol.get());
             }
-            
+
             return "rol/creareditarrol";
         } catch (Exception e) {
-            return "redirect:/roles/obtenerTodos";    
+            return "redirect:/roles/obtenerTodos";
         }
-        
+
     }
 
+    // Eliminar rol
     @GetMapping("/eliminar/{id}")
     public String eliminarParametro(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
@@ -118,5 +116,5 @@ public class RolController {
         }
         return "redirect:/roles/obtenerTodos";
     }
-    
+
 }

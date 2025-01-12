@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,9 +82,13 @@ public class PasantiaController {
     public String guardarPasantia(@ModelAttribute Pasantia pasantia, Model model,
             RedirectAttributes redirectAttributes) {
         try {
+            // Obtener usuario logueado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication != null ? authentication.getName() : "Anónimo";
+
             // pasantia.setFechaInicio(LocalDateTime.now());;
             pasantia.setFechaCrea(LocalDateTime.now());
-            pasantia.setUsuCrea("test");
+            pasantia.setUsuCrea(username);
             String anioFull = '2' + pasantia.getAnioEstudiante();
             LocalDateTime fecha = LocalDateTime.of(Integer.parseInt(anioFull), Month.JANUARY, 1, 0, 0, 0);
             pasantia.setFechaIngresoUniversidad(fecha);
@@ -138,15 +144,19 @@ public class PasantiaController {
     public String guardarProyecto(@ModelAttribute PasantiaPrograma pasantiaPrograma, Model model,
             RedirectAttributes redirectAttributes) {
         try {
+            // Obtener usuario logueado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication != null ? authentication.getName() : "Anónimo";
+
             pasantiaPrograma.setFechaCrea(LocalDateTime.now());
-            pasantiaPrograma.setUsuCrea("test");// PENDIENTE
+            pasantiaPrograma.setUsuCrea(username);
 
             pasantiaProgramaService.guardar(pasantiaPrograma);
             redirectAttributes.addFlashAttribute("mensaje", "La práctica profesional se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
             return "redirect:/pasantias/proyectos/" + pasantiaPrograma.getId().getPasantia().getIdPasantia();
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());            
+            model.addAttribute("error", e.getMessage());
 
             //
             Pasantia pasantia = pasantiaService

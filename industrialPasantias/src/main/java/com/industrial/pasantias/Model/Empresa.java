@@ -2,6 +2,9 @@ package com.industrial.pasantias.Model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "EMPRESA")
 public class Empresa {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_EMPRESA")
@@ -27,28 +31,21 @@ public class Empresa {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_RUBRO", nullable = false)
     private Rubro rubro;
-    @Column(name = "UBICACION", nullable = true, length = 250)
+
+    @Column(name = "UBICACION", length = 250)
     private String ubicacion;
 
-    @Column(name = "TELEFONO", nullable = true, length = 20)
+    @Column(name = "TELEFONO", length = 20)
     private String telefono;
 
-    @Column(name = "SITIO_WEB", nullable = true, length = 100)
+    @Column(name = "SITIO_WEB", length = 100)
     private String sitioWeb;
 
     @Column(name = "FECHA_CREA")
+    @CreationTimestamp
     private LocalDateTime fechaCrea;
 
     @Column(name = "FECHA_MOD")
+    @UpdateTimestamp
     private LocalDateTime fechaMod;
-    @PrePersist
-    protected void onCreate() {
-        this.fechaCrea = LocalDateTime.now();
-        this.fechaMod = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.fechaMod = LocalDateTime.now();
-    }
 }

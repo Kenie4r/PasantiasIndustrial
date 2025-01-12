@@ -1,6 +1,10 @@
 package com.industrial.pasantias.Model;
 
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,9 +44,11 @@ public class Usuario {
     @Column(name = "ESTADO", nullable = false)
     private String estado;
 
+    @CreationTimestamp
     @Column(name = "FECHA_CREA", nullable = false)
     private LocalDateTime fechaCrea;
 
+    @UpdateTimestamp
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
 

@@ -1,6 +1,5 @@
 package com.industrial.pasantias.Controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +41,7 @@ public class RubroController {
     @PostMapping
     public String guardarRubro(@ModelAttribute Rubro rubro, RedirectAttributes redirectAttributes, Model model) {
         try {
-            rubro.setEstado("A");
-            rubro.setFechaCrea(LocalDateTime.now());
+            rubro.setEstado("A");            
             rubroService.guardar(rubro);
             redirectAttributes.addFlashAttribute("mensaje", "El rubro de empresa se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
@@ -78,8 +76,7 @@ public class RubroController {
             return "redirect:/rubros";
         }
         try {
-            rubroExiste.setDescripcion(rubro.getDescripcion());
-            rubroExiste.setFechaMod(LocalDateTime.now());
+            rubroExiste.setDescripcion(rubro.getDescripcion());            
             rubroService.guardar(rubroExiste);
             redirectAttributes.addFlashAttribute("mensaje", "El rubro de empresa se editó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");

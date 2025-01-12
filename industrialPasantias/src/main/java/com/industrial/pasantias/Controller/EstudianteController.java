@@ -2,7 +2,6 @@ package com.industrial.pasantias.Controller;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -99,9 +98,6 @@ public class EstudianteController {
             estudianteEntity.setHOJA_DE_VIDA(
                     rutas != null && rutas.containsKey("rutaCV") ? rutas.get("rutaCV") : "");
 
-            // Establecer datos del estudiante
-            estudianteEntity.setFECHA_CREA(new Date(System.currentTimeMillis()));
-
             // Guardar en base de datos
             Optional<EstudianteEntity> response = estudianteService.crearEstudiante(estudianteEntity);
 
@@ -169,6 +165,7 @@ public class EstudianteController {
 
             if (hojaDeVida != null && !hojaDeVida.isEmpty()) {
                 String contentTypeCV = hojaDeVida.getContentType();
+                @SuppressWarnings("null")
                 String[] contentTypeCVS = contentTypeCV.split("/");
                 String nameFileCV = String.format("%s_CV.%s", format.format(LocalDateTime.now()), contentTypeCVS[1]);
                 String destinyRouteCV = environment.getProperty("route.destiny.files") + File.separator + "CV"
@@ -180,6 +177,7 @@ public class EstudianteController {
 
             if (fotoUrl != null && !fotoUrl.isEmpty()) {
                 String contentTypeFU = fotoUrl.getContentType();
+                @SuppressWarnings("null")
                 String[] contentTypeFUS = contentTypeFU.split("/");
                 String nameFileFU = String.format("%s_FU.%s", format.format(LocalDateTime.now()), contentTypeFUS[1]);
                 String destinyRouteFU = environment.getProperty("route.destiny.files") + File.separator + "fotos"
@@ -209,7 +207,7 @@ public class EstudianteController {
                     .ifPresentOrElse(estudianteExistente -> {
                         // Eliminar archivo antiguo y cargar uno nuevo si aplica
                         HashMap<String, String> rutas = new HashMap<>();
-                        
+
                         if (fotoUrl != null && !fotoUrl.isEmpty()) {
                             // Eliminar archivo antiguo de la foto si existía
                             if (estudianteExistente.getFOTO_URL() != null
@@ -243,8 +241,7 @@ public class EstudianteController {
                         estudianteExistente.setAPELLIDOS(estudianteEntity.getAPELLIDOS());
                         estudianteExistente.setNOMBRES(estudianteEntity.getNOMBRES());
                         estudianteExistente.setTELEFONO(estudianteEntity.getTELEFONO());
-                        estudianteExistente.setTELEFONO2(estudianteEntity.getTELEFONO2());
-                        estudianteExistente.setFECHA_MOD(new Date(System.currentTimeMillis()));
+                        estudianteExistente.setTELEFONO2(estudianteEntity.getTELEFONO2());                        
 
                         // Guardar cambios
                         estudianteService.modificarEstudiante(estudianteExistente);

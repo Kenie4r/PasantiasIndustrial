@@ -3,6 +3,8 @@ package com.industrial.pasantias.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -59,6 +61,10 @@ public class MateriaController {
     @PostMapping("/guardar")
     public String guardarMateria(@ModelAttribute Materia materia, RedirectAttributes redirectAttributes, Model model) {
         try {
+            // Obtener usuario logueado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication != null ? authentication.getName() : "Anónimo";
+            materia.setUsuarioCrea(username);
             materiaService.guardar(materia);
             redirectAttributes.addFlashAttribute("mensaje", "La materia se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
@@ -74,7 +80,7 @@ public class MateriaController {
     @GetMapping("/editar/{id}")
     public String EditarMateriaForm(@PathVariable Integer id, Model model) {
         Materia materia = materiaService.obtenerPorId(id);
-        
+
         if (materia == null) {
             return "redirect:/materias";
         }
@@ -96,11 +102,16 @@ public class MateriaController {
             if (materia == null) {
                 return "redirect:/materias";
             }
+            // Obtener usuario logueado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication != null ? authentication.getName() : "Anónimo";
+
             materiaExistente.setNombre(materia.getNombre());
             materiaExistente.setCarrera(materia.getCarrera());
             materiaExistente.setEstado(materia.getEstado());
             materiaExistente.setHoras(materia.getHoras());
             materiaExistente.setPensum(materia.getPensum());
+            materia.setUsuarioCrea(username);
 
             materiaService.guardar(materiaExistente);
             redirectAttributes.addFlashAttribute("mensaje", "La materia se actualizó correctamente.");

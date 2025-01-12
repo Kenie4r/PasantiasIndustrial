@@ -1,6 +1,5 @@
 package com.industrial.pasantias.Servicio;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,14 +17,11 @@ public class RolService {
     private RolRepository repository;
 
     public Optional<RolEntity> eliminarRol(int id) {
-
         try {
-
             Optional<RolEntity> entidad = repository.findById(id);
 
             if (entidad.isPresent()) {
                 repository.deleteById(id);
-
                 return Optional.of(entidad.get());
             }
 
@@ -38,9 +34,7 @@ public class RolService {
     }
 
     public Optional<List<RolEntity>> obtenerTodos() {
-
         try {
-
             List<RolEntity> roles = repository.findAll();
 
             if (roles == null || roles.isEmpty()) {
@@ -55,9 +49,7 @@ public class RolService {
     }
 
     public Optional<RolEntity> obtenerDataModificar(int id) {
-
         try {
-
             Optional<RolEntity> entidad = repository.findById(id);
 
             if (entidad.isPresent()) {
@@ -69,46 +61,36 @@ public class RolService {
         } catch (Exception e) {
             return Optional.empty();
         }
-
     }
 
     public Optional<RolEntity> modificarRol(RolEntity dto) {
+        try {            
+            Optional<RolEntity> optionalEntity = repository.findById(dto.getID_ROL());
 
-        RolEntity entity = new RolEntity();
-
-        entity.setID_ROL(dto.getID_ROL());
-        entity.setDESCRIPCION(dto.getDESCRIPCION());
-        entity.setESTADO(dto.getESTADO());
-        entity.setFECHA_MOD(new Date(System.currentTimeMillis()));
-        entity.setFECHA_CREA(dto.getFECHA_CREA());
-
-        try {
-
-            repository.save(entity);
-
-            return Optional.of(entity);
-        } catch (Exception e) {
-
+            if (optionalEntity.isPresent()) {
+                RolEntity entity = optionalEntity.get();                 
+                entity.setDESCRIPCION(dto.getDESCRIPCION());
+                entity.setESTADO(dto.getESTADO());
+                
+                repository.save(entity);
+                return Optional.of(entity);
+            } else {                
+                return Optional.empty();
+            }
+        } catch (Exception e) {            
             return Optional.empty();
         }
-
     }
 
     public Optional<RolEntity> crearRol(@ModelAttribute RolEntity dto) {
-
         RolEntity entity = new RolEntity();
-
         entity.setDESCRIPCION(dto.getDESCRIPCION());
         entity.setESTADO(dto.getESTADO());
-        entity.setFECHA_CREA(new Date(System.currentTimeMillis()));
 
         try {
-
             repository.save(entity);
-
             return Optional.of(entity);
         } catch (Exception e) {
-
             return Optional.empty();
         }
 
