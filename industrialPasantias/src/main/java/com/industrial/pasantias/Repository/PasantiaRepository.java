@@ -12,4 +12,8 @@ public interface PasantiaRepository extends JpaRepository<Pasantia, Integer> {
     // Obtener ultimo correlativo por carrera
     @Query(value = "SELECT ISNULL(MAX(CORRELATIVO), 0) CORRELATIVO FROM PASANTIA WHERE ID_CARRERA = :idCarrera", nativeQuery = true)
     Integer obtenerUltimoCorrelativoPorCarrera(int idCarrera);
+
+    // Obtener las horas totales de una pasantia
+    @Query(value = "SELECT SUM(M.HORAS) FROM PASANTIA PA INNER JOIN PASANTIA_PROGRAMA PP ON PA.ID_PASANTIA = PP.ID_PASANTIA INNER JOIN PROGRAMA P ON PP.ID_PROGRAMA = P.ID_PROGRAMA INNER JOIN MATERIA M ON P.ID_MATERIA = M.ID_MATERIA WHERE PA.ID_PASANTIA = :idPasantia", nativeQuery = true)
+    Integer obtenerHorasTotales(int idPasantia);
 }

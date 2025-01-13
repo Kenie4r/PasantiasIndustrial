@@ -18,7 +18,7 @@
             <div id="content">
                 <div class="container-fluid">
                     <h1 class="h3 mb-4 text-gray-800">Proyectos de práctica profesional #<span
-                            th:text="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}"></span>
+                            th:text="${pasantia.carrera.codCarrera} + '-' + ${#numbers.formatInteger(pasantia.correlativo, 3)} + '-' + ${pasantia.anioEstudiante}"></span>
                     </h1>
 
                     <div th:if="${mensaje}"
@@ -38,32 +38,46 @@
                         class="btn btn-success mb-3">Cambiar estado</a>
                     <a href="/pasantias" class="btn btn-secondary mb-3">Regresar</a>
 
-                    <div class="row m-3">
-                        <div class="col-sm-4">
-                            <p class="font-weight-bold">Carnet del estudiante:</p>
-                            <p th:text="${pasantia.estudiante.carnet}"></p>
+                    <div class="row">
+                        <div class="col-md-2 d-flex justify-content-center align-items-center">
+                            <img th:if="${pasantia.estudiante.FOTO_URL != null and !pasantia.estudiante.FOTO_URL.isEmpty()}"
+                                            th:src="@{/estudiantes/images/{img}(img=${pasantia.estudiante.FOTO_URL})}"
+                                            alt="" style="width: 90%; height: auto;" />
                         </div>
-
-                        <div class="col-sm-4">
-                            <p class="font-weight-bold">Nombres del estudiante:</p>
-                            <p th:text="${pasantia.estudiante.NOMBRES}"></p>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <p class="font-weight-bold">Apellidos del estudiante:</p>
-                            <p th:text="${pasantia.estudiante.APELLIDOS}"></p>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <p class="font-weight-bold">Carrera del estudiante:</p>
-                            <p th:text="${pasantia.carrera.descripcion}"></p>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <p class="font-weight-bold">Estado de la práctica profesional:</p>
-                            <p th:text="${pasantia.estado == 'E'} ? 'En Proceso' : 'Finalizado'"></p>
+                        <div class="col-md-10">
+                            <div class="row m-3">
+                                <div class="col-md-4">
+                                    <p class="font-weight-bold">Carnet del estudiante:</p>
+                                    <p th:text="${pasantia.estudiante.carnet}"></p>
+                                </div>
+        
+                                <div class="col-md-4">
+                                    <p class="font-weight-bold">Nombres del estudiante:</p>
+                                    <p th:text="${pasantia.estudiante.NOMBRES}"></p>
+                                </div>
+        
+                                <div class="col-md-4">
+                                    <p class="font-weight-bold">Apellidos del estudiante:</p>
+                                    <p th:text="${pasantia.estudiante.APELLIDOS}"></p>
+                                </div>
+        
+                                <div class="col-md-4">
+                                    <p class="font-weight-bold">Carrera del estudiante:</p>
+                                    <p th:text="${pasantia.carrera.descripcion}"></p>
+                                </div>
+        
+                                <div class="col-md-4">
+                                    <p class="font-weight-bold">Horas acumuladas:</p>
+                                    <p th:text="${varHorasTotales}"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="font-weight-bold">Estado de la práctica profesional:</p>
+                                    <p th:text="${pasantia.estado == 'E'} ? 'En Proceso' : 'Finalizado'"></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
 
                     <div class="table-responsive">
                         <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
@@ -71,8 +85,9 @@
                                 <tr>
                                     <th>Empresa</th>
                                     <th>Nombre programa</th>
-                                    <th>Materias cursadas</th>
+                                    <th>Asignaturas cursadas</th>
                                     <th>UV obtenidos</th>
+                                    <th>Horas de asignatura</th>
                                     <th>Estado</th>
                                     <th>Operaciones</th>
                                 </tr>
@@ -83,6 +98,7 @@
                                     <td th:text="${p.id.programa.nombrePrograma}"></td>
                                     <td th:text="${p.materiasCursadasCantidad}"></td>
                                     <td th:text="${p.materiasCursadasUv}"></td>
+                                    <td th:text="${p.id.programa.materia.horas}"></td>
                                     <td th:text="${p.estado == 'E'} ? 'En Proceso' : 'Finalizado'"></td>
                                     <td>
                                         <a th:href="@{/pasantias/proyectos/editar/pasantia/{idPasantia}/programa/{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idPrograma = ${p.id.programa.idPrograma})}"

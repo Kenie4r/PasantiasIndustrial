@@ -109,8 +109,10 @@ public class PasantiaController {
     public String listarProyectos(@PathVariable Integer id, Model model) {
         Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(id);
         List<PasantiaPrograma> pasantiaProgramas = pasantiaProgramaService.obtenerPorIdPasantia(id);
+        Integer horasTotales = pasantiaService.ObtenerHorasTotalesPasantia(id);
         model.addAttribute("pasantia", pasantia);
         model.addAttribute("programas", pasantiaProgramas);
+        model.addAttribute("varHorasTotales", horasTotales);
         return "pasantias/proyectos";
     }
 
