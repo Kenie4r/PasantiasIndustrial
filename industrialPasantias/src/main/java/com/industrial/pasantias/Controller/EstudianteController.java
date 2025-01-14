@@ -35,6 +35,7 @@ import org.springframework.core.io.Resource;
 import com.industrial.pasantias.Model.CambioDeCarrera;
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
+import com.industrial.pasantias.Model.Pensum;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EstudianteService;
 
@@ -102,6 +103,20 @@ public class EstudianteController {
 
             // Guardar en base de datos
             Optional<EstudianteEntity> response = estudianteService.crearEstudiante(estudianteEntity);
+
+            CambioDeCarrera cambioDeCarrera = new CambioDeCarrera();
+
+            cambioDeCarrera.setCARNET(estudianteEntity.getCarnet());
+            cambioDeCarrera.setESTADO("A");
+            cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
+            cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
+            cambioDeCarrera.setPENSUM_ACTUAL(null);
+
+            Optional<CambioDeCarrera> responseCambioCarrera = estudianteService.insertarCambioCarrera(cambioDeCarrera);
+
+            if(responseCambioCarrera.isPresent()){
+                logger.info("Cambio de carrera agregado.");
+            }
 
             if (response.isPresent()) {
                 redirectAttributes.addFlashAttribute("mensaje", "El estudiante se guardó correctamente.");
@@ -255,9 +270,9 @@ public class EstudianteController {
 
                             cambioDeCarrera.setCARNET(estudianteEntity.getCarnet());
                             cambioDeCarrera.setESTADO("A");
-                            cambioDeCarrera.setFECHA_CAMBIO(new Date(System.currentTimeMillis()));
+                            cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
                             cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
-                            cambioDeCarrera.setCARRERA_ANTIGUA(estudianteExistente.getCarrera());
+                            cambioDeCarrera.setPENSUM_ACTUAL(null);
 
                             estudianteService.insertarCambioCarrera(cambioDeCarrera);
                         }

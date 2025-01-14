@@ -24,10 +24,14 @@ public class CambioDeCarrera {
     private String ESTADO;
 
     private Carrera CARRERA_ACTUAL;
-    private Carrera CARRERA_ANTIGUA;
 
 
-    private Date FECHA_CAMBIO;
+    private Date FECHA_CREA;
+    private Date FECHA_MOD;
+
+    private Pensum PENSUM_ACTUAL;
+
+
 
 
 }
