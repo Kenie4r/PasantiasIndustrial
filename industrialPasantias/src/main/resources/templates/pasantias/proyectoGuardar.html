@@ -34,7 +34,7 @@
                         <div class="mb-3">
                             <label for="codPasantia" class="form-label">Practica profesional *</label>
                             <input type="text" name="codPasantia" id="codPasantia" class="form-control"
-                                th:value="${pasantia.carrera.codCarrera} + '-' + ${pasantia.correlativo} + '-' + ${pasantia.anioEstudiante}"
+                                th:value="${pasantia.carrera.codCarrera} + '-' + ${#numbers.formatInteger(pasantia.correlativo, 3)} + '-' + ${pasantia.anioEstudiante}"
                                 readonly>
                             <input type="hidden" name="idPasantia" id="idPasantia" th:field="*{id.pasantia.idPasantia}">
                         </div>
@@ -51,14 +51,14 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="materiasCursadasCantidad" class="form-label">Cantidad de materias cursadas
+                            <label for="materiasCursadasCantidad" class="form-label">Cantidad de asignaturas cursadas
                                 *</label>
                             <input type="number" name="materiasCursadasCantidad" id="materiasCursadasCantidad"
                                 th:field="*{materiasCursadasCantidad}" min="0" step="1" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="materiasCursadasUv" class="form-label">UV de materias cursadas *</label>
+                            <label for="materiasCursadasUv" class="form-label">UV de asignaturas cursadas *</label>
                             <input type="number" name="materiasCursadasUv" id="materiasCursadasUv"
                                 th:field="*{materiasCursadasUv}" min="0" step="1" class="form-control" required>
                         </div>

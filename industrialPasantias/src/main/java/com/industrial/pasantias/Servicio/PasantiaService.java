@@ -39,4 +39,8 @@ public class PasantiaService {
     public Integer ObtenerCorrelativoParaNuevaPasantia(int idCarrera){
         return (pasantiaRepository.obtenerUltimoCorrelativoPorCarrera(idCarrera) + 1);
     }
+
+    public Integer ObtenerHorasTotalesPasantia(int idPasantia){
+        return pasantiaRepository.obtenerHorasTotales(idPasantia);
+    }
 }
