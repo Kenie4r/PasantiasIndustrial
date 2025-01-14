@@ -110,7 +110,9 @@ public class EstudianteController {
             cambioDeCarrera.setESTADO("A");
             cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
             cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
-            cambioDeCarrera.setPENSUM_ACTUAL(null);
+            Pensum pensum = new Pensum();
+            pensum.setID_PENSUM(1);
+            cambioDeCarrera.setPENSUM_ACTUAL(pensum);
 
             Optional<CambioDeCarrera> responseCambioCarrera = estudianteService.insertarCambioCarrera(cambioDeCarrera);
 
@@ -253,29 +255,34 @@ public class EstudianteController {
                             estudianteExistente.setHOJA_DE_VIDA(rutas.get("rutaCV"));
                         }
 
-                        estudianteExistente.setCarrera(estudianteEntity.getCarrera());
+                        
                         estudianteExistente.setCORREO(estudianteEntity.getCORREO());
                         estudianteExistente.setAPELLIDOS(estudianteEntity.getAPELLIDOS());
                         estudianteExistente.setNOMBRES(estudianteEntity.getNOMBRES());
                         estudianteExistente.setTELEFONO(estudianteEntity.getTELEFONO());
                         estudianteExistente.setTELEFONO2(estudianteEntity.getTELEFONO2());
 
-                        // Guardar cambios
-                        estudianteService.modificarEstudiante(estudianteExistente);
-
-                        if (!estudianteExistente.getCarrera().getDescripcion()
-                                .equals(estudianteEntity.getCarrera().getDescripcion())) {
-
+                        if (estudianteExistente.getCarrera().getIdCarrera() != estudianteEntity.getCarrera().getIdCarrera()) {
+                            
                             CambioDeCarrera cambioDeCarrera = new CambioDeCarrera();
 
                             cambioDeCarrera.setCARNET(estudianteEntity.getCarnet());
                             cambioDeCarrera.setESTADO("A");
                             cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
                             cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
-                            cambioDeCarrera.setPENSUM_ACTUAL(null);
+
+                            Pensum pensum = new Pensum();
+                            pensum.setID_PENSUM(1);
+                            cambioDeCarrera.setPENSUM_ACTUAL(pensum);
 
                             estudianteService.insertarCambioCarrera(cambioDeCarrera);
                         }
+
+                        estudianteExistente.setCarrera(estudianteEntity.getCarrera());
+
+                        estudianteService.modificarEstudiante(estudianteExistente);
+
+                    
 
                         redirectAttributes.addFlashAttribute("mensaje", "El estudiante se editó correctamente.");
                         redirectAttributes.addFlashAttribute("tipoMensaje", "success");

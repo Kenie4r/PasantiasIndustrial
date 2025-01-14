@@ -5,10 +5,13 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.industrial.pasantias.Controller.EstudianteController;
 import com.industrial.pasantias.Model.CambioDeCarrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
 import com.industrial.pasantias.Repository.CambioCarreraRepository;
@@ -18,7 +21,11 @@ import com.industrial.pasantias.Repository.EstudianteRepository;
 public class EstudianteService {
     @Autowired
     private EstudianteRepository estudianteRepository;
+
+    @Autowired
     private CambioCarreraRepository logCambioDeCarreraRepository;
+
+    private static Logger logger = LoggerFactory.getLogger(EstudianteController.class);
 
     public EstudianteEntity obtenerPorCarnet(String carnet) {
         return estudianteRepository.encontrarPorCarnet(carnet);
@@ -66,6 +73,7 @@ public class EstudianteService {
             return Optional.ofNullable(cambio);
 
         } catch (Exception e) {
+            logger.error("Error al ingresar el cambio / inicio de carrera {}", e.getMessage());
             return Optional.empty();
 
         }
