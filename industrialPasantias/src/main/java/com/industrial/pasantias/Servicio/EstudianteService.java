@@ -9,13 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.industrial.pasantias.Model.CambioDeCarrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
+import com.industrial.pasantias.Repository.CambioCarreraRepository;
 import com.industrial.pasantias.Repository.EstudianteRepository;
 
 @Service
 public class EstudianteService {
     @Autowired
     private EstudianteRepository estudianteRepository;
+    private CambioCarreraRepository logCambioDeCarreraRepository;
 
     public EstudianteEntity obtenerPorCarnet(String carnet) {
         return estudianteRepository.encontrarPorCarnet(carnet);
@@ -53,6 +56,19 @@ public class EstudianteService {
             return Optional.empty();
         }
 
+    }
+
+    public Optional<CambioDeCarrera> insertarCambioCarrera(CambioDeCarrera carreraNueva) {
+        try {
+
+            CambioDeCarrera cambio = logCambioDeCarreraRepository.save(carreraNueva);
+
+            return Optional.ofNullable(cambio);
+
+        } catch (Exception e) {
+            return Optional.empty();
+
+        }
     }
 
     public Optional<EstudianteEntity> modificarEstudiante(EstudianteEntity dto) {
@@ -93,6 +109,7 @@ public class EstudianteService {
         // EstudianteEntity entity = new EstudianteEntity();
         try {
             estudianteRepository.save(dto);
+
             return Optional.of(dto);
         } catch (Exception e) {
             return Optional.empty();

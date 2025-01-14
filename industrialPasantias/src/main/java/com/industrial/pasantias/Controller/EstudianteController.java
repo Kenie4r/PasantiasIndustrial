@@ -2,6 +2,7 @@ package com.industrial.pasantias.Controller;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.core.io.Resource;
 
+import com.industrial.pasantias.Model.CambioDeCarrera;
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
 import com.industrial.pasantias.Servicio.CarreraService;
@@ -200,7 +202,7 @@ public class EstudianteController {
             @ModelAttribute EstudianteEntity estudianteEntity,
             @RequestParam(value = "HojaDeVida", required = false) MultipartFile hojaDeVida,
             @RequestParam(value = "FotoUrl", required = false) MultipartFile fotoUrl) {
-        System.out.println("carnet: " + estudianteEntity.getCarnet());
+
         try {
             // Verificar si el estudiante existe
             estudianteService.obtenerDataModificar(estudianteEntity.getCarnet())
@@ -241,10 +243,25 @@ public class EstudianteController {
                         estudianteExistente.setAPELLIDOS(estudianteEntity.getAPELLIDOS());
                         estudianteExistente.setNOMBRES(estudianteEntity.getNOMBRES());
                         estudianteExistente.setTELEFONO(estudianteEntity.getTELEFONO());
-                        estudianteExistente.setTELEFONO2(estudianteEntity.getTELEFONO2());                        
+                        estudianteExistente.setTELEFONO2(estudianteEntity.getTELEFONO2());
 
                         // Guardar cambios
                         estudianteService.modificarEstudiante(estudianteExistente);
+
+                        if (!estudianteExistente.getCarrera().getDescripcion()
+                                .equals(estudianteEntity.getCarrera().getDescripcion())) {
+
+                            CambioDeCarrera cambioDeCarrera = new CambioDeCarrera();
+
+                            cambioDeCarrera.setCARNET(estudianteEntity.getCarnet());
+                            cambioDeCarrera.setESTADO("A");
+                            cambioDeCarrera.setFECHA_CAMBIO(new Date(System.currentTimeMillis()));
+                            cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
+                            cambioDeCarrera.setCARRERA_ANTIGUA(estudianteExistente.getCarrera());
+
+                            estudianteService.insertarCambioCarrera(cambioDeCarrera);
+                        }
+
                         redirectAttributes.addFlashAttribute("mensaje", "El estudiante se editó correctamente.");
                         redirectAttributes.addFlashAttribute("tipoMensaje", "success");
 
