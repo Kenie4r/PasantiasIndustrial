@@ -114,6 +114,13 @@ public class reportPrinter {
             parameters.put("ID_PASANTIA", datosPasantia[0]); 
             parameters.put("ID_CARRERA", datosPasantia[1]); 
             parameters.put("CARNET", datosPasantia[2]); 
+            try {
+                parameters.put("PROGRAMA", datosPasantia[3]); 
+            }catch(Exception ex ){
+                parameters.put("PROGRAMA", null); 
+            }
+
+            
             //parameters.put(JRParameter.REPORT_MAX_COUNT, 1);
 
             // Obtener la conexión de la base de datos desde el datasource de Spring

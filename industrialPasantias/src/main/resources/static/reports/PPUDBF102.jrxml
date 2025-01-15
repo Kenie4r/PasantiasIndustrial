@@ -6,6 +6,7 @@
 	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<parameter name="ID_PASANTIA" class="java.lang.String"/>
 	<parameter name="ID_CARRERA" class="java.lang.String"/>
+	<parameter name="PROGRAMA" class="java.lang.String"/>
 	<parameter name="CARNET" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT 
@@ -31,7 +32,8 @@ PR.AREA_REALIZACION,
 PR.OTROS_DETALLES, 
 pr.OBSERVACIONES,
 PR.FECHA_INI , 
-PR.FECHA_FIN
+PR.FECHA_FIN,
+PR.ID_PROGRAMA
 FROM DBO.PASANTIA P 
 INNER JOIN DBO.ESTUDIANTE E
 ON (E.CARNET = P.CARNET) 
@@ -144,6 +146,10 @@ WHERE
 		<property name="com.jaspersoft.studio.field.name" value="FECHA_FIN"/>
 		<property name="com.jaspersoft.studio.field.label" value="FECHA_FIN"/>
 	</field>
+	<field name="ID_PROGRAMA" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="ID_PROGRAMA"/>
+		<property name="com.jaspersoft.studio.field.label" value="ID_PROGRAMA"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -159,6 +165,7 @@ WHERE
 	<detail>
 		<band height="752" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[($P{PROGRAMA} == null  || $P{PROGRAMA}.isEmpty())? true : $P{PROGRAMA}.equals( $F{ID_PROGRAMA}.toString(  ) )]]></printWhenExpression>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="0" width="217" height="31" uuid="b6720379-0c2a-4734-96b4-93084a8e76cc"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
