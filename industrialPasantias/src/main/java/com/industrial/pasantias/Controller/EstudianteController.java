@@ -110,10 +110,7 @@ public class EstudianteController {
             cambioDeCarrera.setESTADO("A");
             cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
             cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
-            Pensum pensum = new Pensum();
-            pensum.setID_PENSUM(1);
-            cambioDeCarrera.setPENSUM_ACTUAL(pensum);
-
+  
             Optional<CambioDeCarrera> responseCambioCarrera = estudianteService.insertarCambioCarrera(cambioDeCarrera);
 
             if(responseCambioCarrera.isPresent()){
@@ -270,10 +267,6 @@ public class EstudianteController {
                             cambioDeCarrera.setESTADO("A");
                             cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
                             cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
-
-                            Pensum pensum = new Pensum();
-                            pensum.setID_PENSUM(1);
-                            cambioDeCarrera.setPENSUM_ACTUAL(pensum);
 
                             estudianteService.insertarCambioCarrera(cambioDeCarrera);
                         }
