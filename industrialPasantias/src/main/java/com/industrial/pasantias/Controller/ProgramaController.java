@@ -3,6 +3,7 @@ package com.industrial.pasantias.Controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.Empresa;
 import com.industrial.pasantias.Model.EmpresaPrograma;
 import com.industrial.pasantias.Model.Materia;
+import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EmpresaService;
 import com.industrial.pasantias.Servicio.MateriaService;
 import com.industrial.pasantias.Servicio.ProgramaService;
@@ -26,11 +30,13 @@ public class ProgramaController {
     private final ProgramaService programaService;
     private final EmpresaService empresaService;
     private final MateriaService materiaService;
+    private final CarreraService carreraService;
 
-    public ProgramaController(ProgramaService progama, EmpresaService empresaService, MateriaService materiaService) {
+    public ProgramaController(ProgramaService progama, EmpresaService empresaService, MateriaService materiaService,CarreraService carreraService) {
         this.programaService = progama;
         this.empresaService = empresaService;
         this.materiaService = materiaService;
+        this.carreraService=carreraService;
     }
 
     @GetMapping(path = { "", "/" })
@@ -83,6 +89,9 @@ public class ProgramaController {
 
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
+        List<Carrera> carreras = carreraService.obtenerTodos();
+        model.addAttribute("carrera", carreras);
+        
 
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
@@ -125,6 +134,8 @@ public class ProgramaController {
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
         model.addAttribute("programa", programas);
+        List<Carrera> carreras = carreraService.obtenerTodos();
+        model.addAttribute("carrera", carreras);
         System.out.println("programa: " + programas);
         return "programas/crear_editar_programa";
     }
@@ -222,4 +233,16 @@ public class ProgramaController {
 
         return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
     }
-}
+     // Método para obtener las asignaturas de una carrera
+     @GetMapping("/obtenerAsignaturaPorCarrera/{id}")
+     public ResponseEntity<List<Materia>> obtenerAsignaturasPorCarrera(@PathVariable Integer id) {
+         List<Materia> materias = materiaService.obtenerPorCarreraId(id);
+         if (materias.isEmpty()) {
+             return ResponseEntity.noContent().build();
+         }
+         return ResponseEntity.ok(materias);
+     }
+ }
+    
+
+

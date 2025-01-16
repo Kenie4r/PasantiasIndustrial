@@ -37,11 +37,11 @@ public class EmpresaPrograma {
     private String observaciones;
 
     @ManyToOne
-    @JoinColumn(name = "ID_EMPRESA", nullable = false)
+    @JoinColumn(name = "ID_EMPRESA", nullable = true)
     private Empresa empresa;
 
     @ManyToOne
-    @JoinColumn(name = "ID_MATERIA", nullable = false)
+    @JoinColumn(name = "ID_MATERIA", nullable = true)
     private Materia materia;
 
     @Column(name = "TIPO_PROGRAMA", nullable = false, length = 200)

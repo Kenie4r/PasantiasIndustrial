@@ -4,7 +4,7 @@
 <head th:replace="fragments/header :: header(title = 'Materias')">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materias</title>
+    <title>Asignatura</title>
 </head>
 
 <body>
@@ -14,7 +14,7 @@
             <div th:replace="fragments/topbar :: topbar"></div>
             <div id="content">
                 <div class="container-fluid">
-                    <h1 class="mb-4" th:text="${materia.idMateria == null ? 'Crear Materia' : 'Editar Materia'}"></h1>
+                    <h1 class="mb-4" th:text="${materia.idMateria == null ? 'Crear Asignatura' : 'Editar Asignatura'}"></h1>
 
                     <div th:if="${mensaje}"
                         th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"

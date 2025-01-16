@@ -44,12 +44,12 @@
                         <!-- Campo Tipo Programa -->
                         <div class="mb-3">
                             <label for="tipo" class="form-label">Tipo de Programa</label>
-                            <select id="tipo" name="tipoPrograma" class="form-control" th:field="*{tipoPrograma}"
+                            <select id="tipo" name="tipoPrograma" class="form-control select-2" th:field="*{tipoPrograma}"
                                 required>
-                                <option value="Empresa" th:selected="${programa.tipoPrograma == 'Empresa'}">Empresa
-                                </option>
-                                <option value="Materia" th:selected="${programa.tipoPrograma == 'Materia'}">Materia
-                                </option>
+                                <option value="Empresa" th:selected="${programa.tipoPrograma ?: '' eq 'Empresa'}">Empresa</option>
+                                <option value="Materia" th:selected="${programa.tipoPrograma ?: '' eq 'Materia'}">Asignatura</option>
+                                
+                                
                             </select>
                         </div>
 
@@ -75,7 +75,7 @@
                             <label for="empresa" class="form-label">Empresa</label>
                             <span th:if="${empresa == null}">
                                 <select id="empresa" name="idEmpresa" class="form-control select-2"
-                                    th:field="*{empresa.idEmpresa}" required>
+                                    th:field="*{empresa.idEmpresa}" >
                                     <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}"
                                         th:text="${empresa.nombre}">
                                     </option>
@@ -85,15 +85,21 @@
                                 <input type="text" class="form-control" th:value="${empresa}" readonly required />
                                 <input type="hidden" name="empresa.idEmpresa" th:value="${empresaId}" /> </span>
                         </div>
-
-                        <!-- Campo Materia -->
-                        <div class="mb-3">
-                            <label for="Materias" class="form-label">Materia</label>
-                            <select id="materia" name="idMateria" class="form-control select-2"
-                                th:field="*{materia.idMateria}" required>
-                                <option th:each="materia : ${materia}" th:value="${materia.idMateria}"
-                                    th:text="${materia.nombre}">
+                        <div class="mb-3 " id="carrera-container" style="display: none;">
+                            <label for="carrera" class="form-label">Carreras</label>
+                            <select id="idcarrera" name="idCarrera" class="form-control select-2 " >
+                                <option value="" disabled selected>Seleccione una carrera</option>
+                                <option th:each="carrera : ${carrera}" th:value="${carrera.idCarrera}"
+                                    th:text="${carrera.descripcion}">
                                 </option>
+                            </select>
+                        </div>
+                        <!-- Campo Materia -->
+                        <div class="mb-3" id="materia-container" style="display: none;">
+                            <label for="Materias" class="form-label">Asignatura</label>
+                            <select id="idMateria" name="idMateria" class="form-control select-2" >
+                                <option th:each="materia : ${materia}" th:value="${materia.idMateria}"
+                                    th:text="${materia.nombre}"></option>
                             </select>
                         </div>
 
@@ -151,6 +157,79 @@
     <!-- Modales y scripts -->
     <div th:replace="~{fragments/userModal :: userModal}"></div>
     <div th:replace="~{fragments/jsComponents :: jsScripts}"></div>
+    <!-- Scripts para manejar asignaturas -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tipoSelect = document.getElementById('tipo');
+            const carreraContainer = document.getElementById('carrera-container');
+            const materiaContainer = document.getElementById('materia-container');
+            const empresaSelect = document.getElementById('empresa');
+            const carreraSelect = document.getElementById('idcarrera');
+            const materiaSelect = document.getElementById('idMateria');
+    
+            // Inicialmente ocultar los contenedores de carrera y materia
+            carreraContainer.style.display = 'none';
+            materiaContainer.style.display = 'none';
+    
+            // Mostrar/Ocultar campos según el tipo de programa
+            tipoSelect.addEventListener('change', function () {
+                if (this.value === 'Empresa') {
+                    // Mostrar solo empresa, ocultar campos de carrera y materia
+                    materiaContainer.style.display = 'none';
+                    carreraContainer.style.display = 'none';
+    
+                    // Limpiar los valores de carrera y materia
+                    carreraSelect.value = "";
+                    materiaSelect.value = "";
+    
+                    // Habilitar el campo de empresa
+                    empresaSelect.disabled = false;
+                } else if (this.value === 'Materia') {
+                    // Mostrar carrera y materia, ocultar empresa
+                    materiaContainer.style.display = 'block';
+                    carreraContainer.style.display = 'block';
+    
+                    // Limpiar el valor de empresa
+                    empresaSelect.value = "";
+    
+                    // Deshabilitar el campo de empresa
+                    empresaSelect.disabled = true;
+                }
+            });
+    
+            // Script para obtener asignaturas según la carrera seleccionada
+            $('#idcarrera').on("change", function () {
+                // Obtener el código de la carrera
+                $.ajax({
+                    url: "/programas/obtenerAsignaturaPorCarrera/" + this.value, // Asegúrate de que esta ruta sea correcta
+                    type: "GET",
+                    success: function (data) {
+                        // Limpiar las opciones del select de materias
+                        var materiaSelect = $("#idMateria");
+                        materiaSelect.empty();
+    
+                        // Agregar un option vacío por defecto
+                        materiaSelect.append('<option value="" disabled selected>Seleccione una asignatura</option>');
+    
+                        // Agregar las opciones de materias obtenidas
+                        $.each(data, function (index, materia) {
+                            materiaSelect.append('<option value="' + materia.idMateria + '">' + materia.nombre + '</option>');
+                        });
+    
+                        // Habilitar el select de materias
+                        materiaSelect.prop('disabled', false);
+                    },
+                    error: function () {
+                        alert("Error al obtener las asignaturas.");
+                    }
+                });
+            });
+        });
+    </script>
+    
+    
+
+
 
 </body>
 
