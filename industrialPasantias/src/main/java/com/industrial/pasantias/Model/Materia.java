@@ -1,6 +1,10 @@
 package com.industrial.pasantias.Model;
 
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,30 +35,21 @@ public class Materia {
     @Column(name = "HORAS", nullable = true, length = 250)
     private Integer horas;
 
-    @Column(name = "FECHA_CREA")
+    @CreationTimestamp
+    @Column(name = "FECHA_CREA", nullable = false)
     private LocalDateTime fechaCrea;
 
+    @UpdateTimestamp
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
 
-    @Column(name = "USU_CREA")
+    @Column(name = "USU_CREA", nullable = false)
     private String usuarioCrea;
 
     @Column(name = "USU_MOD")
     private String usuarioMod;
 
-    @PrePersist
-    protected void onCreate() {
-        this.fechaCrea = LocalDateTime.now();
-        this.fechaMod = LocalDateTime.now();
-        this.usuarioCrea = "A"; // PENDIENTE
-        this.usuarioMod = "A"; // PENDIENTE
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.fechaMod = LocalDateTime.now();
-        this.usuarioMod = "A"; // PENDIENTE
-    }
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_PENSUM", referencedColumnName = "ID_PENSUM", nullable = false)
+    private Pensum pensum;
 }

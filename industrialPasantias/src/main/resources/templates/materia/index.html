@@ -38,6 +38,7 @@
                                 <tr>
                                     <th>Nombre</th>
                                     <th>Carrera</th>
+                                    <th>Pénsum</th>
                                     <th>Estado</th>
                                     <th>Horas</th>
                                     <th>Operaciones</th>
@@ -47,6 +48,7 @@
                                 <tr th:each="materia : ${materias}">
                                     <td th:text="${materia.nombre}"></td>                                    
                                     <td th:text="${materia.carrera.descripcion}"></td>
+                                    <td th:text="${materia.pensum.NOMBRE}"></td>
                                     <td th:text="${materia.estado == 'A' ? 'Activo' : 'Inactivo'}"></td>
                                     <td th:text="${materia.horas}"></td>
                                     <td>

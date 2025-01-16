@@ -3,7 +3,8 @@ package com.industrial.pasantias.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.Materia;
+import com.industrial.pasantias.Model.Pensum;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.MateriaService;
+import com.industrial.pasantias.Servicio.PensumService;
 
 @Controller
 @RequestMapping("/materias")
@@ -28,6 +31,9 @@ public class MateriaController {
 
     @Autowired
     private CarreraService carreraService;
+
+    @Autowired
+    private PensumService pensumService;
 
     public MateriaController(MateriaService materia) {
         this.materiaService = materia;
@@ -45,8 +51,10 @@ public class MateriaController {
     @GetMapping("/nueva")
     public String nuevaMateriaForm(Model model) {
         List<Carrera> carrerasActivas = carreraService.obtenerCarrerasActivas();
+        List<Pensum> pensums = pensumService.obtenerTodos();
         model.addAttribute("materia", new Materia());
         model.addAttribute("carreras", carrerasActivas);
+        model.addAttribute("pensums", pensums);
         return "materia/crear_editar_materia";
     }
 
@@ -54,6 +62,10 @@ public class MateriaController {
     @PostMapping("/guardar")
     public String guardarMateria(@ModelAttribute Materia materia, RedirectAttributes redirectAttributes, Model model) {
         try {
+            // Obtener usuario logueado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication != null ? authentication.getName() : "Anónimo";
+            materia.setUsuarioCrea(username);
             materiaService.guardar(materia);
             redirectAttributes.addFlashAttribute("mensaje", "La materia se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
@@ -69,13 +81,16 @@ public class MateriaController {
     @GetMapping("/editar/{id}")
     public String EditarMateriaForm(@PathVariable Integer id, Model model) {
         Materia materia = materiaService.obtenerPorId(id);
+
         if (materia == null) {
             return "redirect:/materias";
         }
 
         List<Carrera> carrerasActivas = carreraService.obtenerCarrerasActivas();
+        List<Pensum> pensums = pensumService.obtenerTodos();
         model.addAttribute("materia", materia);
         model.addAttribute("carreras", carrerasActivas);
+        model.addAttribute("pensums", pensums);
         return "materia/crear_editar_materia";
     }
 
@@ -88,11 +103,16 @@ public class MateriaController {
             if (materia == null) {
                 return "redirect:/materias";
             }
-            System.out.println("materia:" + materia);
+            // Obtener usuario logueado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication != null ? authentication.getName() : "Anónimo";
+
             materiaExistente.setNombre(materia.getNombre());
             materiaExistente.setCarrera(materia.getCarrera());
             materiaExistente.setEstado(materia.getEstado());
             materiaExistente.setHoras(materia.getHoras());
+            materiaExistente.setPensum(materia.getPensum());
+            materia.setUsuarioCrea(username);
 
             materiaService.guardar(materiaExistente);
             redirectAttributes.addFlashAttribute("mensaje", "La materia se actualizó correctamente.");

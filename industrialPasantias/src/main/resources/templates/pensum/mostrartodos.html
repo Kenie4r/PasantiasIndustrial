@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Listado Pensum')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pensum</title>
+</head>
+
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">Pensum</h1>
+                    <a th:href="@{/pensums/nuevo}" class="btn btn-primary mb-3">Crear Pensum</a>
+
+                    <div th:if="${mensaje}"
+                        th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"
+                        role="alert">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nombre</th>
+                                    <th>Operaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="pensum : ${pensums}">
+                                    <td th:text="${pensum.ID_PENSUM}"></td>
+                                    <td th:text="${pensum.NOMBRE}"></td>
+                                    <td>
+                                        <a th:href="@{/pensums/editar/{id}(id=${pensum.ID_PENSUM})}">
+                                            <i class="fas fa-edit" style="color: #085691;"></i></a>
+
+                                        <a th:href="@{/pensums/eliminar/{id}(id=${pensum.ID_PENSUM})}"
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este pensum?');">
+                                            <i class="fas fa-trash-alt" style="color: #085691;"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>                
+            </div>
+            <div th:replace="fragments/footer :: footer"></div>
+        </div>
+    </div>
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,13 +42,15 @@ public class CarrreraController {
     @PostMapping("/carreras")
     public String guardarCarrera(@ModelAttribute Carrera carrera, RedirectAttributes redirectAttributes, Model model) {
         try {
+            // Obtener usuario logueado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication != null ? authentication.getName() : "Anónimo";
+
             if (carrera.getIdCarrera() == null) {
-                carrera.setFechaCre(LocalDateTime.now());
                 carrera.setEstado("A");
-                carrera.setUsuCrea("USUARIO"); // PENDIENTE
+                carrera.setUsuCrea(username);
             } else {
-                carrera.setFechaMod(LocalDateTime.now());
-                carrera.setUsuMod("USUARIO"); // PENDIENTE
+                carrera.setUsuMod(username);
             }
             carreraService.guardar(carrera);
             redirectAttributes.addFlashAttribute("mensaje", "La carrera se guardó correctamente.");
@@ -81,9 +85,12 @@ public class CarrreraController {
                 return "redirect:/carreras";
             }
 
-            carreraExistente.setDescripcion(carrera.getDescripcion());
-            carreraExistente.setFechaMod(carrera.getFechaMod());
-            carreraExistente.setUsuMod(carrera.getUsuMod()); // PENDIENTE
+            // Obtener usuario logueado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication != null ? authentication.getName() : "Anónimo";
+
+            carreraExistente.setDescripcion(carrera.getDescripcion());            
+            carreraExistente.setUsuMod(username);
             carreraExistente.setCodCarrera(carrera.getCodCarrera());
 
             carreraService.guardar(carreraExistente);

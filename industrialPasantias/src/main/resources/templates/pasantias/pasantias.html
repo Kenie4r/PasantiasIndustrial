@@ -48,7 +48,7 @@
                                 <tr th:each="p : ${pasantias}">
                                     <td th:text="${p.idPasantia}"></td>
                                     <td th:text="${p.carrera.codCarrera}"></td>
-                                    <td th:text="${p.correlativo}"></td>
+                                    <td th:text="${#numbers.formatInteger(p.correlativo, 3)}"></td>
                                     <td th:text="${p.anioEstudiante}"></td>
                                     <td th:text="${p.estudiante.carnet}"></td>
                                     <td th:text="${p.estudiante.NOMBRES}"></td>
