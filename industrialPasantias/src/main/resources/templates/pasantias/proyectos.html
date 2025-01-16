@@ -33,9 +33,23 @@
 
                     <a th:href="@{/pasantias/proyectos/nuevo/{idPasantia}(idPasantia = ${pasantia.idPasantia})}"
                         class="btn btn-primary mb-3">Agregar proyecto</a>
+
                     <a id="practica-cambiar-estado"
                         th:attr="data-id-pasantia=${pasantia.idPasantia}, data-estado-pasantia=${pasantia.estado}"
                         class="btn btn-success mb-3">Cambiar estado</a>
+
+                    <a th:href="@{/formularios/PPUDBF101/{idPasantia}-{idCarrera}-{carnet}(idPasantia=${pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet})}"
+                        class="btn btn-info mb-3"
+                        target="_blank">PPUDBF101</a>
+
+                    <a th:href="@{/formularios/PPUDBF102/{idPasantia}-{idCarrera}-{carnet}(idPasantia=${pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet})}"
+                        class="btn btn-info mb-3"
+                        target="_blank">PPUDBF102</a>
+                                            
+                    <a th:href="@{/formularios/PPUDBF103/{idPasantia}-{idCarrera}-{carnet}(idPasantia=${pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet})}"
+                        class="btn btn-info mb-3"
+                        target="_blank">PPUDBF103</a>
+
                     <a href="/pasantias" class="btn btn-secondary mb-3">Regresar</a>
 
                     <div class="row">
@@ -89,6 +103,7 @@
                                     <th>UV obtenidos</th>
                                     <th>Horas de asignatura</th>
                                     <th>Estado</th>
+                                    <th>Formularios</th>
                                     <th>Operaciones</th>
                                 </tr>
                             </thead>
@@ -100,6 +115,19 @@
                                     <td th:text="${p.materiasCursadasUv}"></td>
                                     <td th:text="${p.id.programa.materia.horas}"></td>
                                     <td th:text="${p.estado == 'E'} ? 'En Proceso' : 'Finalizado'"></td>
+                                    <td>
+                                        <a th:href="@{/formularios/PPUDBF101/{idPasantia}-{idCarrera}-{carnet}-{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet}, idPrograma = ${p.id.programa.idPrograma})}"
+                                            class="btn btn-info mb-3"
+                                            target="_blank">PPUDBF101</a>
+
+                                        <a th:href="@{/formularios/PPUDBF102/{idPasantia}-{idCarrera}-{carnet}-{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet}, idPrograma = ${p.id.programa.idPrograma})}"
+                                            class="btn btn-info mb-3"
+                                            target="_blank">PPUDBF102</a>
+
+                                        <a th:href="@{/formularios/PPUDBF103/{idPasantia}-{idCarrera}-{carnet}-{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet}, idPrograma = ${p.id.programa.idPrograma})}"
+                                            class="btn btn-info mb-3"
+                                            target="_blank">PPUDBF103</a>
+                                    </td>
                                     <td>
                                         <a th:href="@{/pasantias/proyectos/editar/pasantia/{idPasantia}/programa/{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idPrograma = ${p.id.programa.idPrograma})}"
                                             class="btn btn-success mb-3">Editar</a>
