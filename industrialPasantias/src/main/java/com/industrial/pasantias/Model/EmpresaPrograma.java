@@ -3,6 +3,8 @@ package com.industrial.pasantias.Model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.*;
@@ -58,20 +60,11 @@ public class EmpresaPrograma {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaFi;
     
+    @CreationTimestamp
     @Column(name = "FECHA_CREA")
     private LocalDateTime fechaCrea;
 
+    @UpdateTimestamp
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
-
-    @PrePersist
-    protected void onCreate() {
-        this.fechaCrea = LocalDateTime.now();
-        this.fechaMod = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.fechaMod = LocalDateTime.now();
-    }
 }

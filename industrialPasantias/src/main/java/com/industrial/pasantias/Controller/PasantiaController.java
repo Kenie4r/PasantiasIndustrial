@@ -87,7 +87,7 @@ public class PasantiaController {
             String username = authentication != null ? authentication.getName() : "Anónimo";
 
             // pasantia.setFechaInicio(LocalDateTime.now());;
-            pasantia.setFechaCrea(LocalDateTime.now());
+            //pasantia.setFechaCrea(LocalDateTime.now());
             pasantia.setUsuCrea(username);
             String anioFull = '2' + pasantia.getAnioEstudiante();
             LocalDateTime fecha = LocalDateTime.of(Integer.parseInt(anioFull), Month.JANUARY, 1, 0, 0, 0);
@@ -150,7 +150,7 @@ public class PasantiaController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication != null ? authentication.getName() : "Anónimo";
 
-            pasantiaPrograma.setFechaCrea(LocalDateTime.now());
+            //pasantiaPrograma.setFechaCrea(LocalDateTime.now());
             pasantiaPrograma.setUsuCrea(username);
 
             pasantiaProgramaService.guardar(pasantiaPrograma);

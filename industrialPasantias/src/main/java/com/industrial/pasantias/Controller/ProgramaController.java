@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.industrial.pasantias.Model.Carrera;
@@ -32,11 +31,12 @@ public class ProgramaController {
     private final MateriaService materiaService;
     private final CarreraService carreraService;
 
-    public ProgramaController(ProgramaService progama, EmpresaService empresaService, MateriaService materiaService,CarreraService carreraService) {
+    public ProgramaController(ProgramaService progama, EmpresaService empresaService, MateriaService materiaService,
+            CarreraService carreraService) {
         this.programaService = progama;
         this.empresaService = empresaService;
         this.materiaService = materiaService;
-        this.carreraService=carreraService;
+        this.carreraService = carreraService;
     }
 
     @GetMapping(path = { "", "/" })
@@ -89,9 +89,8 @@ public class ProgramaController {
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
         List<Carrera> carreras = carreraService.obtenerTodos();
-        model.addAttribute("carrera", carreras);
-        
 
+        model.addAttribute("carrera", carreras);
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
         model.addAttribute("programa", new EmpresaPrograma());
@@ -103,6 +102,13 @@ public class ProgramaController {
     public String guardarPrograma(@ModelAttribute("programa") EmpresaPrograma programa, Model model,
             RedirectAttributes redirectAttributes) {
         try {
+            /*
+             * VALIDACION SI ES ASIGNATURA ID_EMPRESA = NULL
+             * if (programa.getTipoPrograma().equals("Asignatura"))
+             * programa.setEmpresa(null);
+             */
+            if (programa.getTipoPrograma().equals("Empresa"))
+                programa.setMateria(null);
             // Guarda el nuevo programa en la base de datos
             programaService.guardar(programa);
             redirectAttributes.addFlashAttribute("mensaje", "El programa se guardó correctamente.");
@@ -110,7 +116,7 @@ public class ProgramaController {
             return "redirect:/programas/empresa/" + programa.getEmpresa().getIdEmpresa();
         } catch (Exception e) {
             model.addAttribute("tipoMensaje", "error");
-            model.addAttribute("mensaje", "Ocurrió un error al guardar el programa.");
+            model.addAttribute("mensaje", "Ocurrió un error al guardar el programa." + e.getMessage());
             return "programas/crear_editar_programa";
         }
 
@@ -120,7 +126,7 @@ public class ProgramaController {
     @SuppressWarnings("null")
     @GetMapping("/editar/{id}")
     public String mostrarFormularioModificarPrograma(@PathVariable Integer id,
-            Model model) {        
+            Model model) {
         EmpresaPrograma programas = programaService.obtenerPorId(id);
         if (programas == null) {
             return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
@@ -131,13 +137,22 @@ public class ProgramaController {
 
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
+        List<Carrera> carreras = carreraService.obtenerTodos();
+
+        if (programas.getTipoPrograma().equals("Asignatura")) {
+            Integer idCarreraMateria = materiaService.obtenerCarreraPorIdMateria(programas.getMateria().getIdMateria());
+            model.addAttribute("programaIdCarrera", idCarreraMateria);
+            model.addAttribute("programaIdMateria", programas.getMateria().getIdMateria());
+
+            System.out.println("idCarreraMateria" + idCarreraMateria);
+            System.out.println("programas.getMateria().getIdMateria()" + programas.getMateria().getIdMateria());
+        }
 
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
         model.addAttribute("programa", programas);
-        List<Carrera> carreras = carreraService.obtenerTodos();
         model.addAttribute("carrera", carreras);
-        System.out.println("programa: " + programas);
+
         return "programas/crear_editar_programa";
     }
 
@@ -180,6 +195,9 @@ public class ProgramaController {
             programaExistente.setAreaRealizacion(programas.getAreaRealizacion());
             programaExistente.setOtrosDetalles(programas.getOtrosDetalles());
             programaExistente.setObservaciones(programas.getObservaciones());
+
+            if (programas.getTipoPrograma().equals("Empresa"))
+                programaExistente.setMateria(null);
 
             programaService.guardar(programaExistente);
             redirectAttributes.addFlashAttribute("mensaje",
@@ -234,16 +252,14 @@ public class ProgramaController {
 
         return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
     }
-     // Método para obtener las asignaturas de una carrera
-     @GetMapping("/obtenerAsignaturaPorCarrera/{id}")
-     public ResponseEntity<List<Materia>> obtenerAsignaturasPorCarrera(@PathVariable Integer id) {
-         List<Materia> materias = materiaService.obtenerPorCarreraId(id);
-         if (materias.isEmpty()) {
-             return ResponseEntity.noContent().build();
-         }
-         return ResponseEntity.ok(materias);
-     }
- }
-    
 
-
+    // Método para obtener las asignaturas de una carrera
+    @GetMapping("/obtenerAsignaturaPorCarrera/{id}")
+    public ResponseEntity<List<Materia>> obtenerAsignaturasPorCarrera(@PathVariable Integer id) {
+        List<Materia> materias = materiaService.obtenerPorCarreraId(id);
+        if (materias.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(materias);
+    }
+}

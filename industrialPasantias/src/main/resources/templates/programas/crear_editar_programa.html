@@ -43,13 +43,13 @@
 
                         <!-- Campo Tipo Programa -->
                         <div class="mb-3">
-                            <label for="tipo" class="form-label">Tipo de Programa</label>
-                            <select id="tipo" name="tipoPrograma" class="form-control select-2" th:field="*{tipoPrograma}"
-                                required>
-                                <option value="Empresa" th:selected="${programa.tipoPrograma ?: '' eq 'Empresa'}">Empresa</option>
-                                <option value="Materia" th:selected="${programa.tipoPrograma ?: '' eq 'Materia'}">Asignatura</option>
-                                
-                                
+                            <label for="tipoPrograma" class="form-label">Tipo de Programa</label>
+                            <select id="tipoPrograma" name="tipoPrograma" class="form-control select-2"
+                                th:field="*{tipoPrograma}" required>
+                                <option value="Empresa">
+                                    Empresa</option>
+                                <option value="Asignatura">
+                                    Asignatura</option>
                             </select>
                         </div>
 
@@ -71,35 +71,44 @@
                         </div>
 
                         <!-- Campo Empresa -->
-                        <div class="mb-3">
+                        <div class="mb-3" id="empresaContainer">
                             <label for="empresa" class="form-label">Empresa</label>
+                            <!--
                             <span th:if="${empresa == null}">
-                                <select id="empresa" name="idEmpresa" class="form-control select-2"
-                                    th:field="*{empresa.idEmpresa}" >
+                                <select id="empresa" name="empresa" class="form-control select-2"
+                                    th:field="*{empresa.idEmpresa}">
                                     <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}"
                                         th:text="${empresa.nombre}">
                                     </option>
                                 </select>
                             </span>
+                            -->
                             <span th:if="${empresa != null}">
                                 <input type="text" class="form-control" th:value="${empresa}" readonly required />
-                                <input type="hidden" name="empresa.idEmpresa" th:value="${empresaId}" /> </span>
+                                <input type="hidden" name="empresa.idEmpresa" th:value="${empresaId}" />
+                            </span>
                         </div>
-                        <div class="mb-3 " id="carrera-container" style="display: none;">
+
+                        <!-- Campo Carreras -->
+                        <div class="mb-3 d-none" id="carreraContainer">
                             <label for="carrera" class="form-label">Carreras</label>
-                            <select id="idcarrera" name="idCarrera" class="form-control select-2 " >
+                            <select id="idcarrera" name="idCarrera" class="form-control select-2 ">
                                 <option value="" disabled selected>Seleccione una carrera</option>
                                 <option th:each="carrera : ${carrera}" th:value="${carrera.idCarrera}"
-                                    th:text="${carrera.descripcion}">
+                                    th:text="${carrera.descripcion}"
+                                    th:selected="${carrera.idCarrera == programaIdCarrera}">
                                 </option>
                             </select>
                         </div>
                         <!-- Campo Materia -->
-                        <div class="mb-3" id="materia-container" style="display: none;">
-                            <label for="Materias" class="form-label">Asignatura</label>
-                            <select id="idMateria" name="idMateria" class="form-control select-2" >
-                                <option th:each="materia : ${materia}" th:value="${materia.idMateria}"
-                                    th:text="${materia.nombre}"></option>
+                        <div class="mb-3 d-none" id="materiaContainer">
+                            <label for="idMateria" class="form-label">Asignatura</label>
+                            <select id="idMateria" name="idMateria" class="form-control select-2"
+                                th:field="*{materia.idMateria}">
+                                <option value="" disabled selected>Seleccione una asignatura</option>
+                                <option th:each="m : ${materia}" th:value="${m.idMateria}" th:text="${m.nombre}"
+                                    th:selected="${m.idMateria == programaIdMateria}">
+                                </option>
                             </select>
                         </div>
 
@@ -158,79 +167,6 @@
     <!-- Modales y scripts -->
     <div th:replace="~{fragments/userModal :: userModal}"></div>
     <div th:replace="~{fragments/jsComponents :: jsScripts}"></div>
-    <!-- Scripts para manejar asignaturas -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const tipoSelect = document.getElementById('tipo');
-            const carreraContainer = document.getElementById('carrera-container');
-            const materiaContainer = document.getElementById('materia-container');
-            const empresaSelect = document.getElementById('empresa');
-            const carreraSelect = document.getElementById('idcarrera');
-            const materiaSelect = document.getElementById('idMateria');
-    
-            // Inicialmente ocultar los contenedores de carrera y materia
-            carreraContainer.style.display = 'none';
-            materiaContainer.style.display = 'none';
-    
-            // Mostrar/Ocultar campos según el tipo de programa
-            tipoSelect.addEventListener('change', function () {
-                if (this.value === 'Empresa') {
-                    // Mostrar solo empresa, ocultar campos de carrera y materia
-                    materiaContainer.style.display = 'none';
-                    carreraContainer.style.display = 'none';
-    
-                    // Limpiar los valores de carrera y materia
-                    carreraSelect.value = "";
-                    materiaSelect.value = "";
-    
-                    // Habilitar el campo de empresa
-                    empresaSelect.disabled = false;
-                } else if (this.value === 'Materia') {
-                    // Mostrar carrera y materia, ocultar empresa
-                    materiaContainer.style.display = 'block';
-                    carreraContainer.style.display = 'block';
-    
-                    // Limpiar el valor de empresa
-                    empresaSelect.value = "";
-    
-                    // Deshabilitar el campo de empresa
-                    empresaSelect.disabled = true;
-                }
-            });
-    
-            // Script para obtener asignaturas según la carrera seleccionada
-            $('#idcarrera').on("change", function () {
-                // Obtener el código de la carrera
-                $.ajax({
-                    url: "/programas/obtenerAsignaturaPorCarrera/" + this.value, // Asegúrate de que esta ruta sea correcta
-                    type: "GET",
-                    success: function (data) {
-                        // Limpiar las opciones del select de materias
-                        var materiaSelect = $("#idMateria");
-                        materiaSelect.empty();
-    
-                        // Agregar un option vacío por defecto
-                        materiaSelect.append('<option value="" disabled selected>Seleccione una asignatura</option>');
-    
-                        // Agregar las opciones de materias obtenidas
-                        $.each(data, function (index, materia) {
-                            materiaSelect.append('<option value="' + materia.idMateria + '">' + materia.nombre + '</option>');
-                        });
-    
-                        // Habilitar el select de materias
-                        materiaSelect.prop('disabled', false);
-                    },
-                    error: function () {
-                        alert("Error al obtener las asignaturas.");
-                    }
-                });
-            });
-        });
-    </script>
-    
-    
-
-
 
     <script>
         function autoResize(textarea) {
@@ -244,6 +180,83 @@
         document.addEventListener('DOMContentLoaded', () => {
             const textarea = document.getElementById('observaciones');
             autoResize(textarea);
+        });
+
+        $(document).ready(() => {
+            const empresaContainer = document.getElementById('empresaContainer');
+            const carreraContainer = document.getElementById('carreraContainer');
+            const materiaContainer = document.getElementById('materiaContainer');
+
+            const tipoProgramaSelect = $('#tipoPrograma');
+            const carreraSelect = $('#idcarrera');
+            const materiaSelect = $('#idMateria');
+
+            const updateContainers = (selectedValue) => {
+                if (selectedValue === "Empresa") {
+                    empresaContainer.classList.remove('d-none');
+                    carreraContainer.classList.add('d-none');
+                    materiaContainer.classList.add('d-none');
+                } else if (selectedValue === "Asignatura") {
+                    empresaContainer.classList.add('d-none');
+                    carreraContainer.classList.remove('d-none');
+                    materiaContainer.classList.remove('d-none');
+                }
+            };
+
+            // Ejecutar al cargar la página con el valor actual
+            updateContainers(tipoProgramaSelect.val());
+
+            // Si hay una carrera seleccionada, cargar materias asociadas
+            const selectedCarrera = carreraSelect.val();
+            const selectedMateria = materiaSelect.val();            
+
+            if (selectedCarrera) {
+                $.ajax({
+                    url: "/programas/obtenerAsignaturaPorCarrera/" + selectedCarrera,
+                    type: "GET",
+                    success: function (data) {
+                        materiaSelect.empty();
+                        materiaSelect.append('<option value="" disabled>Seleccionar...</option>');
+
+                        $.each(data, function (index, materia) {
+                            materiaSelect.append('<option value="' + materia.idMateria + '"' +
+                                (materia.idMateria == selectedMateria ? ' selected' : '') +
+                                '>' + materia.nombre + '</option>');
+                        });
+
+                        materiaSelect.prop('disabled', false);
+                    },
+                    error: function () {
+                        alert("Error al obtener las asignaturas.");
+                    }
+                });
+            }
+
+            $('#tipoPrograma').on('change', function () {
+                updateContainers($(this).val());
+            });
+
+            // Actualizar materias cuando cambie la carrera
+            carreraSelect.on("change", function () {
+                const carreraId = $(this).val();
+                $.ajax({
+                    url: "/programas/obtenerAsignaturaPorCarrera/" + carreraId,
+                    type: "GET",
+                    success: function (data) {
+                        materiaSelect.empty();
+                        materiaSelect.append('<option value="" disabled>Seleccionar...</option>');
+
+                        $.each(data, function (index, materia) {
+                            materiaSelect.append('<option value="' + materia.idMateria + '">' + materia.nombre + '</option>');
+                        });
+
+                        materiaSelect.prop('disabled', false);
+                    },
+                    error: function () {
+                        alert("Error al obtener las asignaturas.");
+                    }
+                });
+            });
         });
     </script>
 </body>

@@ -35,7 +35,6 @@ import org.springframework.core.io.Resource;
 import com.industrial.pasantias.Model.CambioDeCarrera;
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
-import com.industrial.pasantias.Model.Pensum;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EstudianteService;
 
@@ -107,8 +106,7 @@ public class EstudianteController {
             CambioDeCarrera cambioDeCarrera = new CambioDeCarrera();
 
             cambioDeCarrera.setCARNET(estudianteEntity.getCarnet());
-            cambioDeCarrera.setESTADO("A");
-            cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
+            cambioDeCarrera.setESTADO("A");            
             cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
   
             Optional<CambioDeCarrera> responseCambioCarrera = estudianteService.insertarCambioCarrera(cambioDeCarrera);

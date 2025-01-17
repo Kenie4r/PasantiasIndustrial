@@ -27,7 +27,13 @@ public class MateriaService {
     public void eliminarMateria(Integer idMateria) {
         materiaRepository.deleteById(idMateria);
     }
+
     public List<Materia> obtenerPorCarreraId(Integer id) {
         return materiaRepository.findMateriasByIdCarrera(id);
     }
+
+    public Integer obtenerCarreraPorIdMateria(Integer id) {        
+        return materiaRepository.findCarreraByIdMateria(id);
+    }
+
 }

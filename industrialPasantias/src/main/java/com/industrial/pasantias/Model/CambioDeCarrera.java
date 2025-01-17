@@ -2,8 +2,10 @@ package com.industrial.pasantias.Model;
 
 import java.sql.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,13 +28,14 @@ public class CambioDeCarrera {
 
     private String ESTADO;
 
-   
     @ManyToOne
     @JoinColumn(name = "CARRERA_ACTUAL", referencedColumnName = "ID_CARRERA", nullable = false)
     private Carrera CARRERA_ACTUAL;
 
+    @CreationTimestamp
     private Date FECHA_CREA;
-    private Date FECHA_MOD;
 
+    @UpdateTimestamp
+    private Date FECHA_MOD;
 
 }

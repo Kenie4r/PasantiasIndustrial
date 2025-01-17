@@ -3,6 +3,7 @@ package com.industrial.pasantias.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -66,6 +67,7 @@ public class MateriaController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication != null ? authentication.getName() : "Anónimo";
             materia.setUsuarioCrea(username);
+            
             materiaService.guardar(materia);
             redirectAttributes.addFlashAttribute("mensaje", "La materia se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
@@ -112,7 +114,7 @@ public class MateriaController {
             materiaExistente.setEstado(materia.getEstado());
             materiaExistente.setHoras(materia.getHoras());
             materiaExistente.setPensum(materia.getPensum());
-            materia.setUsuarioCrea(username);
+            materiaExistente.setUsuarioMod(username);
 
             materiaService.guardar(materiaExistente);
             redirectAttributes.addFlashAttribute("mensaje", "La materia se actualizó correctamente.");

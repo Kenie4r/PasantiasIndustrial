@@ -2,6 +2,9 @@ package com.industrial.pasantias.Model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,9 +35,11 @@ public class Parametro {
     @Column(name = "CATEGORIA", nullable = false)
     private String categoria;
 
+    @CreationTimestamp
     @Column(name = "FECHA_CREA", nullable = false)
     private LocalDateTime fechaCre;
 
+    @UpdateTimestamp
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
 

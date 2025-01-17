@@ -2,6 +2,9 @@ package com.industrial.pasantias.Model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.industrial.pasantias.Model.PK.PasantiaProgramaPK;
 
 import jakarta.persistence.*;
@@ -27,9 +30,11 @@ public class PasantiaPrograma {
     @Column(name = "ESTADO", nullable = false)
     private String estado;
 
+    @CreationTimestamp
     @Column(name = "FECHA_CREA", nullable = false)
     private LocalDateTime fechaCrea;
 
+    @UpdateTimestamp
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
 

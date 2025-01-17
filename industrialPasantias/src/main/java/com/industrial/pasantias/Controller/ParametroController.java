@@ -1,6 +1,5 @@
 package com.industrial.pasantias.Controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,6 @@ public class ParametroController {
     public String guardarParametro(@ModelAttribute Parametro parametro, RedirectAttributes redirectAttributes,
             Model model) {
         try {
-            if (parametro.getIdParametro() == null) {
-                parametro.setFechaCre(LocalDateTime.now());
-            } else {
-                parametro.setFechaMod(LocalDateTime.now());
-            }
             parametroService.guardar(parametro);
             redirectAttributes.addFlashAttribute("mensaje", "El parámetro se guardó correctamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
@@ -80,7 +74,7 @@ public class ParametroController {
             parametroExistente.setDescripcion(parametro.getDescripcion());
             parametroExistente.setValor(parametro.getValor());
             parametroExistente.setCategoria(parametro.getCategoria());
-            parametroExistente.setFechaMod(LocalDateTime.now());
+            //parametroExistente.setFechaMod(LocalDateTime.now());
 
             parametroService.guardar(parametroExistente);
             redirectAttributes.addFlashAttribute("mensaje", "El parámetro se actualizó correctamente.");
