@@ -16,4 +16,16 @@ public interface PasantiaRepository extends JpaRepository<Pasantia, Integer> {
     // Obtener las horas totales de una pasantia
     @Query(value = "SELECT SUM(M.HORAS) FROM PASANTIA PA INNER JOIN PASANTIA_PROGRAMA PP ON PA.ID_PASANTIA = PP.ID_PASANTIA INNER JOIN PROGRAMA P ON PP.ID_PROGRAMA = P.ID_PROGRAMA INNER JOIN MATERIA M ON P.ID_MATERIA = M.ID_MATERIA WHERE PA.ID_PASANTIA = :idPasantia", nativeQuery = true)
     Integer obtenerHorasTotales(int idPasantia);
+
+    // Obtener practicas profesionales activas
+    @Query(value = "SELECT COUNT(ID_PASANTIA) FROM pasantia WHERE ESTADO = 'E'", nativeQuery = true)
+    Integer obtenerPracticasProfesionalesActivas();
+
+    // Obtener practicas profesionales activas ingenieria
+    @Query(value = "SELECT COUNT(ID_PASANTIA) FROM pasantia WHERE ESTADO = 'E' AND ID_CARRERA = 1", nativeQuery = true)
+    Integer obtenerPracticasProfesionalesActivasIngenieria();
+
+    // Obtener practicas profesionales activas tecnico
+    @Query(value = "SELECT COUNT(ID_PASANTIA) FROM pasantia WHERE ESTADO = 'E' AND ID_CARRERA = 3", nativeQuery = true)
+    Integer obtenerPracticasProfesionalesActivasTecnico();
 }

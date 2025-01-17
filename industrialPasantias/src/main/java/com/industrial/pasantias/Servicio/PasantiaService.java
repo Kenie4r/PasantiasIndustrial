@@ -43,4 +43,16 @@ public class PasantiaService {
     public Integer ObtenerHorasTotalesPasantia(int idPasantia){
         return pasantiaRepository.obtenerHorasTotales(idPasantia);
     }
+
+    public Integer obtenerPracticasProfesionalesActivas(){
+        return pasantiaRepository.obtenerPracticasProfesionalesActivas();
+    }
+
+    public Integer obtenerPracticasProfesionalesActivasIngenieria(){
+        return pasantiaRepository.obtenerPracticasProfesionalesActivasIngenieria();
+    }
+
+    public Integer obtenerPracticasProfesionalesActivasTecnico(){
+        return pasantiaRepository.obtenerPracticasProfesionalesActivasTecnico();
+    }
 }

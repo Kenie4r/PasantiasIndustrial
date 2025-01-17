@@ -47,7 +47,7 @@ public class EstudianteEntity {
     @Column(name = "HOJA_DE_VIDA")
     private String HOJA_DE_VIDA;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "ID_CARRERA", referencedColumnName = "ID_CARRERA", nullable = false)
     private Carrera Carrera;
 
