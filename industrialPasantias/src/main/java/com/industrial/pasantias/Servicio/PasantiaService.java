@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.industrial.pasantias.Model.EstudianteEntity;
 import com.industrial.pasantias.Model.Pasantia;
 import com.industrial.pasantias.Repository.PasantiaRepository;
 import com.industrial.pasantias.ViewModel.SelectListItem;
@@ -54,5 +55,9 @@ public class PasantiaService {
 
     public Integer obtenerPracticasProfesionalesActivasTecnico(){
         return pasantiaRepository.obtenerPracticasProfesionalesActivasTecnico();
+    }
+
+    public List<Pasantia> obtenerPasantiasPorEstudiante(EstudianteEntity idEstudiante){
+        return pasantiaRepository.findByEstudiante(idEstudiante); 
     }
 }

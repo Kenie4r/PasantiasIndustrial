@@ -14,125 +14,84 @@
             <!-- Main Content -->
             <div id="content"class="h-full">
               <div class="container-fluid h-100">
-                <div class="row h-100">
-                    <div class="col-md-12 col-xl-4"> 
-                        <div class="card mb-4 d-xl-block d-none ">
-                        
-                                <div class="card-header">
-                                    Filtros de reporte
-                                </div>
-                                <div class="card-body">
-                                    <div>
-                                        <label for="tipos">Formulario a generar</label>
-                                        <select name="tipos" id="Nreportes" class="form-control select-2" th:field="${reporte}"  >
-                                            <option value="">Seleccione un formulario...</option>
-                                            <option value="PPUDBF101" >PP-UDB-FI-01</option>
-
-                                            <option value="PPUDBF102" >PP-UDB-FI-02</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label for="idpasantia">
-                                            Número de práctica profesional:
-                                        </label>
-                                        <input type="text" id="idpasantia" class="form-control"/>
-                                    </div>
-                                    <div>
+                <div class="row">
+                    <div class="col-12" style="height: fit-content !important;"> 
+                        <div class="card mb-4 ">
+                            <div class="card-header">Búsqueda de Estudiante</div>
+                            <div class="card-body">
+                                <div class="row ">
+                                    <div class="col-12 col-xl-6">
                                         <label for="idCarrera" class="form-label" >
-                                            Carrera: 
+                                                Carrera: 
                                         </label>
-                                        <select id="idCarrera" name="idCarrera" class="form-control select-2"  >
+                                        <select id="idCarrera" name="idCarrera" class="form-control select-2" >
                                             <option value="0">Seleccionar carrera...</option>
                                             <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
                                             </option>
                                         </select>
-
+    
                                     </div>
-                            
-                                    <div>
-                                        <label for="codEstudiante">
-                                            Código de estudiante: 
+                                
+                                    <div class="col-12 col-xl-6">
+                                        <label for="carnet">
+                                                Código de estudiante: 
                                         </label>
-                                        <input type="text" id="codEstudiante"class="form-control"/>
+                                        <select id="carnet" name="carnet" class="form-control select-2"
+                                            required>
+                                            <option value="0" disabled selected>Seleccionar...</option>
+                                        </select>
                                     </div>
-                                        
-                                    <br/>
-                                    <br/>
-                                    <button class="btn btn-success" id="btnGenerar">
-                                        Generar Formulario
-                                    </button>
-                                    
                                 </div>
+                                <div class="col-12 mt-4">
+                                    <button class="btn btn-success" id="btnGenerar" >
+                                            Buscar Prácticas Profesionales
+                                    </button>    
+                                </div>
+                                    
+                            </div>
                             
                         </div>
-
-
-                        <div class="card shadow mb-4 d-xl-none d-block">
-                            <!-- Card Header - Accordion -->
-                            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse"
-                                role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                                <h6 class="m-0 font-weight-bold text-secondary">                                Filtros de reporte
-                                </h6>
-                            </a>
-                            <!-- Card Content - Collapse -->
-                            <div class="collapse show" id="collapseCardExample">
-                                <div class="card-body">
-                                    
-                                    <div>
-                                        <label for="tipos">Formulario a generar</label>
-                                        <select name="tipos" id="Nreportes2" class="form-control select-2" th:field="${reporte2}"   >
-                                            <option value="">Seleccione un formulario...</option>
-                                            <option value="PPUDBF101" >PP-UDB-FI-01</option>
-                                            <option value="PPUDBF102" >PP-UDB-FI-02</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label for="idpasantia2">
-                                            Número de práctica profesional:
-                                        </label>
-                                        <input type="text" id="idpasantia2" class="form-control"/>
-                                    </div>
-                                    <div>
-                                        <label for="idCarrera2" class="form-label">
-                                            Carrera: 
-                                        </label>
-                                        <select id="idCarrera2" name="idCarrera2" class="form-control select-2" >
-                                            <option value="0">Seleccionar carrera...</option>
-                                            <option th:each="carrera : ${carreras}" th:value="${carrera.idCarrera}" th:text="${'[' + carrera.codCarrera +'] ' + carrera.descripcion}">
-                                            </option>
-                                        </select>
-                                    </div>
-                           
-                                    <div>
-                                        <label for="codEstudiante2">
-                                            Código de estudiante: 
-                                        </label>
-                                        <input type="text" id="codEstudiante2"class="form-control"/>
-                                    </div>
-                                       
-                                    <br/>
-                                    <br/>
-                                    <button class="btn btn-success" id="btnGenerar2">
-                                        Generar Formulario
-                                    </button>
-                                 
-                                </div>
+                    </div>
+                   
+                </div>
+                <div class="row ">
+                    <div class="col-12  " >
+                        <div class="card mb-4 ">
+                            <div class="card-header">Prácticas Profesionales del Estudiante</div>
+                            <div class="card-body" id="dataResponse">
+                                
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-md-12 col-xl-8">
-                        <iframe width="100%" id="frame"
-                        height="100%" src="/reportPrinter" frameborder="0">
-
-                        </iframe>
-                    </div>
                 </div>
+                
               </div>
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
+            <!--Modal para los reportes-->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-xl  modal-dialog-centered" role="document"  >
+                  <div class="modal-content" style="height: 85vh;">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Formulario de Práctica Profesional </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                     
+                        <iframe width="100%" id="frame"
+                        height="100%" src="/reportPrinter" frameborder="0">
 
+                        </iframe>
+                
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
             <!-- Footer -->
             <div th:replace="fragments/footer :: footer"/>
             <!-- End of Footer -->
@@ -152,145 +111,81 @@
        
         $(document).ready(()=>{
 
-            $("#btnGenerar").on("click", (e)=> {
-                let idpasantia = $("#idpasantia").val(); 
-                let idCarrera = $("#idCarrera").val(); 
-                let codEstudiante = $("#codEstudiante").val(); 
-                let reporte = $("#Nreportes").val(); 
+     
 
-                let url = "/formularios/"+ reporte + "/"+idpasantia + "-" + idCarrera + "-" + codEstudiante; 
 
-                //alert(idpasantia  + ' - ' + codEstudiante + ' ' + reporte )
-                if (idpasantia == "" && idCarrera == 0 
-                    && codEstudiante == "" 
-                    && reporte == "" 
-                ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, complete el formulario para generar el formulario deseado', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
+            $("#btnGenerar").on("click", (e) => {
+                let carnetVal = $("#carnet").val(); 
+               
+                if (carnetVal == null || carnetVal == "0"){
+                    Swal.fire( { 
+                        title: 'Error',
+                        text: 'Por favor seleccione un estudiante',
+                        icon: 'warning',
+                        confirmButtonText: 'Volver'
+                    }); 
+                }else 
+               {
+                 $.ajax({
+                    url: "/reporteria/formularios/" + carnetVal, 
+                    type: "GET", 
+                    success : (response)=> {
+                        $("#frame").attr("src", "/reportPrinter"); 
+                        $("#dataResponse").html("");
+                        if(response == ""){
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'No se han encontrado prácticas profesionales para el estudiante seleccionado',
+                                icon: 'error',
+                                confirmButtonText: 'Volver'
+                            })
+                        }else 
+                        {
+                            $("#dataResponse").append(response); 
+                            //$("#frame").attr("src", "/reportPrinter"); 
+                            Swal.fire({
+                                title: 'Exito',
+                                text: 'Se obtuvieron las prácticas profesionales del estudiante',
+                                icon: 'success',
+                                confirmButtonText: 'Ok'
+                            })
+                        }
+                        
+                    }
+                })
                 }
-
-                if(idpasantia == "" ){
-                   
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, ingrese un número de pasantia', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
-                }
-                if(idCarrera == 0 ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, seleccion una carrera', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
-                }
-
-                if(codEstudiante == "" ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, añada un código de estudiante para realizar la búsqueda', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
-                }
-
-                if(reporte == "" ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, seleccion una formulario para generar', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
-                }
-                $("#frame").attr("src", url); 
             })
+         $('#idCarrera').on("change", function () {
+            $.ajax({
+                    url: "/pasantias/obtenerEstudiantesPorCarrera/" + this.value,
+                    type: "GET",
+                    success: function (data) {
+                        // LImpiar opciones
+                        document.querySelector("#carnet").innerHTML = '';
 
-            $("#btnGenerar2").on("click", (e)=> {
-                let idpasantia = $("#idpasantia2").val(); 
-                let idCarrera = $("#idCarrera2").val(); 
-                let codEstudiante = $("#codEstudiante2").val(); 
-                let reporte = $("#Nreportes2").val(); 
+                        // Agregar opcion default
+                        let option = new Option('Seleccionar un estudiante...', '0');
+                        document.querySelector("#carnet").add(option);
 
-                let url = "/formularios/"+ reporte + "/"+idpasantia + "-" + idCarrera + "-" + codEstudiante; 
+                        // Agregar opciones
+                        data.forEach((element, index) => {
+                            let valueOption = '[' + element.carnet + '] ' + element.nombres + ' ' + element.apellidos;
+                            let option = new Option(valueOption, element.carnet);
+                            document.querySelector("#carnet").add(option);
+                        });
+                    }
+                });
+            }); 
+        }) 
+        
+        
+        function mostrarReporte( carnet, pasantia,  carrera, form ){
 
-                if (idpasantia == "" && idCarrera == 0 
-                    && codEstudiante == "" 
-                    && reporte == "" 
-                ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, complete el formulario para generar el formulario deseado', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
+            let formName = (form == 1 )? "PPUDBF101": (form==2)? "PPUDBF102": "PPUDBF103";             
+            let reporte = "/formularios/" + formName + "/" + pasantia + "-" + carrera + "-" + carnet; 
 
-                    return; 
-                }
-
-                
-             
-                if(idpasantia == "" ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, ingrese un número de pasantia', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
-                }
-                if(idCarrera == 0 ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, seleccion una carrera', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
-                }
-
-                if(codEstudiante == "" ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, añada un código de estudiante para realizar la búsqueda', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
-                }
-
-                if(reporte == "" ){
-                    Swal.fire({
-                        title: 'Error', 
-                        text: 'Por favor, seleccion una formulario para generar', 
-                        icon: 'error', 
-                        confirmButtonText: 'Confirmar'
-                    });
-
-                    return; 
-                }
-
-                $("#frame").attr("src", url); 
-            })
-        })    
+            $("#frame").attr("src", reporte); 
+        }
     </script>
 </body>
 </html>

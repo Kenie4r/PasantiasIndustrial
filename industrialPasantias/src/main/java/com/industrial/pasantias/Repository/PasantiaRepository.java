@@ -1,8 +1,11 @@
 package com.industrial.pasantias.Repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.industrial.pasantias.Model.EstudianteEntity;
 import com.industrial.pasantias.Model.Pasantia;
 
 public interface PasantiaRepository extends JpaRepository<Pasantia, Integer> {
@@ -28,4 +31,7 @@ public interface PasantiaRepository extends JpaRepository<Pasantia, Integer> {
     // Obtener practicas profesionales activas tecnico
     @Query(value = "SELECT COUNT(ID_PASANTIA) FROM pasantia WHERE ESTADO = 'E' AND ID_CARRERA = 3", nativeQuery = true)
     Integer obtenerPracticasProfesionalesActivasTecnico();
+
+    //Obtener todas  por el estudinante
+    List<Pasantia> findByEstudiante(EstudianteEntity estudiante);
 }

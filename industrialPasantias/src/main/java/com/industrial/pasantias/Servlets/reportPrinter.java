@@ -97,7 +97,7 @@ public class reportPrinter {
     public void generarReportePDFparams(HttpServletResponse response, 
                                   @RequestParam(required = false) String parametroEjemplo, @PathVariable String nombre, @PathVariable String pasantia) {
         try {
-            String reportName = "FI01"; 
+            String reportName = "FI0" + nombre.charAt(nombre.length()-1); 
             String[] datosPasantia = pasantia.split("-"); 
             // Ruta del archivo .jasper en el directorio de recursos
             InputStream jasperStream = getClass().getResourceAsStream("/static/reports/"+ nombre + ".jasper");
