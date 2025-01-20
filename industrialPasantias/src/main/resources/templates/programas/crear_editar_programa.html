@@ -130,6 +130,20 @@
                                 th:field="*{nombreResponsable}" required>
                         </div>
 
+                        <!-- Campo Correo Responsable -->
+                        <div class="mb-3">
+                            <label for="correoResponsable" class="form-label">Correo Responsable</label>
+                            <input type="email" id="correoResponsable" name="correoResponsable" class="form-control"
+                                th:field="*{correoResponsable}">
+                        </div>
+
+                        <!-- Campo Telefono Responsable -->
+                        <div class="mb-3">
+                            <label for="telResponsable" class="form-label">Teléfono Responsable</label>
+                            <input type="tel" id="telResponsable" name="telResponsable" class="form-control"
+                                th:field="*{telResponsable}" maxlength="9">
+                        </div>
+
                         <!-- Campo Área Realización -->
                         <div class="mb-3">
                             <label for="areaRealizacion" class="form-label">Área de Realización</label>
@@ -169,6 +183,19 @@
     <div th:replace="~{fragments/jsComponents :: jsScripts}"></div>
 
     <script>
+        // 
+        function formatPhoneInput(event) {
+            let input = event.target;
+            let value = input.value.replace(/[^0-9]/g, "");
+            if (value.length > 4) {
+                value = value.slice(0, 4) + "-" + value.slice(4);
+            }
+            input.value = value;
+        }
+
+        document.getElementById("telResponsable").addEventListener("input", formatPhoneInput);
+
+        //
         function autoResize(textarea) {
             // Restablece la altura para calcularla correctamente
             textarea.style.height = 'auto';
@@ -208,7 +235,7 @@
 
             // Si hay una carrera seleccionada, cargar materias asociadas
             const selectedCarrera = carreraSelect.val();
-            const selectedMateria = materiaSelect.val();            
+            const selectedMateria = materiaSelect.val();
 
             if (selectedCarrera) {
                 $.ajax({

@@ -1,7 +1,8 @@
 package com.industrial.pasantias.Servicio;
 
-import com.industrial.pasantias.DAO.EmpresaRepository;
 import com.industrial.pasantias.Model.Empresa;
+import com.industrial.pasantias.Repository.EmpresaRepository;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.industrial.pasantias.Model.PK;
 
-import com.industrial.pasantias.Model.EmpresaPrograma;
+import com.industrial.pasantias.Model.Programa;
 import com.industrial.pasantias.Model.Pasantia;
 
 import jakarta.persistence.*;
@@ -21,5 +21,5 @@ public class PasantiaProgramaPK {
 
     @ManyToOne
     @JoinColumn(name = "ID_PROGRAMA", nullable = false)
-    private EmpresaPrograma programa;
+    private Programa programa;
 }

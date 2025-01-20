@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.industrial.pasantias.Model.EmpresaPrograma;
+import com.industrial.pasantias.Model.Programa;
 import com.industrial.pasantias.Model.Pasantia;
 import com.industrial.pasantias.Model.PasantiaPrograma;
 import com.industrial.pasantias.Model.PK.PasantiaProgramaPK;
@@ -21,7 +21,7 @@ public class PasantiaProgramaService {
     private PasantiaService pasantiaService;
 
     @Autowired
-    private ProgramaService empresaProgramaService;
+    private ProgramaService programaService;
 
     public List<PasantiaPrograma> obtenerTodos() {
         return pasantiaProgramaRepository.findAll();
@@ -37,12 +37,12 @@ public class PasantiaProgramaService {
 
     public Optional<PasantiaPrograma> obtenerPorIdPasantiaPrograma(int idPasantia, int idPrograma) {
         Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(idPasantia);
-        EmpresaPrograma programa = empresaProgramaService.obtenerPorId(idPrograma);
+        Programa programa = programaService.obtenerPorId(idPrograma);
         PasantiaProgramaPK id = new PasantiaProgramaPK(pasantia, programa);
         return pasantiaProgramaRepository.findById(id);
     }
 
-    public Optional<PasantiaPrograma> obtenerPorIdPasantiaPrograma(Pasantia pasantia, EmpresaPrograma programa) {
+    public Optional<PasantiaPrograma> obtenerPorIdPasantiaPrograma(Pasantia pasantia, Programa programa) {
         PasantiaProgramaPK id = new PasantiaProgramaPK(pasantia, programa);
         return pasantiaProgramaRepository.findById(id);
     }

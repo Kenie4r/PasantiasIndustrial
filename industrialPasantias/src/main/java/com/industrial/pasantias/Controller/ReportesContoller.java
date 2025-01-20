@@ -43,7 +43,7 @@ public class ReportesContoller {
     public String getMethodName(Model model) {
         model.addAttribute("reporte", ""); 
         model.addAttribute("reporte2", ""); 
-        model.addAttribute("carreras",carreraService.obtenerTodos()); 
+        model.addAttribute("carreras",carreraService.obtenerCarrerasActivas()); 
         return "reportes/reporteria";
     }
 
@@ -51,7 +51,7 @@ public class ReportesContoller {
     @GetMapping("/reporteria/{reporte}")
     public String reportesFiltrados(@PathVariable String reporte , Model model) {
         model.addAttribute("reporte", reporte); 
-        model.addAttribute("carreras",carreraService.obtenerTodos()); 
+        model.addAttribute("carreras",carreraService.obtenerCarrerasActivas()); 
         return "reportes/reporteria";
     }
     

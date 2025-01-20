@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.industrial.pasantias.Model.Carrera;
-import com.industrial.pasantias.Model.EmpresaPrograma;
+import com.industrial.pasantias.Model.Programa;
 import com.industrial.pasantias.Model.EstudianteEntity;
 import com.industrial.pasantias.Model.Pasantia;
 import com.industrial.pasantias.Model.PasantiaPrograma;
@@ -62,7 +62,7 @@ public class PasantiaController {
     @GetMapping("/nuevo")
     public String nuevaPasantia(Model model) {
         // Carreras
-        List<Carrera> carreras = carreraService.obtenerTodos();
+        List<Carrera> carreras = carreraService.obtenerCarrerasActivas();
 
         // Estados
         List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
@@ -122,7 +122,7 @@ public class PasantiaController {
     public String nuevoProyecto(@PathVariable Integer idPasantia, Model model) {
         //
         Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(idPasantia);
-        List<EmpresaPrograma> empresasProgramas = programaService.ObternerTodo();
+        List<Programa> empresasProgramas = programaService.ObternerTodo();
         //
         PasantiaPrograma pasantiaPrograma = new PasantiaPrograma();
         PasantiaProgramaPK id = new PasantiaProgramaPK();
@@ -163,7 +163,7 @@ public class PasantiaController {
             //
             Pasantia pasantia = pasantiaService
                     .obtenerPorIdPasantia(pasantiaPrograma.getId().getPasantia().getIdPasantia());
-            List<EmpresaPrograma> empresasProgramas = programaService.ObternerTodo();
+            List<Programa> empresasProgramas = programaService.ObternerTodo();
 
             // Estados
             List<SelectListItem> estados = pasantiaService.obtenerEstadosPasantia();
@@ -185,7 +185,7 @@ public class PasantiaController {
     public String editarProyecto(@PathVariable Integer idPasantia, @PathVariable Integer idPrograma, Model model) {
         //
         Pasantia pasantia = pasantiaService.obtenerPorIdPasantia(idPasantia);
-        List<EmpresaPrograma> empresasProgramas = programaService.ObternerTodo();
+        List<Programa> empresasProgramas = programaService.ObternerTodo();
         //
         Optional<PasantiaPrograma> pasantiaPrograma = pasantiaProgramaService.obtenerPorIdPasantiaPrograma(idPasantia,
                 idPrograma);

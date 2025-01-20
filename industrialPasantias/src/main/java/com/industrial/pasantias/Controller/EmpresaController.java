@@ -37,7 +37,7 @@ public class EmpresaController {
     @GetMapping("/nueva")
     public String nuevaEmpresaForm(Model model) {
         model.addAttribute("empresa", new Empresa());
-        model.addAttribute("rubro", rubroService.obtenerTodos());
+        model.addAttribute("rubro", rubroService.obtenerActivos());
         return "empresas/crear_editar_empresa";
     }
 

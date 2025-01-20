@@ -1,15 +1,16 @@
-// Call the dataTables jQuery plugin
 $(document).ready(function () {
   $('#dataTable').DataTable({
-    // Opciones básicas
     "paging": true,
-    "lengthMenu": [5, 10, 25],
+    "lengthMenu": [5, 10, 25, 50, 100],
     "searching": true,
     "ordering": true,
     "info": true,
     "autoWidth": false,
+    "responsive": true,
     "language": {
       "url": "/js/datatables/Spanish.json"  // Ruta local
     },
+    "order": [[0, "asc"]],
+    "pagingType": "full_numbers",
   });
 });

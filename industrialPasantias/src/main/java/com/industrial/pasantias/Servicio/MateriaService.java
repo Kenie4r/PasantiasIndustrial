@@ -3,6 +3,7 @@ package com.industrial.pasantias.Servicio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.industrial.pasantias.Model.Materia;
 import com.industrial.pasantias.Repository.MateriaRepository;
 
@@ -32,7 +33,7 @@ public class MateriaService {
         return materiaRepository.findMateriasByIdCarrera(id);
     }
 
-    public Integer obtenerCarreraPorIdMateria(Integer id) {        
+    public Integer obtenerCarreraPorIdMateria(Integer id) {
         return materiaRepository.findCarreraByIdMateria(id);
     }
 

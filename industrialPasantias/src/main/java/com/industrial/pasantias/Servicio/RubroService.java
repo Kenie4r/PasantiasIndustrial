@@ -17,6 +17,10 @@ public class RubroService {
         return rubroRepository.findAll();
     }
 
+    public List<Rubro> obtenerActivos() {
+        return rubroRepository.encontrarRubrosActivos("A");
+    }
+
     public Rubro obtenerPorId(Integer id) {
         return rubroRepository.findById(id).orElse(null);
     }

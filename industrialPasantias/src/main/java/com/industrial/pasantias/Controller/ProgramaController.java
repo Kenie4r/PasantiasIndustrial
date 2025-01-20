@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.Empresa;
-import com.industrial.pasantias.Model.EmpresaPrograma;
+import com.industrial.pasantias.Model.Programa;
 import com.industrial.pasantias.Model.Materia;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EmpresaService;
@@ -42,7 +42,7 @@ public class ProgramaController {
     @GetMapping(path = { "", "/" })
     public String listarProgramas(@RequestParam(value = "idEmpresa", required = false) Integer idEmpresa, Model model) {
         List<Empresa> empresas = empresaService.listarEmpresas(); // Listado de empresas para el select
-        List<EmpresaPrograma> programas;
+        List<Programa> programas;
 
         if (idEmpresa != null) {
             // Filtrar programas por la empresa seleccionada
@@ -61,7 +61,7 @@ public class ProgramaController {
     // Mostrar programa por id
     @GetMapping("/{id}")
     public String listarPrograma(@PathVariable Integer id, Model model) {
-        List<EmpresaPrograma> programas = programaService.obtenerPorIdEmpresa(id);
+        List<Programa> programas = programaService.obtenerPorIdEmpresa(id);
         Empresa empresa = null;
 
         if (id != null) {
@@ -88,18 +88,18 @@ public class ProgramaController {
 
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
-        List<Carrera> carreras = carreraService.obtenerTodos();
+        List<Carrera> carreras = carreraService.obtenerCarrerasActivas();
 
         model.addAttribute("carrera", carreras);
         model.addAttribute("empresas", empresas);
         model.addAttribute("materia", materias);
-        model.addAttribute("programa", new EmpresaPrograma());
+        model.addAttribute("programa", new Programa());
         return "programas/crear_editar_programa";
     }
 
     // Maneja la solicitud POST para guardar el nuevo programa
     @PostMapping("/guardar")
-    public String guardarPrograma(@ModelAttribute("programa") EmpresaPrograma programa, Model model,
+    public String guardarPrograma(@ModelAttribute("programa") Programa programa, Model model,
             RedirectAttributes redirectAttributes) {
         try {
             /*
@@ -127,7 +127,7 @@ public class ProgramaController {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioModificarPrograma(@PathVariable Integer id,
             Model model) {
-        EmpresaPrograma programas = programaService.obtenerPorId(id);
+        Programa programas = programaService.obtenerPorId(id);
         if (programas == null) {
             return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
         }
@@ -137,7 +137,7 @@ public class ProgramaController {
 
         List<Empresa> empresas = empresaService.listarEmpresas();
         List<Materia> materias = materiaService.listar();
-        List<Carrera> carreras = carreraService.obtenerTodos();
+        List<Carrera> carreras = carreraService.obtenerCarrerasActivas();
 
         if (programas.getTipoPrograma().equals("Asignatura")) {
             Integer idCarreraMateria = materiaService.obtenerCarreraPorIdMateria(programas.getMateria().getIdMateria());
@@ -159,7 +159,7 @@ public class ProgramaController {
     // Mostrar programa por empresa
     @GetMapping("/empresa/{id}")
     public String listarProgramasEmpresa(@PathVariable Integer id, Model model) {
-        List<EmpresaPrograma> programas = programaService.obtenerPorIdEmpresa(id);
+        List<Programa> programas = programaService.obtenerPorIdEmpresa(id);
         Empresa empresa = null;
 
         if (id != null) {
@@ -176,10 +176,10 @@ public class ProgramaController {
 
     @SuppressWarnings("null")
     @PostMapping("/editar/{id}")
-    public String actualizarPrograma(@PathVariable Integer id, @ModelAttribute EmpresaPrograma programas,
+    public String actualizarPrograma(@PathVariable Integer id, @ModelAttribute Programa programas,
             RedirectAttributes redirectAttributes) {
         try {
-            EmpresaPrograma programaExistente = programaService.obtenerPorId(id);
+            Programa programaExistente = programaService.obtenerPorId(id);
             if (programas == null) {
                 return "redirect:/programas/empresa/" + programas.getEmpresa().getIdEmpresa();
             }
@@ -195,6 +195,8 @@ public class ProgramaController {
             programaExistente.setAreaRealizacion(programas.getAreaRealizacion());
             programaExistente.setOtrosDetalles(programas.getOtrosDetalles());
             programaExistente.setObservaciones(programas.getObservaciones());
+            programaExistente.setCorreoResponsable(programas.getCorreoResponsable());
+            programaExistente.setTelResponsable(programas.getTelResponsable());
 
             if (programas.getTipoPrograma().equals("Empresa"))
                 programaExistente.setMateria(null);
@@ -214,7 +216,7 @@ public class ProgramaController {
     // Eliminar un programa
     @GetMapping("/eliminar/{id}")
     public String eliminarPrograma(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        EmpresaPrograma programas = programaService.obtenerPorId(id);
+        Programa programas = programaService.obtenerPorId(id);
         try {
             programaService.eliminar(id);
             redirectAttributes.addFlashAttribute("mensaje", "El programa se eliminó correctamente.");
@@ -230,7 +232,7 @@ public class ProgramaController {
     @SuppressWarnings("null")
     @PostMapping("/cambiarEstado/{id}")
     public String cambiarEstado(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        EmpresaPrograma programas = programaService.obtenerPorId(id);
+        Programa programas = programaService.obtenerPorId(id);
         try {
             if (programas != null) {
                 if ("A".equals(programas.getEstado())) {

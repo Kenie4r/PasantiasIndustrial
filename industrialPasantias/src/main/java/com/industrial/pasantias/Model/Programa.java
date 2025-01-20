@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "PROGRAMA")
-public class EmpresaPrograma {
+public class Programa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_PROGRAMA")
@@ -67,4 +67,10 @@ public class EmpresaPrograma {
     @UpdateTimestamp
     @Column(name = "FECHA_MOD")
     private LocalDateTime fechaMod;
+
+    @Column(name = "CORREO_RESPONSABLE")
+    private String correoResponsable;
+
+    @Column(name = "TEL_RESPONSABLE", length = 9)
+    private String telResponsable;
 }
