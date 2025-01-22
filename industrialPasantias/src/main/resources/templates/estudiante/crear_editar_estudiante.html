@@ -17,6 +17,15 @@
                     <h1 class="mb-4" th:text="${estudiante.carnet == null ? 'Crear estudiante' : 'Editar estudiante'}">
                     </h1>
 
+                    <div th:if="${mensaje}"
+                        th:classappend="${tipoMensaje == 'success' ? 'alert alert-success alert-dismissible fade show' : 'alert alert-danger alert-dismissible fade show'}"
+                        role="alert">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
                     <form
                         th:action="@{${estudiante.carnet == null} ? '/estudiantes/crear' : '/estudiantes/editar/' + estudiante.carnet}"
                         th:object="${estudiante}" method="post" enctype="multipart/form-data">
@@ -24,7 +33,7 @@
                         <div class="mb-3">
                             <label for="carnet" class="form-label">Carnet</label>
                             <input type="text" id="carnet" name="carnet" class="form-control" th:field="*{carnet}"
-                                required>
+                                required th:attr="readonly=${esEdicion ? 'readonly' : null}">
                         </div>
 
                         <div class="mb-3">

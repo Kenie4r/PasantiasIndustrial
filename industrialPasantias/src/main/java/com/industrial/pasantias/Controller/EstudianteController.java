@@ -35,6 +35,7 @@ import org.springframework.core.io.Resource;
 import com.industrial.pasantias.Model.CambioDeCarrera;
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
+import com.industrial.pasantias.Servicio.CambioCarreraService;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EstudianteService;
 
@@ -51,6 +52,9 @@ public class EstudianteController {
     @Autowired
     private Environment environment;
     private static Logger logger = LoggerFactory.getLogger(EstudianteController.class);
+
+    @Autowired
+    private CambioCarreraService cambioCarreraService;
 
     // Listar todos los estudiantes
     @GetMapping("/obtenerTodos")
@@ -80,6 +84,7 @@ public class EstudianteController {
         if (carreras == null) {
             model.addAttribute("carreras", new Carrera());
         }
+        model.addAttribute("esEdicion", false);
         return "estudiante/crear_editar_estudiante";
     }
 
@@ -92,6 +97,23 @@ public class EstudianteController {
             RedirectAttributes redirectAttributes) {
 
         try {
+            // Validar si ya existe un estudiante con el mismo carnet o correo
+            boolean carnetDuplicado = estudianteService.existePorCarnet(estudianteEntity.getCarnet());
+            boolean correoDuplicado = estudianteService.existePorCorreo(estudianteEntity.getCORREO());
+
+            if (carnetDuplicado) {
+                redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+                redirectAttributes.addFlashAttribute("mensaje",
+                        "El carnet del estudiante ya está en uso. Por favor, elige otro.");
+                return "redirect:/estudiantes/obtenerTodos";
+            }
+            if (correoDuplicado) {
+                redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+                redirectAttributes.addFlashAttribute("mensaje",
+                        "El correo del estudiante ya está en uso. Por favor, elige otro.");
+                return "redirect:/estudiantes/obtenerTodos";
+            }
+
             // Procesar rutas de destino para los archivos
             HashMap<String, String> rutas = rutasDeDestino(fotoUrl, hojaDeVida);
 
@@ -106,12 +128,12 @@ public class EstudianteController {
             CambioDeCarrera cambioDeCarrera = new CambioDeCarrera();
 
             cambioDeCarrera.setCARNET(estudianteEntity.getCarnet());
-            cambioDeCarrera.setESTADO("A");            
+            cambioDeCarrera.setESTADO("A");
             cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
-  
+
             Optional<CambioDeCarrera> responseCambioCarrera = estudianteService.insertarCambioCarrera(cambioDeCarrera);
 
-            if(responseCambioCarrera.isPresent()){
+            if (responseCambioCarrera.isPresent()) {
                 logger.info("Cambio de carrera agregado.");
             }
 
@@ -219,65 +241,71 @@ public class EstudianteController {
             // Verificar si el estudiante existe
             estudianteService.obtenerDataModificar(estudianteEntity.getCarnet())
                     .ifPresentOrElse(estudianteExistente -> {
-                        // Eliminar archivo antiguo y cargar uno nuevo si aplica
-                        HashMap<String, String> rutas = new HashMap<>();
+                        boolean correoDuplicado = estudianteService.existePorCorreo(estudianteEntity.getCORREO())
+                                && !estudianteExistente.getCORREO().equals(estudianteEntity.getCORREO());
 
-                        if (fotoUrl != null && !fotoUrl.isEmpty()) {
-                            // Eliminar archivo antiguo de la foto si existía
-                            if (estudianteExistente.getFOTO_URL() != null
-                                    && !estudianteExistente.getFOTO_URL().isEmpty()) {
-                                eliminarArchivoAntiguo(uploadDir + "/fotos/" + estudianteExistente.getFOTO_URL());
+                        if (correoDuplicado) {
+                            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+                            redirectAttributes.addFlashAttribute("mensaje",
+                                    "El correo del estudiante ya está en uso. Por favor, elige otro.");
+                        } else {
+                            // Eliminar archivo antiguo y cargar uno nuevo si aplica
+                            HashMap<String, String> rutas = new HashMap<>();
+
+                            if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                                // Eliminar archivo antiguo de la foto si existía
+                                if (estudianteExistente.getFOTO_URL() != null
+                                        && !estudianteExistente.getFOTO_URL().isEmpty()) {
+                                    eliminarArchivoAntiguo(uploadDir + "/fotos/" + estudianteExistente.getFOTO_URL());
+                                }
+                                // Guardar nueva foto
+                                rutas.putAll(rutasDeDestino(fotoUrl, null));
                             }
-                            // Guardar nueva foto
-                            rutas.putAll(rutasDeDestino(fotoUrl, null));
-                        }
 
-                        if (hojaDeVida != null && !hojaDeVida.isEmpty()) {
-                            // Eliminar archivo antiguo del CV si existía
-                            if (estudianteExistente.getHOJA_DE_VIDA() != null
-                                    && !estudianteExistente.getHOJA_DE_VIDA().isEmpty()) {
-                                eliminarArchivoAntiguo(uploadDir + "/cv/" + estudianteExistente.getHOJA_DE_VIDA());
+                            if (hojaDeVida != null && !hojaDeVida.isEmpty()) {
+                                // Eliminar archivo antiguo del CV si existía
+                                if (estudianteExistente.getHOJA_DE_VIDA() != null
+                                        && !estudianteExistente.getHOJA_DE_VIDA().isEmpty()) {
+                                    eliminarArchivoAntiguo(uploadDir + "/cv/" + estudianteExistente.getHOJA_DE_VIDA());
+                                }
+                                // Guardar nuevo CV
+                                rutas.putAll(rutasDeDestino(null, hojaDeVida));
                             }
-                            // Guardar nuevo CV
-                            rutas.putAll(rutasDeDestino(null, hojaDeVida));
+
+                            // Actualizar datos del estudiante
+                            if (rutas.containsKey("rutaFoto")) {
+                                estudianteExistente.setFOTO_URL(rutas.get("rutaFoto"));
+                            }
+                            if (rutas.containsKey("rutaCV")) {
+                                estudianteExistente.setHOJA_DE_VIDA(rutas.get("rutaCV"));
+                            }
+
+                            estudianteExistente.setCORREO(estudianteEntity.getCORREO());
+                            estudianteExistente.setAPELLIDOS(estudianteEntity.getAPELLIDOS());
+                            estudianteExistente.setNOMBRES(estudianteEntity.getNOMBRES());
+                            estudianteExistente.setTELEFONO(estudianteEntity.getTELEFONO());
+                            estudianteExistente.setTELEFONO2(estudianteEntity.getTELEFONO2());
+
+                            if (estudianteExistente.getCarrera().getIdCarrera() != estudianteEntity.getCarrera()
+                                    .getIdCarrera()) {
+
+                                CambioDeCarrera cambioDeCarrera = new CambioDeCarrera();
+
+                                cambioDeCarrera.setCARNET(estudianteEntity.getCarnet());
+                                cambioDeCarrera.setESTADO("A");
+                                cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
+                                cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
+
+                                estudianteService.insertarCambioCarrera(cambioDeCarrera);
+                            }
+
+                            estudianteExistente.setCarrera(estudianteEntity.getCarrera());
+
+                            estudianteService.modificarEstudiante(estudianteExistente);
+
+                            redirectAttributes.addFlashAttribute("mensaje", "El estudiante se editó correctamente.");
+                            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
                         }
-
-                        // Actualizar datos del estudiante
-                        if (rutas.containsKey("rutaFoto")) {
-                            estudianteExistente.setFOTO_URL(rutas.get("rutaFoto"));
-                        }
-                        if (rutas.containsKey("rutaCV")) {
-                            estudianteExistente.setHOJA_DE_VIDA(rutas.get("rutaCV"));
-                        }
-
-                        
-                        estudianteExistente.setCORREO(estudianteEntity.getCORREO());
-                        estudianteExistente.setAPELLIDOS(estudianteEntity.getAPELLIDOS());
-                        estudianteExistente.setNOMBRES(estudianteEntity.getNOMBRES());
-                        estudianteExistente.setTELEFONO(estudianteEntity.getTELEFONO());
-                        estudianteExistente.setTELEFONO2(estudianteEntity.getTELEFONO2());
-
-                        if (estudianteExistente.getCarrera().getIdCarrera() != estudianteEntity.getCarrera().getIdCarrera()) {
-                            
-                            CambioDeCarrera cambioDeCarrera = new CambioDeCarrera();
-
-                            cambioDeCarrera.setCARNET(estudianteEntity.getCarnet());
-                            cambioDeCarrera.setESTADO("A");
-                            cambioDeCarrera.setFECHA_CREA(new Date(System.currentTimeMillis()));
-                            cambioDeCarrera.setCARRERA_ACTUAL(estudianteEntity.getCarrera());
-
-                            estudianteService.insertarCambioCarrera(cambioDeCarrera);
-                        }
-
-                        estudianteExistente.setCarrera(estudianteEntity.getCarrera());
-
-                        estudianteService.modificarEstudiante(estudianteExistente);
-
-                    
-
-                        redirectAttributes.addFlashAttribute("mensaje", "El estudiante se editó correctamente.");
-                        redirectAttributes.addFlashAttribute("tipoMensaje", "success");
-
                     }, () -> {
                         redirectAttributes.addFlashAttribute("mensaje",
                                 "El estudiante con el carnet proporcionado no existe.");
@@ -303,6 +331,7 @@ public class EstudianteController {
 
             if (estudiante.isPresent()) {
                 model.addAttribute("estudiante", estudiante.get());
+                model.addAttribute("esEdicion", true);
             }
 
             if (carreras != null) {
@@ -328,6 +357,12 @@ public class EstudianteController {
             EstudianteEntity estudianteEliminado = estudianteService.obtenerPorCarnet(carnet);
 
             if (estudianteEliminado != null) {
+                // Eliminar log de carrera
+                cambioCarreraService.eliminar(estudianteEliminado.getCarnet());
+
+                // Elimina el estudiante de la base de datos
+                estudianteService.eliminar(carnet);
+
                 // Elimina los archivos asociados (si existen)
                 if (estudianteEliminado.getHOJA_DE_VIDA() != null && !estudianteEliminado.getHOJA_DE_VIDA().isEmpty()) {
                     eliminarArchivoAntiguo(uploadDir + "/cv/" + estudianteEliminado.getHOJA_DE_VIDA());
@@ -335,9 +370,6 @@ public class EstudianteController {
                 if (estudianteEliminado.getFOTO_URL() != null && !estudianteEliminado.getFOTO_URL().isEmpty()) {
                     eliminarArchivoAntiguo(uploadDir + "/fotos/" + estudianteEliminado.getFOTO_URL());
                 }
-
-                // Elimina el estudiante de la base de datos
-                estudianteService.eliminar(carnet);
 
                 redirectAttributes.addFlashAttribute("mensaje", "El estudiante se eliminó correctamente.");
                 redirectAttributes.addFlashAttribute("tipoMensaje", "success");

@@ -1,5 +1,6 @@
 package com.industrial.pasantias.Controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -109,14 +110,25 @@ public class ProgramaController {
              */
             if (programa.getTipoPrograma().equals("Empresa"))
                 programa.setMateria(null);
-            // Guarda el nuevo programa en la base de datos
-            programaService.guardar(programa);
-            redirectAttributes.addFlashAttribute("mensaje", "El programa se guardó correctamente.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+
+            // Validar las fechas de inicio y final programa
+            LocalDate fechaIni = programa.getFechaIni();
+            LocalDate fechaFi = programa.getFechaFi();
+
+            if (fechaFi.isAfter(fechaIni)) {
+                // Guarda el nuevo programa en la base de datos
+                programaService.guardar(programa);
+                redirectAttributes.addFlashAttribute("mensaje", "El programa se guardó correctamente.");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            } else {
+                redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+                redirectAttributes.addFlashAttribute("mensaje", "La fecha final debe ser mayor a la inicial.");
+            }
             return "redirect:/programas/empresa/" + programa.getEmpresa().getIdEmpresa();
+
         } catch (Exception e) {
             model.addAttribute("tipoMensaje", "error");
-            model.addAttribute("mensaje", "Ocurrió un error al guardar el programa." + e.getMessage());
+            model.addAttribute("mensaje", "Ocurrió un error al guardar el programa.");
             return "programas/crear_editar_programa";
         }
 

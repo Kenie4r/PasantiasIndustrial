@@ -31,4 +31,9 @@ public class CarreraService {
     public List<Carrera> obtenerCarrerasActivas() {
         return carreraRepository.encontrarCarrerasActivas("A");
     }
+
+    public boolean existePorCodigo(Integer codCarrera) {
+        Integer count = carreraRepository.contarPorCodigo(codCarrera);
+        return count != null && count > 0;
+    }
 }

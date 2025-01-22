@@ -31,6 +31,16 @@ public class EstudianteService {
         return estudianteRepository.encontrarPorCarnet(carnet);
     }
 
+    public boolean existePorCarnet(String carnet) {
+        Integer count = estudianteRepository.contarPorCarnet(carnet);
+        return count != null && count > 0;
+    }
+
+    public boolean existePorCorreo(String correo) {
+        Integer count = estudianteRepository.contarPorCorreo(correo);
+        return count != null && count > 0;
+    }
+
     public void eliminar(String carnet) {
         estudianteRepository.deleteById(carnet);
     }

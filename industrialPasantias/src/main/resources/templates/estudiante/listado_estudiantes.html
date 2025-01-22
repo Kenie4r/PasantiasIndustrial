@@ -52,7 +52,7 @@
                                     <td>
                                         <img th:if="${estudiantes.FOTO_URL != null and !estudiantes.FOTO_URL.isEmpty()}"
                                             th:src="@{/estudiantes/images/{img}(img=${estudiantes.FOTO_URL})}"
-                                            alt="" style="width: 100px; height: auto;" />
+                                            alt="" style="width: 150px; height: auto;" />
                                     </td>
 
                                     <td th:text="${estudiantes.carnet}"></td>

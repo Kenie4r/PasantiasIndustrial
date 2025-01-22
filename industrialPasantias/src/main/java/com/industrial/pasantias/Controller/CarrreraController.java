@@ -42,6 +42,15 @@ public class CarrreraController {
     @PostMapping("/carreras")
     public String guardarCarrera(@ModelAttribute Carrera carrera, RedirectAttributes redirectAttributes, Model model) {
         try {
+            // Validar si ya existe una carrera con el código
+            boolean codigoDuplicado = carreraService.existePorCodigo(carrera.getCodCarrera());
+
+            if (codigoDuplicado) {
+                model.addAttribute("tipoMensaje", "error");
+                model.addAttribute("mensaje", "El código de carrera ya existe. Por favor, elige otro.");
+                return "carreras/crear_editar_carrera";
+            }
+
             // Obtener usuario logueado
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication != null ? authentication.getName() : "Anónimo";
@@ -85,11 +94,21 @@ public class CarrreraController {
                 return "redirect:/carreras";
             }
 
+            // Validar que el nuevo código no esté duplicado
+            boolean codigoDuplicado = carreraService.existePorCodigo(carrera.getCodCarrera()) &&
+                    !carreraExistente.getCodCarrera().equals(carrera.getCodCarrera());
+
+            if (codigoDuplicado) {
+                model.addAttribute("tipoMensaje", "error");
+                model.addAttribute("mensaje", "El código de carrera ya existe. Por favor, elija otro código.");
+                return "carreras/crear_editar_carrera";
+            }
+
             // Obtener usuario logueado
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication != null ? authentication.getName() : "Anónimo";
 
-            carreraExistente.setDescripcion(carrera.getDescripcion());            
+            carreraExistente.setDescripcion(carrera.getDescripcion());
             carreraExistente.setUsuMod(username);
             carreraExistente.setCodCarrera(carrera.getCodCarrera());
 
