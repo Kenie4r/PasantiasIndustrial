@@ -35,9 +35,11 @@ import org.springframework.core.io.Resource;
 import com.industrial.pasantias.Model.CambioDeCarrera;
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
+import com.industrial.pasantias.Model.LogCarreras;
 import com.industrial.pasantias.Servicio.CambioCarreraService;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EstudianteService;
+import com.industrial.pasantias.Servicio.LogCarrerasService;
 
 @Controller
 @RequestMapping("/estudiantes")
@@ -48,6 +50,8 @@ public class EstudianteController {
 
     @Autowired
     private CarreraService carreraService;
+    @Autowired
+    private LogCarrerasService logCarrerasService;
 
     @Autowired
     private Environment environment;
@@ -70,7 +74,13 @@ public class EstudianteController {
         }
         return "estudiante/listado_estudiantes";
     }
-
+  // Listar todos los estudiantes
+  @GetMapping("/obtenerTodosCambios")
+  public String listarTodosCambios(Model model) {
+    model.addAttribute("logCarreras", logCarrerasService.listaCambios());
+    // System.out.println("aaa" + logCarrerasService.listaCambios());
+      return "estudiante/listado_cambiosEstudiantes";
+  }
     // Mostrar formulario crear estudiante
     @GetMapping("/nuevo")
     public String mostrarFormularioEstudiante(Model model) {

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title = 'Log de Cambios de Carrera')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log de Cambios de Carrera</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div th:replace="fragments/topbar :: topbar"></div>
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">Registros de Carrera</h1>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" width="100%" cellspacing="0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>ID Log</th>
+                                    <th>Carnet</th>
+                                    <th>Estado</th>
+                                    <th>Carrera Actual</th>
+                                  
+                                    <th>Fecha Creación</th>
+                                    <th>Fecha Modificación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="log : ${logCarreras}">
+                                    <td th:text="${log.idLog}"></td>
+                                    <td th:text="${log.carnet}"></td>
+                                    <td>
+                                        <span th:if="${log.estado == 'A'}" th:text="'Activo'"></span>
+                                        <span th:if="${log.estado == 'I'}" th:text="'Inactivo'"></span>
+                                    </td>
+                                    
+                                    <td th:text="${log.Carrera.descripcion}"></td>
+                                    
+                                    <td th:text="${log.fechaCrea}"></td>
+                                    <td th:text="${log.fechaMod}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div th:replace="fragments/footer :: footer"></div>
+            <!-- End of Footer -->
+        </div>
+    </div>
+
+    <script th:src="@{/js/alertFade.js}"></script>
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+</body>
+
+</html>
