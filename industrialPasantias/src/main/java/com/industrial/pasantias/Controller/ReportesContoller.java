@@ -1,26 +1,20 @@
 package com.industrial.pasantias.Controller;
 
-import java.io.OutputStreamWriter;
 import java.util.List;
 
-import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.industrial.pasantias.Model.EstudianteEntity;
 import com.industrial.pasantias.Model.Pasantia;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EstudianteService;
-import com.industrial.pasantias.Servicio.PasantiaProgramaService;
 import com.industrial.pasantias.Servicio.PasantiaService;
-import com.industrial.pasantias.Servicio.ProgramaService;
-
 import jakarta.servlet.http.HttpServletResponse;
 
 
@@ -32,12 +26,7 @@ public class ReportesContoller {
     @Autowired
     private PasantiaService pasantiaService;
     @Autowired
-    private EstudianteService estudianteService;
-    @Autowired
-    private ProgramaService programaService;
-
-    @Autowired
-    private PasantiaProgramaService pasantiaProgramaService;
+    private EstudianteService estudianteService;    
 
     @GetMapping("/reporteria")
     public String getMethodName(Model model) {

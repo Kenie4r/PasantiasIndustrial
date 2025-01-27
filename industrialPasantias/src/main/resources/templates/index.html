@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="fragments/header :: header(title = 'Inicio')">
@@ -80,25 +80,58 @@
 
                     </div>
 
-                </div>
-                <!-- /.container-fluid -->
-            </div>
-            <!-- End of Main Content -->
+                    <div class="row">
+                        <div style="width: 70%; margin: 0 auto;">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
             <!-- Footer -->
             <div th:replace="fragments/footer :: footer" />
             <!-- End of Footer -->
-
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div th:replace="fragments/userModal :: userModal"></div>
+    <div th:replace="fragments/jsComponents :: jsScripts"></div>
+    <script th:inline="javascript">
+        // Convierte las listas de Java a JSON para que el navegador pueda entenderlas
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+        const values2021 = [12000, 15000, 18000, 20000, 25000, 27000, 30000];
+        const values2022 = [14000, 16000, 19000, 22000, 28000, 29000, 32000];
 
-    <div th:replace="fragments/userModal :: userModal">
-
-    </div>
-
-    <div th:replace="fragments/jsComponents :: jsScripts">
-
-    </div>
+        // Renderizar el gráfico
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        console.log(ctx)
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: '2021',
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        data: values2021
+                    },
+                    {
+                        label: '2022',
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        data: values2022
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

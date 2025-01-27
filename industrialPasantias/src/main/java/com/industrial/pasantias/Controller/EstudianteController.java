@@ -35,7 +35,6 @@ import org.springframework.core.io.Resource;
 import com.industrial.pasantias.Model.CambioDeCarrera;
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.EstudianteEntity;
-import com.industrial.pasantias.Model.LogCarreras;
 import com.industrial.pasantias.Servicio.CambioCarreraService;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EstudianteService;

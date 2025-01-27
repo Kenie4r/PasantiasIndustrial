@@ -8,8 +8,8 @@ import com.industrial.pasantias.Model.PK.PasantiaProgramaPK;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface PasantiaProgramaRepository extends JpaRepository<PasantiaPrograma, PasantiaProgramaPK> {
+    @SuppressWarnings("null")
     Optional<PasantiaPrograma> findById(PasantiaProgramaPK id);
 
     @Query(value = "SELECT * FROM PASANTIA_PROGRAMA WHERE ID_PASANTIA = :idPasantia", nativeQuery = true)
