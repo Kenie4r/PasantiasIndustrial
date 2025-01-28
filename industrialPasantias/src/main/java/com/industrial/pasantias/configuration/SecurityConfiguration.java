@@ -20,12 +20,12 @@ public class SecurityConfiguration {
      * 
      * }
      */
-    
+
     @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login", "/css/**", "/js/**", "/img/**", "/reports/**", "/vendor/**", "/scss/**")
+                .requestMatchers("/login", "/css/**", "/js/**", "/img/**", "/reports/**", "/vendor/**", "/scss/**", "/database/**")
                 .permitAll().anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login").loginProcessingUrl("/access")
                         .defaultSuccessUrl("/inicio", true).failureUrl("/login?error=true").permitAll())
