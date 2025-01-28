@@ -1,20 +1,16 @@
 package com.industrial.pasantias.Controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.ui.Model;
 
+import com.industrial.pasantias.Model.Pasantia;
 import com.industrial.pasantias.Model.Usuario;
 import com.industrial.pasantias.Servicio.PasantiaService;
 import com.industrial.pasantias.Servicio.UsuarioService;
@@ -33,6 +29,10 @@ public class MainController {
         Integer practivasActivas = pasantiaService.obtenerPracticasProfesionalesActivas();
         Integer practivasActivasIngenieria = pasantiaService.obtenerPracticasProfesionalesActivasIngenieria();
         Integer practivasActivasTecnico = pasantiaService.obtenerPracticasProfesionalesActivasTecnico();
+
+        // Actividad reciente
+        List<Pasantia> ultimasPracticas = pasantiaService.obtenerUltimasPracticasProfesionales();
+        model.addAttribute("ultimasPracticas", ultimasPracticas);
 
         model.addAttribute("practivasActivas", practivasActivas);
         model.addAttribute("practivasActivasIngenieria", practivasActivasIngenieria);
@@ -54,15 +54,6 @@ public class MainController {
             return usuarioService.obtenerPorUsername(username);
         }
         return null;
-    }
-
-    @GetMapping("/growth")
-    public String getGrowthData(Model model) {
-        // Simula los datos que enviarás a la vista
-        model.addAttribute("months", List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"));
-        model.addAttribute("values2021", List.of(12000, 15000, 18000, 20000, 25000, 27000, 30000));
-        model.addAttribute("values2022", List.of(14000, 16000, 19000, 22000, 28000, 29000, 32000));
-        return "dashboard"; // Nombre del archivo HTML
     }
 
     /*

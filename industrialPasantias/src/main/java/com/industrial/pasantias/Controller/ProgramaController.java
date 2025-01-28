@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.industrial.pasantias.Model.Carrera;
 import com.industrial.pasantias.Model.Empresa;
 import com.industrial.pasantias.Model.Programa;
+import com.industrial.pasantias.Model.ProgramaResumen;
 import com.industrial.pasantias.Model.Materia;
 import com.industrial.pasantias.Servicio.CarreraService;
 import com.industrial.pasantias.Servicio.EmpresaService;
@@ -28,8 +29,11 @@ import com.industrial.pasantias.Servicio.ProgramaService;
 @RequestMapping("/programas")
 public class ProgramaController {
     private final ProgramaService programaService;
+
     private final EmpresaService empresaService;
+
     private final MateriaService materiaService;
+
     private final CarreraService carreraService;
 
     public ProgramaController(ProgramaService progama, EmpresaService empresaService, MateriaService materiaService,
@@ -38,6 +42,13 @@ public class ProgramaController {
         this.empresaService = empresaService;
         this.materiaService = materiaService;
         this.carreraService = carreraService;
+    }
+
+    @GetMapping("/resumenEmpresa")
+    public ResponseEntity<List<ProgramaResumen>> obtenerResumenPorMesEmpresa() {
+        Integer anioActual = LocalDateTime.now().getYear();
+        List<ProgramaResumen> resumen = programaService.obtenerProgramasEmpresa(anioActual);
+        return ResponseEntity.ok(resumen);
     }
 
     @GetMapping(path = { "", "/" })
@@ -113,7 +124,7 @@ public class ProgramaController {
 
             // Validar las fechas de inicio y final programa
             LocalDate fechaIni = programa.getFechaIni();
-            LocalDate fechaFi = programa.getFechaFi();
+            LocalDate fechaFi = programa.getFechaFi();            
 
             if (fechaFi.isAfter(fechaIni)) {
                 // Guarda el nuevo programa en la base de datos

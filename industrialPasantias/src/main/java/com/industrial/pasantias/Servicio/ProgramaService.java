@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.industrial.pasantias.Model.Programa;
+import com.industrial.pasantias.Model.ProgramaResumen;
 import com.industrial.pasantias.Repository.ProgramaRepository;
 
 @Service
@@ -30,5 +31,9 @@ public class ProgramaService {
 
     public void eliminar(Integer id) {
         repository.deleteById(id);
+    }
+
+    public List<ProgramaResumen> obtenerProgramasEmpresa(Integer fechaIni) {
+        return repository.findProgramasByMesAndTipoPrograma(fechaIni);
     }
 }

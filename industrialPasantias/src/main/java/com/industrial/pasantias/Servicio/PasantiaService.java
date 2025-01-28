@@ -16,6 +16,10 @@ public class PasantiaService {
     @Autowired
     private PasantiaRepository pasantiaRepository;
 
+    public List<Pasantia> obtenerUltimasPracticasProfesionales() {
+        return pasantiaRepository.obtenerUltimasPracticasProfesionales();
+    }
+
     public List<Pasantia> obtenerTodos() {
         return pasantiaRepository.findAll();
     }

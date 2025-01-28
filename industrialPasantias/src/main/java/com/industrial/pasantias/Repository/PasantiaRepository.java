@@ -34,4 +34,8 @@ public interface PasantiaRepository extends JpaRepository<Pasantia, Integer> {
 
     //Obtener todas  por el estudinante
     List<Pasantia> findByEstudiante(EstudianteEntity estudiante);
+
+    // Obtener ultimas practicas profesionales
+    @Query(value = "SELECT TOP 5 * FROM PASANTIA ORDER BY ID_PASANTIA DESC", nativeQuery = true)
+    List<Pasantia> obtenerUltimasPracticasProfesionales();
 }
