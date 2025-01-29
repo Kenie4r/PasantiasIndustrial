@@ -4,6 +4,8 @@ import com.industrial.pasantias.Model.Empresa;
 import com.industrial.pasantias.Repository.EmpresaRepository;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +29,9 @@ public class EmpresaService {
 
     public Empresa obtenerPorId(Integer id) {
         return empresaRepository.findById(id).orElse(null);
+    }
+
+    public List<Map<String, Object>> obtenerEmpresaCountByRubro() {
+        return empresaRepository.findEmpresaCountByRubro();
     }
 }

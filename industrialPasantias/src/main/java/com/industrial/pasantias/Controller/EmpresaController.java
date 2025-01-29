@@ -1,5 +1,9 @@
 package com.industrial.pasantias.Controller;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +28,12 @@ public class EmpresaController {
     public EmpresaController(EmpresaService empresaService, RubroService rubroService) {
         this.empresaService = empresaService;
         this.rubroService = rubroService;
+    }
+
+    @GetMapping("/rubroDistribucion")
+    public ResponseEntity<?> obtenerDistribucionPorRubro() {
+        List<Map<String, Object>> resumen = empresaService.obtenerEmpresaCountByRubro();
+        return ResponseEntity.ok(resumen);
     }
 
     // Mostrar todas las empresas

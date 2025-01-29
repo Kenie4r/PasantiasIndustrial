@@ -1,4 +1,3 @@
-DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="fragments/header :: header(title = 'Inicio')">
@@ -17,72 +16,115 @@ DOCTYPE html>
             <div id="content">
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
                     <div class="row">
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Práticas profesionales Activas</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <span th:text="${practivasActivas}" />
+                        <div class="main-content">
+                            <!-- Prácticas profesionales -->
+                            <div class="row mb-5">
+                                <!-- Tarjeta 1 -->
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="card shadow-sm border-0 rounded-4">
+                                        <div class="card-body d-flex align-items-center">
+                                            <div class="icon-container bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-3"
+                                                style="width: 60px; height: 60px;">
+                                                <i class="fas fa-calendar fa-lg"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="text-muted text-uppercase mb-1 fw-bold">Prácticas
+                                                    Profesionales Activas</h6>
+                                                <h4 class="fw-bold text-primary mb-0"><span
+                                                        th:text="${practivasActivas}"></span></h4>
                                             </div>
                                         </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <!-- Tarjeta 2 -->
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="card shadow-sm border-0 rounded-4">
+                                        <div class="card-body d-flex align-items-center">
+                                            <div class="icon-container bg-success text-white rounded-circle d-flex justify-content-center align-items-center me-3"
+                                                style="width: 60px; height: 60px;">
+                                                <i class="fas fa-cogs fa-lg"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="text-muted text-uppercase mb-1 fw-bold">Prácticas de
+                                                    Ingeniería</h6>
+                                                <h4 class="fw-bold text-success mb-0"><span
+                                                        th:text="${practivasActivasIngenieria}"></span></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Tarjeta 3 -->
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="card shadow-sm border-0 rounded-4">
+                                        <div class="card-body d-flex align-items-center">
+                                            <div class="icon-container bg-info text-white rounded-circle d-flex justify-content-center align-items-center me-3"
+                                                style="width: 60px; height: 60px;">
+                                                <i class="fas fa-compass fa-lg"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="text-muted text-uppercase mb-1 fw-bold">Prácticas Técnicas
+                                                    Activas</h6>
+                                                <h4 class="fw-bold text-info mb-0"><span
+                                                        th:text="${practivasActivasTecnico}"></span></h4>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Práticas profesionales Activas de Ingenieria</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <span th:text="${practivasActivasIngenieria}" />
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-cogs fa-2x text-gray-300"></i>
-                                        </div>
+                            <!-- Gráficos -->
+                            <div class="row mb-5">
+                                <div class="col-md-8">
+                                    <h4 class="mb-3">Resumen anual de prácticas profesionales</h4>
+                                    <div class="chart-placeholder p-3 bg-white shadow rounded-3">
+                                        <canvas id="graficoBarras"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4 class="mb-3">Rubros de empresa registrados</h4>
+                                    <div class="chart-placeholder p-3 bg-white shadow rounded-3">
+                                        <canvas id="graficoPastel"></canvas>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Práticas profesionales Activas de Técnico</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <span th:text="${practivasActivasTecnico}" />
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-compass fa-2x text-gray-300"></i>
-                                        </div>
+                            <!-- Tabla -->
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="mb-4">Actividad Reciente</h4>
+                                    <div class="table-responsive shadow-sm rounded-3">
+                                        <table class="table table-striped table-hover">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Código Carrera</th>
+                                                    <th>Correlativo</th>
+                                                    <th>Año Estudiante</th>
+                                                    <th>Carnet</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="p : ${ultimasPracticas}">
+                                                    <td th:text="${p.idPasantia}"></td>
+                                                    <td th:text="${p.carrera.codCarrera}"></td>
+                                                    <td th:text="${#numbers.formatInteger(p.correlativo, 3)}"></td>
+                                                    <td th:text="${p.anioEstudiante}"></td>
+                                                    <td th:text="${p.estudiante.carnet}"></td>
+                                                    <td th:text="${p.estudiante.NOMBRES}"></td>
+                                                    <td th:text="${p.estudiante.APELLIDOS}"></td>
+                                                    <td
+                                                        th:text="${#strings.equals(p.estado, 'E')} ? 'En Proceso' : 'Finalizado'">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div style="width: 70%; margin: 0 auto;">
-                            <canvas id="growthChart"></canvas>
                         </div>
                     </div>
 
@@ -93,45 +135,141 @@ DOCTYPE html>
             <!-- End of Footer -->
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <div th:replace="fragments/userModal :: userModal"></div>
     <div th:replace="fragments/jsComponents :: jsScripts"></div>
     <script th:inline="javascript">
-        // Convierte las listas de Java a JSON para que el navegador pueda entenderlas
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-        const values2021 = [12000, 15000, 18000, 20000, 25000, 27000, 30000];
-        const values2022 = [14000, 16000, 19000, 22000, 28000, 29000, 32000];
+        // Obtener programas por tipo        
+        $.ajax({
+            url: "/programas/resumenEmpresa",
+            type: "GET",
+            success: function (data) {
+                const labels = [];
+                const empresaValues = [];
+                const asignaturaValues = [];
 
-        // Renderizar el gráfico
-        const ctx = document.getElementById('growthChart').getContext('2d');
-        console.log(ctx)
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: months,
-                datasets: [
-                    {
-                        label: '2021',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        data: values2021
+                // Obtener todos los meses únicos
+                data.forEach(item => {
+                    if (!labels.includes(item.mes)) {
+                        labels.push(item.mes);
+                    }
+                });
+
+                // Inicializar valores en 0 para cada mes
+                labels.forEach(mes => {
+                    const empresaItem = data.find(item => item.mes === mes && item.tipoPrograma === "Empresa   ");
+
+                    const asignaturaItem = data.find(item => item.mes === mes && item.tipoPrograma === "Asignatura");
+
+                    empresaValues.push(empresaItem ? empresaItem.cantidad : 0);
+                    asignaturaValues.push(asignaturaItem ? asignaturaItem.cantidad : 0);
+                });
+
+                // Crear el gráfico
+                const ctx = document.getElementById('graficoBarras').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Empresa',
+                                data: empresaValues,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Asignatura',
+                                data: asignaturaValues,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }
+                        ]
                     },
-                    {
-                        label: '2022',
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                        data: values2022
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                ]
+                });
             },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+            error: function (error) {
+                console.error("Error al obtener los datos de grafico barra:", error);
+            }
+        });
+        // Obtener empresas por rubro
+        const ctxPastel = document.getElementById("graficoPastel").getContext("2d");
+        $.ajax({
+            url: "/empresas/rubroDistribucion",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                // Ordenar los datos por cantidad 
+                data.sort((a, b) => b.cantidad - a.cantidad);
+
+                // Límite de etiquetas visibles 
+                const limite = 5;
+                const etiquetas = data.slice(0, limite).map(item => item.rubro); 
+                const valores = data.slice(0, limite).map(item => item.cantidad); 
+
+                // Agrupar el resto como "Otros"
+                const otrosCantidad = data.slice(limite).reduce((acc, item) => acc + item.cantidad, 0);
+                if (otrosCantidad > 0) {
+                    etiquetas.push("Otros");
+                    valores.push(otrosCantidad);
                 }
+
+                // Colores
+                const colores = [
+                    "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#C9CBCF"
+                ];
+
+                // Crear el gráfico
+                new Chart(ctxPastel, {
+                    type: "pie",
+                    data: {
+                        labels: etiquetas, // Etiquetas ajustadas
+                        datasets: [
+                            {
+                                data: valores, // Valores ajustados
+                                backgroundColor: colores.slice(0, etiquetas.length), // Ajustar colores
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: "top",
+                            },
+                            title: {
+                                display: true,
+                                text: "Distribución de Empresas por Rubro"
+                            }
+                        }
+                    }
+                });
+            },
+            error: function (error) {
+                console.error("Error al obtener los datos:", error);
             }
         });
     </script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+    </style>
 </body>
 
 </html>
