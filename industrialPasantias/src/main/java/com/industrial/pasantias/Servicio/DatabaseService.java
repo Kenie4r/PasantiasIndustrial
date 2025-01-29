@@ -16,13 +16,13 @@ public class DatabaseService {
     @Autowired
     private DataSource dataSource;
 
-    private String backupPath = "C:\\pasantias\\backups\\CONTROL_PASANTIAS_INDUSTRIAL_V3";
+    private String backupPath = "C:\\pasantias\\backups\\CONTROL_PASANTIAS_INDUSTRIAL";
 
     public void backupDatabase() throws SQLException, IOException {
         DateTimeFormatter formatterFecha = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
         String timestampFecha = LocalDateTime.now().format(formatterFecha);
 
-        String backupCommand = "BACKUP DATABASE CONTROL_PASANTIAS_INDUSTRIAL_V3 TO DISK = ?";
+        String backupCommand = "BACKUP DATABASE CONTROL_PASANTIAS_INDUSTRIAL TO DISK = ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(backupCommand)) {
             preparedStatement.setString(1, backupPath + "_" + timestampFecha + ".bak");
@@ -32,12 +32,12 @@ public class DatabaseService {
 
     /*
      * --------------------------
-     * RESTORE cannot process database 'CONTROL_PASANTIAS_INDUSTRIAL_V3' because it
+     * RESTORE cannot process database 'CONTROL_PASANTIAS_INDUSTRIAL' because it
      * is in use by this session. It is recommended that the master database be used
      * when performing this operation.
      * --------------------------
      * public void restoreDatabase(String backupFilePath) throws SQLException {
-     * String databaseName = "CONTROL_PASANTIAS_INDUSTRIAL_V3";
+     * String databaseName = "CONTROL_PASANTIAS_INDUSTRIAL";
      * 
      * try (Connection connection = dataSource.getConnection()) {
      * // Cambiar el contexto a la base de datos 'master'
