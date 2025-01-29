@@ -99,11 +99,11 @@
                                 <tr>
                                     <th>Empresa</th>
                                     <th>Nombre programa</th>
+                                    <th>Tipo de programa</th>
+
                                     <th>Asignaturas cursadas</th>
                                     <th>UV obtenidos</th>
-                                    <span th:if="${varHorasTotales}">
-                                        <th>Horas de asignatura</th>
-                                    </span>
+                                
                                     <th>Estado</th>
                                     <th>Formularios</th>
                                     <th>Operaciones</th>
@@ -113,34 +113,35 @@
                                 <tr th:each="p : ${programas}">
                                     <td th:text="${p.id.programa.empresa.nombre}"></td>
                                     <td th:text="${p.id.programa.nombrePrograma}"></td>
+                                    <td th:text="${p.id.programa.materia != null ? 'Asignatura' : (p.id.programa.empresa != null ? 'Empresa' : 'Asignatura')}"></td>
+
+
                                     <td th:text="${p.materiasCursadasCantidad}"></td>
                                     <td th:text="${p.materiasCursadasUv}"></td>
-                                    <span th:if="${varHorasTotales}">
-                                        <td th:text="${p.id.programa.materia.horas}"></td>
-                                    </span>
+                                   
                                     <td th:text="${p.estado == 'E'} ? 'En Proceso' : 'Finalizado'"></td>
                                     <td>
                                         <a th:href="@{/formularios/PPUDBF101/{idPasantia}-{idCarrera}-{carnet}-{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet}, idPrograma = ${p.id.programa.idPrograma})}"
                                             class="btn btn-info mb-3" target="_blank">PPUDBF101</a>
-
+                            
                                         <a th:href="@{/formularios/PPUDBF102/{idPasantia}-{idCarrera}-{carnet}-{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet}, idPrograma = ${p.id.programa.idPrograma})}"
                                             class="btn btn-info mb-3" target="_blank">PPUDBF102</a>
-
+                            
                                         <a th:href="@{/formularios/PPUDBF103/{idPasantia}-{idCarrera}-{carnet}-{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idCarrera=${pasantia.carrera.idCarrera}, carnet=${pasantia.estudiante.carnet}, idPrograma = ${p.id.programa.idPrograma})}"
                                             class="btn btn-info mb-3" target="_blank">PPUDBF103</a>
                                     </td>
                                     <td>
                                         <a th:href="@{/pasantias/proyectos/editar/pasantia/{idPasantia}/programa/{idPrograma}(idPasantia=${p.id.pasantia.idPasantia}, idPrograma = ${p.id.programa.idPrograma})}"
                                             class="btn btn-success mb-3">Editar</a>
-
+                            
                                         <!-- Mostrar el enlace si existe -->
-                                        <a th:if="${p.enlaceDrive != ''}" th:href="${p.enlaceDrive}" class="btn mb-3"
-                                            target="_blank">
+                                        <a th:if="${p.enlaceDrive != ''}" th:href="${p.enlaceDrive}" class="btn mb-3" target="_blank">
                                             <i class="fab fa-google-drive" style="color: #34a853;"></i>
                                         </a>
                                     </td>
                                 </tr>
                             </tbody>
+                            
                         </table>
                     </div>
                 </div>
